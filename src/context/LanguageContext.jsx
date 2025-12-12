@@ -18,12 +18,18 @@ export const LanguageProvider = ({ children }) => {
     localStorage.setItem('clc_language', lang);
   };
 
+  const toggleLanguage = () => {
+    const newLang = language === 'en' ? 'bn' : 'en';
+    setLanguage(newLang);
+    localStorage.setItem('clc_language', newLang);
+  };
+
   const t = (key) => {
     return translations[language][key] || key;
   };
 
   return (
-    <LanguageContext.Provider value={{ language, changeLanguage, t }}>
+    <LanguageContext.Provider value={{ language, changeLanguage, toggleLanguage, t }}>
       {children}
     </LanguageContext.Provider>
   );

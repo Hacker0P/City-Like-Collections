@@ -1,7 +1,7 @@
 export const translations = {
   en: {
     // Header/Footer
-    storeName: 'City Life Collection',
+    storeName: 'City Like Collection',
     location: 'Location',
     mobile: 'Mobile / WhatsApp',
     alternate: 'Alternate',
@@ -14,9 +14,10 @@ export const translations = {
     newCollection: '✨ New Collection Available 2025',
     openNow: '● Open Now',
     closed: '● Closed',
-    heroTitle: 'City Life Collection',
-    heroSubtitle: 'Elevate your style with our premium collection. Seamless ordering directly via WhatsApp.',
+    heroTitle: 'City Like Collection',
+    heroSubtitle: 'Elevate your style with our premium Men\'s Wear collection. Seamless ordering directly via WhatsApp.',
     explore: 'Explore Collection',
+    contactUs: 'Contact Us',
     
     // Filters
     filters: 'Filters',
@@ -44,6 +45,22 @@ export const translations = {
     loading: 'Loading...',
     inStock: 'Available',
     outOfStock: 'Not Available',
+    
+    // New Additions
+    exclusiveMensWear: "Exclusive Men's Wear",
+    footerDesc: "Discover the latest trends and distinct styles. Quality men's fashion. Visit our store or order online today.",
+    found: 'Found',
+    items: 'items',
+    
+    // Categories
+    cat_All: 'All',
+    cat_TShirt: 'T-Shirt',
+    cat_Shirt: 'Shirt',
+    cat_Jeans: 'Jeans',
+    cat_Trousers: 'Trousers',
+    cat_Shoes: 'Shoes',
+    cat_Accessories: 'Accessories',
+    cat_Other: 'Other',
     
     // Shopkeeper
     shop_title: 'Store Collection',
@@ -79,7 +96,7 @@ export const translations = {
   },
   bn: {
     // Header/Footer
-    storeName: 'সিটি লাইফ কালেকশন',
+    storeName: 'সিটি লাইক কালেকশন',
     location: 'অবস্থান',
     mobile: 'মোবাইল / হোয়াটসঅ্যাপ',
     alternate: 'বিকল্প নম্বর',
@@ -92,9 +109,10 @@ export const translations = {
     newCollection: '✨ নতুন কালেকশন ২০২৫',
     openNow: '● এখন খোলা',
     closed: '● বন্ধ',
-    heroTitle: 'সিটি লাইফ কালেকশন',
-    heroSubtitle: 'আমাদের প্রিমিয়াম কালেকশনের সাথে আপনার স্টাইল উন্নত করুন। হোয়াটসঅ্যাপের মাধ্যমে সরাসরি অর্ডার করুন।',
+    heroTitle: 'সিটি লাইক কালেকশন',
+    heroSubtitle: 'আমাদের প্রিমিয়াম মেন্স কালেকশনের সাথে আপনার স্টাইল উন্নত করুন। হোয়াটসঅ্যাপের মাধ্যমে সরাসরি অর্ডার করুন।',
     explore: 'কালেকশন দেখুন',
+    contactUs: 'যোগাযোগ করুন',
 
     // Filters
     filters: 'ফিল্টার',
@@ -122,6 +140,22 @@ export const translations = {
     loading: 'লোড হচ্ছে...',
     inStock: 'স্টক আছে',
     outOfStock: 'স্টক নেই',
+
+    // New Additions
+    exclusiveMensWear: 'এক্সক্লুসিভ মেন্স কালেকশন',
+    footerDesc: 'সর্বশেষ ফ্যাশন ট্রেন্ড এবং অনন্য স্টাইল আবিষ্কার করুন। গুণমান সম্পন্ন পুরুষদের ফ্যাশন। আজই আমাদের দোকানে আসুন বা অনলাইনে অর্ডার করুন।',
+    found: 'পাওয়া গেছে',
+    items: 'টি পণ্য',
+    
+    // Categories
+    cat_All: 'সব',
+    cat_TShirt: 'টি-শার্ট',
+    cat_Shirt: 'শার্ট',
+    cat_Jeans: 'জিন্স',
+    cat_Trousers: 'ট্রাউজার্স',
+    cat_Shoes: 'জুতো',
+    cat_Accessories: 'অ্যাক্সেসরিজ',
+    cat_Other: 'অন্যান্য',
 
     // Shopkeeper
     shop_title: 'স্টোর কালেকশন',

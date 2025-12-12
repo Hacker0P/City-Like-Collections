@@ -1,53 +1,64 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingBag, LayoutDashboard, User } from 'lucide-react';
+import { Home, ShoppingBag, LayoutDashboard, User, LogIn } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useShop } from '../context/ShopContext';
 
 const BottomNav = () => {
     const location = useLocation();
-    const { currentUser } = useAuth(); // We can check if shopkeeper logged in
+    const { currentUser } = useAuth();
+    const { setIsCartOpen, cartCount } = useShop();
 
-    const isActive = (path) => {
-        return location.pathname === path ? "var(--primary)" : "var(--text-secondary)";
+    const isActive = (path) => location.pathname === path;
+
+    const NavItem = ({ to, icon: Icon, label }) => {
+        const active = isActive(to);
+        return (
+            <Link to={to} className={`flex flex-col items-center justify-center gap-1 flex-1 py-3 relative group ${active ? 'text-primary-600' : 'text-slate-400 hover:text-slate-600'}`}>
+                <div className="relative p-1.5 transition-all duration-300">
+                     {active && (
+                       <div className="absolute inset-0 bg-primary-50 rounded-xl scale-110 -z-10 animate-fade-in"></div>
+                     )}
+                    <Icon size={24} strokeWidth={active ? 2.5 : 2} className="transition-transform group-active:scale-90" />
+                </div>
+                <span className={`text-[10px] font-medium tracking-wide ${active ? 'font-bold' : ''}`}>
+                    {label}
+                </span>
+                
+                {/* Active Indicator Dot */}
+                {active && (
+                   <div className="absolute top-0 w-8 h-1 bg-primary-600 rounded-b-lg shadow-sm"></div>
+                )}
+            </Link>
+        );
     };
 
     return (
-        <div className="mobile-only" style={{
-            position: 'fixed',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: '64px',
-            background: 'white',
-            borderTop: '1px solid var(--border-color)',
-            display: 'flex',
-            justifyContent: 'space-around',
-            alignItems: 'center',
-            zIndex: 1000,
-            boxShadow: '0 -2px 10px rgba(0,0,0,0.05)',
-            paddingBottom: 'safe-area-inset-bottom'
-        }}>
-            <Link to="/" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', color: isActive('/') }}>
-                <ShoppingBag size={22} />
-                <span style={{ fontSize: '10px', fontWeight: 600 }}>Shop</span>
-            </Link>
-
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex justify-around items-stretch z-[100] pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+            <NavItem to="/" icon={Home} label="Home" />
+            
+            <button 
+                onClick={() => setIsCartOpen(true)}
+                className="flex flex-col items-center justify-center gap-1 flex-1 py-3 relative group text-slate-400 hover:text-slate-600"
+            >
+                <div className="relative p-1.5 transition-all duration-300">
+                    <ShoppingBag size={24} strokeWidth={2} className="transition-transform group-active:scale-90" />
+                    {cartCount > 0 && (
+                        <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center border border-white">
+                            {cartCount}
+                        </span>
+                    )}
+                </div>
+                <span className="text-[10px] font-medium tracking-wide">Cart</span>
+            </button>
+            
             {currentUser ? (
                 <>
-                    <Link to="/shopkeeper" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', color: isActive('/shopkeeper') }}>
-                        <LayoutDashboard size={22} />
-                        <span style={{ fontSize: '10px', fontWeight: 600 }}>Dashboard</span>
-                    </Link>
-                    <Link to="/profile" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', color: isActive('/profile') }}>
-                        <User size={22} />
-                        <span style={{ fontSize: '10px', fontWeight: 600 }}>Profile</span>
-                    </Link>
+                    <NavItem to="/shopkeeper" icon={LayoutDashboard} label="Admin" />
+                    <NavItem to="/profile" icon={User} label="Profile" />
                 </>
             ) : (
-                <Link to="/login" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '4px', color: isActive('/login') }}>
-                    <User size={22} />
-                    <span style={{ fontSize: '10px', fontWeight: 600 }}>Shopkeeper</span>
-                </Link>
+                <NavItem to="/login" icon={LogIn} label="Login" />
             )}
         </div>
     );

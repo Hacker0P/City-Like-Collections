@@ -8,12 +8,19 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      injectRegister: null,
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+      },
       manifest: {
-        name: 'City Life Collection',
-        short_name: 'City Life',
+        name: 'City Like Collection',
+        short_name: 'City Like',
         description: 'Premium clothing store with live product catalog',
         theme_color: '#ffffff',
+        start_url: '/',
+        display: 'standalone',
+        background_color: '#ffffff',
         icons: [
           {
             src: 'pwa-192x192.png',

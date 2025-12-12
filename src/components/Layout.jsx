@@ -1,16 +1,21 @@
 import React from 'react';
 import Navbar from './Navbar';
 import BottomNav from './BottomNav';
-import '../styles/main.css';
+import { useShop } from '../context/ShopContext';
+import CartDrawer from './CartDrawer';
+import InstallPrompt from './InstallPrompt';
 
 const Layout = ({ children }) => {
   return (
-    <div className="container" style={{ paddingBottom: '5rem' }}>
+    <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main className="animate-fade-in">
+      <main className="flex-1 w-full">
         {children}
       </main>
       <BottomNav />
+
+      <CartDrawer />
+      <InstallPrompt />
     </div>
   );
 };
