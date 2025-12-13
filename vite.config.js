@@ -23,17 +23,17 @@ export default defineConfig({
         background_color: '#ffffff',
         icons: [
           {
-            src: 'pwa-192x192.png',
-            sizes: '192x192',
+            src: 'clc_logo.png',
+            sizes: '192x192', // ideally should be resized, but using original for now
             type: 'image/png'
           },
           {
-            src: 'pwa-512x512.png',
+            src: 'clc_logo.png',
             sizes: '512x512',
             type: 'image/png'
           },
           {
-            src: 'pwa-512x512.png',
+            src: 'clc_logo.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable'
