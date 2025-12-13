@@ -58,7 +58,7 @@ const InstallPrompt = () => {
         </button>
 
         <div className="flex items-start gap-4 pr-8">
-            <img src="/pwa-192x192.png" className="w-14 h-14 rounded-xl shadow-lg border border-slate-700 object-cover" alt="App Icon" />
+            <img src="/clc_logo.png" className="w-14 h-14 rounded-xl shadow-lg border border-slate-700 object-cover" alt="App Icon" />
             <div>
                 <h3 className="font-bold text-lg leading-tight mb-1">Install App</h3>
                 <p className="text-slate-300 text-sm leading-snug">

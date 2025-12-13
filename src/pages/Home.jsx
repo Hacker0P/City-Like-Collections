@@ -334,7 +334,7 @@ const Home = () => {
                  {/* Left: Brand & Info */}
                  <div className="space-y-8 md:space-y-10">
                      <div className="flex items-center gap-4 md:gap-6">
-                        <img src="/pwa-192x192.png" alt={config.storeName} className="w-16 h-16 md:w-20 md:h-20 rounded-3xl shadow-2xl border-2 border-slate-800/50 object-cover" />
+                        <img src="/clc_logo.png" alt={config.storeName} className="w-16 h-16 md:w-20 md:h-20 rounded-3xl shadow-2xl border-2 border-slate-800/50 object-cover" />
                         <div>
                             <h3 className="text-2xl md:text-3xl font-bold text-white tracking-tight leading-none mb-1 md:mb-2">{config.storeName}</h3>
                             <p className="text-slate-500 text-xs md:text-sm font-bold tracking-[0.2em] uppercase">{t('exclusiveMensWear')}</p>
