@@ -17,7 +17,15 @@ const CartDrawer = () => {
         message += `${index + 1}. *${item.name}*\n`;
         if (item.selectedSize && item.selectedSize !== 'All') message += `   Size: ${item.selectedSize}\n`;
         if (item.selectedColor && item.selectedColor !== 'All') message += `   Color: ${item.selectedColor}\n`;
-        message += `   Qty: ${item.quantity} x ₹${item.price} = ₹${item.quantity * item.price}\n\n`;
+        message += `   Qty: ${item.quantity} x ₹${item.price} = ₹${item.quantity * item.price}\n`;
+        
+        // Add Image URL if available
+        let imgUrl = '';
+        if (Array.isArray(item.images) && item.images.length > 0) imgUrl = item.images[0];
+        else if (typeof item.images === 'string' && item.images.startsWith('http')) imgUrl = item.images;
+        
+        if (imgUrl) message += `   Image: ${imgUrl}\n`;
+        message += `\n`;
     });
     message += `*Total Amount: ₹${cartTotal.toLocaleString()}*\n`;
     message += `-------------------\n`;
@@ -131,12 +139,20 @@ const CartDrawer = () => {
                   <span>Total</span>
                   <span>₹{cartTotal.toLocaleString()}</span>
               </div>
-              <button 
-                  onClick={handleCheckout}
-                  className="w-full py-3.5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-green-600/20 active:scale-[0.98] transition-all"
-              >
-                  <MessageCircle size={20} /> Checkout on WhatsApp
-              </button>
+              <div className="flex gap-3">
+                  <button 
+                      onClick={() => setIsCartOpen(false)}
+                      className="flex-1 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold flex items-center justify-center gap-2 active:scale-[0.98] transition-all"
+                  >
+                      Back
+                  </button>
+                  <button 
+                      onClick={handleCheckout}
+                      className="flex-[2] py-3.5 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-green-600/20 active:scale-[0.98] transition-all"
+                  >
+                      <MessageCircle size={20} /> Checkout on WhatsApp
+                  </button>
+              </div>
           </div>
         )}
       </div>

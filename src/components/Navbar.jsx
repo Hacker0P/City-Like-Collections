@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Search, ShoppingBag, LogIn, LayoutDashboard, User, LogOut, Globe } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
@@ -11,10 +11,11 @@ const Navbar = () => {
     const { currentUser } = useAuth();
     const { setIsCartOpen, cartCount } = useShop();
     const navigate = useNavigate();
+    const location = useLocation();
     const [searchTerm, setSearchTerm] = useState('');
 
     const handleLogout = async () => {
-        await supabase.auth.signOut();
+    await supabase.auth.signOut();
         navigate('/login');
     };
 
@@ -30,19 +31,28 @@ const Navbar = () => {
                   </span>
                </Link>
 
-               {/* Search Bar (Desktop) */}
-               <div className="hidden md:block flex-1 max-w-lg mx-8">
-                   <div className="relative">
-                       <input
-                         type="text"
-                         className="w-full pl-10 pr-4 py-2 bg-slate-100 hover:bg-slate-200 focus:bg-white border-transparent focus:border-primary-500 rounded-lg focus:ring-2 focus:ring-primary-200 transition-all font-medium text-slate-800"
-                         placeholder="Search for products..."
-                         value={searchTerm}
-                         onChange={(e) => setSearchTerm(e.target.value)}
-                       />
-                       <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+
+               {/* Search Bar (Desktop) - Hidden on Home */}
+               {location.pathname !== '/' && (
+                   <div className="hidden md:block flex-1 max-w-lg mx-8">
+                       <div className="relative">
+                           <input
+                             type="text"
+                             className="w-full pl-10 pr-4 py-2 bg-slate-100 hover:bg-slate-200 focus:bg-white border-transparent focus:border-primary-500 rounded-lg focus:ring-2 focus:ring-primary-200 transition-all font-medium text-slate-800"
+                             placeholder="Search for products..."
+                             value={searchTerm}
+                             onChange={(e) => setSearchTerm(e.target.value)}
+                             onKeyDown={(e) => { if (e.key === 'Enter') navigate(`/catalogue?search=${searchTerm}`)}}
+                           />
+                           <button 
+                             onClick={() => navigate(`/catalogue?search=${searchTerm}`)}
+                             className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary-600 transition-colors"
+                           >
+                               <Search size={18} />
+                           </button>
+                       </div>
                    </div>
-               </div>
+               )}
 
                {/* Actions */}
                <div className="flex items-center gap-2">
@@ -59,10 +69,10 @@ const Navbar = () => {
                    <div className="hidden md:flex items-center gap-2">
                        {currentUser ? (
                            <>
-                               <Link to="/shopkeeper" className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg transition-colors">
+                               <Link to="/shopkeeper" className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg transition-colors" title="Dashboard">
                                    <LayoutDashboard size={18} /> Dashboard
                                </Link>
-                               <Link to="/profile" className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg transition-colors">
+                               <Link to="/profile" className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg transition-colors" title="Profile">
                                    <User size={18} /> Profile
                                </Link>
                                <button onClick={handleLogout} className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Logout">

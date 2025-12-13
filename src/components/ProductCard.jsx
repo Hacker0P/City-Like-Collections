@@ -111,7 +111,7 @@ const ProductCard = ({ product, config, onImageClick }) => {
                                 <button 
                                     key={size}
                                     onClick={() => setSelectedSize(selectedSize === size ? null : size)}
-                                    className={`px-1.5 py-0.5 text-[10px] font-bold rounded border ${
+                                    className={`px-2 py-1 text-xs font-bold rounded-md border ${
                                         selectedSize === size 
                                           ? 'bg-slate-900 text-white border-slate-900' 
                                           : 'bg-white text-slate-600 border-slate-200'
@@ -131,7 +131,7 @@ const ProductCard = ({ product, config, onImageClick }) => {
                                     key={color}
                                     onClick={() => setSelectedColor(selectedColor === color ? null : color)}
                                     title={color}
-                                    className={`w-5 h-5 rounded-full flex items-center justify-center overflow-hidden transition-all border shadow-sm ${
+                                    className={`w-6 h-6 rounded-full flex items-center justify-center overflow-hidden transition-all border shadow-sm ${
                                         selectedColor === color ? 'border-primary-600 ring-1 ring-primary-100 scale-110' : 'border-slate-200 hover:scale-105'
                                     }`}
                                 >

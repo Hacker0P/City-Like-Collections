@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { useNetworkStatus } from '../hooks/useNetworkStatus';
-import { Plus, Trash2, Save, Package, Image as ImageIcon, Edit2, X, Camera, RefreshCcw, Power, AlertCircle, ChevronLeft, ChevronRight, WifiOff, CheckCircle } from 'lucide-react';
+import { Plus, Trash2, Save, Package, Image as ImageIcon, Edit2, X, Camera, RefreshCcw, Power, AlertCircle, ChevronLeft, ChevronRight, WifiOff, CheckCircle, ChevronDown, ChevronUp, Search, Filter } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 
 const Shopkeeper = () => {
@@ -19,6 +19,15 @@ const Shopkeeper = () => {
 
   const [currentTime, setCurrentTime] = useState(new Date());
   const [toast, setToast] = useState(null);
+  const [activeTab, setActiveTab] = useState('list');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterCategory, setFilterCategory] = useState('');
+
+  const filteredProducts = products.filter(product => {
+    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = filterCategory ? product.category === filterCategory : true;
+    return matchesSearch && matchesCategory;
+  });
 
   useEffect(() => {
     if (toast) {
@@ -34,7 +43,7 @@ const Shopkeeper = () => {
   
   const cameraInputRef = useRef(null);
   
-  // State management functions ... (kept same logic as before)
+  // State management functions
   const fetchStoreSettings = async () => {
     const { data } = await supabase.from('store_settings').select('is_open').eq('id', 1).single();
     if (data) setStoreStatus(data.is_open);
@@ -95,6 +104,7 @@ const Shopkeeper = () => {
       setFormData({ name: '', price: '', description: '', quantity: '', category: '', sizes: '', colors: '', images: [] });
       fetchProducts();
       setToast({ message: editMode ? 'Product updated successfully!' : 'Product added to inventory!', type: 'success' });
+      setActiveTab('list'); // Switch to list view after success
     } catch (e) { 
         console.error(e); 
         setToast({ message: 'Error saving product', type: 'error' });
@@ -103,7 +113,10 @@ const Shopkeeper = () => {
   const handleEdit = (p) => {
     let imgs = p.images || []; if (imgs.length === 0 && p.image) imgs = [p.image];
     setFormData({ name: p.name, price: p.price, description: p.description, quantity: p.quantity || '', category: p.category || '', sizes: p.sizes || '', colors: p.colors || '', images: imgs });
-    setEditMode(true); setEditingId(p.id); window.scrollTo({ top: 0, behavior: 'smooth' });
+    setEditMode(true); 
+    setEditingId(p.id); 
+    setActiveTab('add'); // Switch to add/edit tab
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   const handleDelete = (id, imgs) => {
     setDeleteModal({ show: true, id, images: imgs });
@@ -140,38 +153,38 @@ const Shopkeeper = () => {
             <span>You are currently offline. Changes will not be saved.</span>
         </div>
       )}
-      <div className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+      <div className="mb-8 md:mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
         <div>
-            <h1 className="text-3xl font-bold text-slate-900 mb-2">{t('shop_title')}</h1>
-            <p className="text-slate-500">{t('shop_subtitle')}</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-1 md:mb-2">{t('shop_title')}</h1>
+            <p className="text-sm md:text-base text-slate-500">{t('shop_subtitle')}</p>
         </div>
-        <div className="bg-white px-5 py-3 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-end min-w-[180px]">
-             <div className="text-2xl font-bold text-primary-600 font-mono leading-none">
+        <div className="bg-white px-4 md:px-5 py-2 md:py-3 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-end min-w-[150px] md:min-w-[180px]">
+             <div className="text-xl md:text-2xl font-bold text-primary-600 font-mono leading-none">
                 {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
              </div>
-             <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">
+             <div className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">
                 {currentTime.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}
              </div>
         </div>
       </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             <button 
                 onClick={isOnline ? toggleStoreStatus : undefined}
                 disabled={!isOnline}
-                className={`bg-white p-6 rounded-2xl border-l-4 shadow-sm flex items-center gap-4 text-left w-full transition-all active:scale-95 group ${storeStatus ? 'border-green-500' : 'border-red-500'} ${!isOnline ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer hover:shadow-md'}`}
+                className={`bg-white p-5 md:p-6 rounded-2xl border-l-4 shadow-sm flex items-center gap-4 text-left w-full transition-all active:scale-95 group ${storeStatus ? 'border-green-500' : 'border-red-500'} ${!isOnline ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer hover:shadow-md'}`}
             >
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 transition-colors ${storeStatus ? 'bg-green-100 text-green-600 group-hover:bg-green-200' : 'bg-red-100 text-red-600 group-hover:bg-red-200'}`}>
-                    <Power size={24} />
+                <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shrink-0 transition-colors ${storeStatus ? 'bg-green-100 text-green-600 group-hover:bg-green-200' : 'bg-red-100 text-red-600 group-hover:bg-red-200'}`}>
+                    <Power size={20} className="md:w-6 md:h-6" />
                 </div>
                 <div className="flex-1">
-                    <h4 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">Store Status</h4>
+                    <h4 className="text-xs md:text-sm font-semibold text-slate-500 uppercase tracking-wider">Store Status</h4>
                     <div className="flex items-center justify-between mt-1">
-                      <span className={`text-xl font-bold ${storeStatus ? 'text-green-700' : 'text-red-700'}`}>
+                      <span className={`text-lg md:text-xl font-bold ${storeStatus ? 'text-green-700' : 'text-red-700'}`}>
                         {storeStatus ? 'OPEN' : 'CLOSED'}
                       </span>
                       <span 
-                        className={`text-xs font-bold px-3 py-1 rounded-full border transition-all ${!isOnline ? 'bg-slate-100 text-slate-400 border-slate-200' : (storeStatus ? 'border-red-200 text-red-600 bg-red-50' : 'border-green-200 text-green-600 bg-green-50')}`}
+                        className={`text-[10px] md:text-xs font-bold px-2 md:px-3 py-1 rounded-full border transition-all ${!isOnline ? 'bg-slate-100 text-slate-400 border-slate-200' : (storeStatus ? 'border-red-200 text-red-600 bg-red-50' : 'border-green-200 text-green-600 bg-green-50')}`}
                       >
                         {storeStatus ? 'Close Shop' : 'Open Shop'}
                       </span>
@@ -179,42 +192,58 @@ const Shopkeeper = () => {
                 </div>
             </button>
 
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
-                    <Package size={24} />
+            <div className="bg-white p-5 md:p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                    <Package size={20} className="md:w-6 md:h-6" />
                 </div>
                 <div>
-                    <h4 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">{t('shop_totalProducts')}</h4>
-                    <span className="text-2xl font-bold text-slate-900">{products.length}</span>
+                    <h4 className="text-xs md:text-sm font-semibold text-slate-500 uppercase tracking-wider">{t('shop_totalProducts')}</h4>
+                    <span className="text-xl md:text-2xl font-bold text-slate-900">{products.length}</span>
                 </div>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
-                    <span className="text-xl font-bold">₹</span>
+            <div className="bg-white p-5 md:p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                    <span className="text-lg md:text-xl font-bold">₹</span>
                 </div>
                 <div>
-                    <h4 className="text-sm font-semibold text-slate-500 uppercase tracking-wider">{t('shop_inventoryValue')}</h4>
-                    <span className="text-2xl font-bold text-slate-900">₹{totalValue.toLocaleString()}</span>
+                    <h4 className="text-xs md:text-sm font-semibold text-slate-500 uppercase tracking-wider">{t('shop_inventoryValue')}</h4>
+                    <span className="text-xl md:text-2xl font-bold text-slate-900">₹{totalValue.toLocaleString()}</span>
                 </div>
             </div>
         </div>
 
+        {/* Mobile Tab Navigation */}
+        <div className="flex p-1 bg-slate-200/50 rounded-xl mt-8 md:hidden">
+            <button 
+                onClick={() => setActiveTab('list')}
+                className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all flex items-center justify-center gap-2 ${activeTab === 'list' ? 'bg-white text-primary-600 shadow-sm ring-1 ring-black/5' : 'text-slate-500 hover:text-slate-700'}`}
+            >
+                <Package size={16} /> Inventory List
+            </button>
+            <button 
+                onClick={() => setActiveTab('add')}
+                className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all flex items-center justify-center gap-2 ${activeTab === 'add' ? 'bg-white text-primary-600 shadow-sm ring-1 ring-black/5' : 'text-slate-500 hover:text-slate-700'}`}
+            >
+                {editMode ? <Edit2 size={16} /> : <Plus size={16} />} 
+                {editMode ? 'Edit Product' : 'Add Product'}
+            </button>
+        </div>
 
-      <div className="grid lg:grid-cols-3 gap-8 items-start">
+      <div className="grid lg:grid-cols-3 gap-6 md:gap-8 items-start mt-6 md:mt-8">
         
         {/* Left Column: Form */}
-        <div className="sticky top-24">
+        <div className={`lg:sticky lg:top-24 ${activeTab === 'add' ? 'block' : 'hidden'} lg:block`}>
           <div className="bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden">
-            <div className="bg-slate-50 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+            <div className="bg-slate-50 px-5 md:px-6 py-4 border-b border-slate-200 flex justify-between items-center">
                 <h3 className="font-bold text-slate-800 flex items-center gap-2">
                     {editMode ? <Edit2 size={18} className="text-primary-600" /> : <Plus size={18} className="text-primary-600" />}
                     {editMode ? t('shop_editProduct') : t('shop_addProduct')}
                 </h3>
             </div>
             
-            <form onSubmit={handleSubmit} className="p-6 space-y-5">
-              <div>
+            <form onSubmit={handleSubmit} className="p-5 md:p-6 space-y-5">
+            <div>
                 <div className="flex justify-between items-center mb-2">
                     <label className="text-sm font-bold text-slate-700">{t('shop_imagesLabel')}</label>
                     <button type="button" onClick={() => cameraInputRef.current.click()} className="text-primary-600 text-xs font-bold flex items-center gap-1 hover:text-primary-700"><Camera size={14} /> {t('shop_takePhoto')}</button>
@@ -222,28 +251,28 @@ const Shopkeeper = () => {
                 </div>
                 
                 <div className="grid grid-cols-4 gap-2">
-                  {formData.images.map((img, index) => (
+                {formData.images.map((img, index) => (
                     <div key={index} className="relative aspect-square rounded-lg overflow-hidden border border-slate-200 bg-slate-100 group">
-                      <img src={typeof img === 'string' ? img : img.preview} alt="" className="w-full h-full object-cover" />
-                      <button type="button" onClick={() => removeImage(index)} className="absolute top-1 right-1 bg-white/90 text-red-500 p-1 rounded-full shadow-sm hover:bg-white"><X size={12} /></button>
+                    <img src={typeof img === 'string' ? img : img.preview} alt="" className="w-full h-full object-cover" />
+                    <button type="button" onClick={() => removeImage(index)} className="absolute top-1 right-1 bg-white/90 text-red-500 p-1 rounded-full shadow-sm hover:bg-white"><X size={12} /></button>
                     </div>
-                  ))}
-                  {formData.images.length < 4 && (
-                      <div className="aspect-square rounded-lg border-2 border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 hover:border-primary-400 hover:text-primary-500 hover:bg-primary-50 transition-colors relative cursor-pointer">
-                         <ImageIcon size={20} />
-                         <span className="text-[10px] font-bold mt-1">Add</span>
-                         <input type="file" accept="image/*" multiple onChange={handleImageUpload} className="absolute inset-0 opacity-0 cursor-pointer" />
-                      </div>
-                  )}
+                ))}
+                {formData.images.length < 4 && (
+                    <div className="aspect-square rounded-lg border-2 border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 hover:border-primary-400 hover:text-primary-500 hover:bg-primary-50 transition-colors relative cursor-pointer">
+                        <ImageIcon size={20} />
+                        <span className="text-[10px] font-bold mt-1">Add</span>
+                        <input type="file" accept="image/*" multiple onChange={handleImageUpload} className="absolute inset-0 opacity-0 cursor-pointer" />
+                    </div>
+                )}
                 </div>
-              </div>
+            </div>
 
-              <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-1">{t('shop_name')}</label>
-                  <input className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none" placeholder={t('shop_namePlaceholder')} value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
-              </div>
+            <div>
+                <label className="block text-sm font-bold text-slate-700 mb-1">{t('shop_name')}</label>
+                <input className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none" placeholder={t('shop_namePlaceholder')} value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+            </div>
 
-              <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4">
                 <div>
                     <label className="block text-sm font-bold text-slate-700 mb-1">{t('shop_price')}</label>
                     <input className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none" type="number" placeholder="0.00" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} />
@@ -252,114 +281,151 @@ const Shopkeeper = () => {
                     <label className="block text-sm font-bold text-slate-700 mb-1">{t('shop_stock')}</label>
                     <input className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none" type="number" placeholder="0" value={formData.quantity} onChange={e => setFormData({...formData, quantity: e.target.value})} />
                 </div>
-              </div>
-              
-              <div>
+            </div>
+            
+            <div>
                 <label className="block text-sm font-bold text-slate-700 mb-1">{t('shop_category')}</label>
                 <select className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})}>
-                  <option value="">{t('shop_selectCategory')}</option>
-                  <option value="T-Shirt">T-Shirt</option>
-                  <option value="Shirt">Shirt</option>
-                  <option value="Pant">Pant</option>
-                  <option value="Shoes">Shoes</option>
-                  <option value="Other">Other</option>
+                <option value="">{t('shop_selectCategory')}</option>
+                <option value="T-Shirt">T-Shirt</option>
+                <option value="Shirt">Shirt</option>
+                <option value="Jeans">Jeans</option>
+                <option value="Trousers">Trousers</option>
+                <option value="Shoes">Shoes</option>
+                <option value="Other">Other</option>
                 </select>
-              </div>
+            </div>
 
-              <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4">
                 <div>
-                   <label className="block text-sm font-bold text-slate-700 mb-1">{t('shop_sizes')}</label>
-                   <input className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none" placeholder={t('shop_sizesPlaceholder')} value={formData.sizes} onChange={e => setFormData({...formData, sizes: e.target.value})} />
+                <label className="block text-sm font-bold text-slate-700 mb-1">{t('shop_sizes')}</label>
+                <input className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none" placeholder={t('shop_sizesPlaceholder')} value={formData.sizes} onChange={e => setFormData({...formData, sizes: e.target.value})} />
                 </div>
                 <div>
-                   <label className="block text-sm font-bold text-slate-700 mb-1">{t('shop_colors')}</label>
-                   <input className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none" placeholder={t('shop_colorsPlaceholder')} value={formData.colors} onChange={e => setFormData({...formData, colors: e.target.value})} />
+                <label className="block text-sm font-bold text-slate-700 mb-1">{t('shop_colors')}</label>
+                <input className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none" placeholder={t('shop_colorsPlaceholder')} value={formData.colors} onChange={e => setFormData({...formData, colors: e.target.value})} />
                 </div>
-              </div>
+            </div>
 
-              <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-1">{t('shop_description')}</label>
-                  <textarea className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none min-h-[80px]" placeholder={t('shop_descriptionPlaceholder')} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} />
-              </div>
-              
-              <div className="flex gap-3 pt-2">
+            <div>
+                <label className="block text-sm font-bold text-slate-700 mb-1">{t('shop_description')}</label>
+                <textarea className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none min-h-[80px]" placeholder={t('shop_descriptionPlaceholder')} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} />
+            </div>
+            
+            <div className="flex gap-3 pt-2">
                 <button className="flex-1 bg-primary-600 text-white font-bold py-3 rounded-xl hover:bg-primary-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed" type="submit" disabled={uploading || !isOnline}>
-                  {uploading ? <RefreshCcw className="animate-spin" size={18} /> : (editMode ? <Save size={18} /> : <Plus size={18} />)}
-                  {uploading ? 'Saving...' : (editMode ? t('shop_update') : t('shop_add'))}
+                {uploading ? <RefreshCcw className="animate-spin" size={18} /> : (editMode ? <Save size={18} /> : <Plus size={18} />)}
+                {uploading ? 'Saving...' : (editMode ? t('shop_update') : t('shop_add'))}
                 </button>
                 {editMode && (
-                  <button className="px-6 py-3 border border-slate-300 text-slate-600 font-bold rounded-xl hover:bg-slate-50 transition-colors" type="button" onClick={() => { setEditMode(false); setEditingId(null); setFormData({ name: '', price: '', description: '', quantity: '', category: '', sizes: '', colors: '', images: [] }); }}>
+                <button className="px-6 py-3 border border-slate-300 text-slate-600 font-bold rounded-xl hover:bg-slate-50 transition-colors" type="button" onClick={() => { setEditMode(false); setEditingId(null); setActiveTab('list'); setFormData({ name: '', price: '', description: '', quantity: '', category: '', sizes: '', colors: '', images: [] }); }}>
                     {t('shop_cancel')}
-                  </button>
+                </button>
                 )}
-              </div>
+            </div>
             </form>
           </div>
         </div>
 
         {/* Right Column: Inventory List */}
-        <div className="lg:col-span-2">
-          <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-slate-900">{t('shop_inventoryList')}</h2>
+        <div className={`lg:col-span-2 ${activeTab === 'list' ? 'block' : 'hidden'} lg:block`}>
+          <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
+              <h2 className="text-lg md:text-xl font-bold text-slate-900">{t('shop_inventoryList')}</h2>
+              
+              <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
+                  <div className="relative flex-1 md:w-64">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                      <input 
+                        type="text" 
+                        placeholder={t('search_placeholder') || "Search products..."} 
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none text-sm font-medium transition-all shadow-sm"
+                      />
+                      {searchTerm && (
+                        <button onClick={() => setSearchTerm('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                            <X size={14} />
+                        </button>
+                      )}
+                  </div>
+                  
+                  <select 
+                    value={filterCategory}
+                    onChange={(e) => setFilterCategory(e.target.value)}
+                    className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none text-sm font-medium transition-all shadow-sm cursor-pointer"
+                  >
+                      <option value="">All Categories</option>
+                      <option value="T-Shirt">T-Shirt</option>
+                      <option value="Shirt">Shirt</option>
+                      <option value="Jeans">Jeans</option>
+                      <option value="Trousers">Trousers</option>
+                      <option value="Shoes">Shoes</option>
+                      <option value="Other">Other</option>
+                  </select>
+              </div>
           </div>
 
           <div className="space-y-4">
             {loading ? (
                 <div className="text-center py-12 text-slate-400">Loading Inventory...</div>
-            ) : products.length === 0 ? (
+            ) : filteredProducts.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 px-4 text-center border-2 border-dashed border-slate-200 rounded-2xl bg-white">
                 <Package size={48} className="text-slate-300 mb-4" />
-                <h3 className="text-lg font-bold text-slate-900 mb-1">{t('shop_noProducts')}</h3>
-                <p className="text-slate-500 text-sm">Start adding products from the form.</p>
+                <h3 className="text-lg font-bold text-slate-900 mb-1">No products found</h3>
+                <p className="text-slate-500 text-sm">Try adjusting your search or filters.</p>
               </div>
-            ) : ( products.map(product => (
-              <div key={product.id} className="group bg-white p-5 rounded-2xl border border-slate-100 hover:border-primary-100 shadow-sm hover:shadow-xl hover:shadow-primary-900/5 transition-all duration-300 flex items-start gap-6 relative overflow-hidden">
+            ) : ( filteredProducts.map(product => (
+              <div key={product.id} className="group bg-white p-4 md:p-5 rounded-2xl border border-slate-100 hover:border-primary-100 shadow-sm hover:shadow-xl hover:shadow-primary-900/5 transition-all duration-300 flex items-start gap-3 md:gap-6 relative overflow-hidden">
                 {/* Decorative background accent on hover */}
                 <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary-50/50 to-transparent rounded-bl-full -mr-10 -mt-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
 
                 <div 
-                    className="w-24 h-24 bg-slate-50 rounded-xl overflow-hidden flex-shrink-0 border border-slate-100 shadow-sm relative group-hover:scale-105 transition-transform duration-500 cursor-pointer"
+                    className="w-20 h-20 md:w-24 md:h-24 bg-slate-50 rounded-xl overflow-hidden flex-shrink-0 border border-slate-100 shadow-sm relative group-hover:scale-105 transition-transform duration-500 cursor-pointer"
                     onClick={() => setSelectedImage({ index: 0, images: product.images && product.images.length > 0 ? product.images : [] })}
                 >
                   {product.images && product.images.length > 0 ? (
                     <img src={product.images[0]} alt="" className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-slate-300"><ImageIcon size={28} /></div>
+                    <div className="w-full h-full flex items-center justify-center text-slate-300"><ImageIcon size={24} className="md:w-7 md:h-7" /></div>
                   )}
                 </div>
                 
-                <div className="flex-1 min-w-0 py-1 relative z-10">
-                   <div className="flex justify-between items-start mb-2">
-                       <h4 className="font-bold text-slate-800 text-lg leading-tight line-clamp-1 group-hover:text-primary-700 transition-colors">{product.name}</h4>
-                       <span className="font-extrabold text-primary-600 text-xl tracking-tight">₹{product.price}</span>
+                <div className="flex-1 min-w-0 py-0.5 md:py-1 relative z-10">
+                   <div className="flex justify-between items-start mb-1 md:mb-2">
+                       <h4 className="font-bold text-slate-800 text-base md:text-lg leading-tight line-clamp-1 group-hover:text-primary-700 transition-colors">{product.name}</h4>
+                       <span className="font-extrabold text-primary-600 text-lg md:text-xl tracking-tight ml-2">₹{product.price}</span>
                    </div>
                    
-                   <div className="flex flex-wrap gap-2.5 mb-3">
-                        <span className="px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wide bg-blue-50 text-blue-600 border border-blue-100 shadow-sm">
+                   <div className="flex flex-wrap gap-2 mb-2 md:mb-3">
+                        <span className="px-2 md:px-3 py-1 rounded-lg text-[10px] md:text-xs font-bold uppercase tracking-wide bg-blue-50 text-blue-600 border border-blue-100 shadow-sm">
                            {product.category || 'Item'}
                         </span>
-                        <span className={`px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wide border shadow-sm ${Number(product.quantity) === 0 ? 'bg-red-50 text-red-600 border-red-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100'}`}>
+                        <span className={`px-2 md:px-3 py-1 rounded-lg text-[10px] md:text-xs font-bold uppercase tracking-wide border shadow-sm ${Number(product.quantity) === 0 ? 'bg-red-50 text-red-600 border-red-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100'}`}>
                            {Number(product.quantity) === 0 ? 'Out of Stock' : `Stock: ${product.quantity}`}
                         </span>
                    </div>
                    
-                   {product.sizes && (
-                       <div className="text-sm text-slate-500 font-medium flex items-center gap-2">
-                           <span className="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
-                           Sizes: <span className="text-slate-700 font-semibold">{product.sizes.toUpperCase()}</span>
-                       </div>
-                   )}
-                   {product.colors && (
-                       <div className="text-sm text-slate-500 font-medium flex items-center gap-2">
-                           <span className="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
-                           Colors: <span className="text-slate-700 font-semibold">{product.colors.toUpperCase()}</span>
-                       </div>
-                   )}
+                   <div className="space-y-1 md:space-y-0">
+                    {product.sizes && (
+                        <div className="text-xs md:text-sm text-slate-500 font-medium flex items-center gap-2">
+                            <span className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-slate-300 hidden md:block"></span>
+                            <span className="md:hidden text-[10px] uppercase font-bold text-slate-400">Size:</span>
+                            <span className="text-slate-700 font-semibold">{product.sizes.toUpperCase()}</span>
+                        </div>
+                    )}
+                    {product.colors && (
+                        <div className="text-xs md:text-sm text-slate-500 font-medium flex items-center gap-2">
+                            <span className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-slate-300 hidden md:block"></span>
+                            <span className="md:hidden text-[10px] uppercase font-bold text-slate-400">Color:</span>
+                            <span className="text-slate-700 font-semibold">{product.colors.toUpperCase()}</span>
+                        </div>
+                    )}
+                   </div>
                 </div>
                 
                 <div className="flex flex-col gap-2 relative z-10">
-                  <button onClick={() => handleEdit(product)} className="p-2.5 text-primary-600 bg-primary-50 hover:bg-primary-600 hover:text-white rounded-xl transition-all shadow-sm" title="Edit"><Edit2 size={18} /></button>
-                  <button onClick={() => handleDelete(product.id, product.images)} className="p-2.5 text-red-600 bg-red-50 hover:bg-red-600 hover:text-white rounded-xl transition-all shadow-sm" title="Delete"><Trash2 size={18} /></button>
+                  <button onClick={() => handleEdit(product)} className="p-2 md:p-2.5 text-primary-600 bg-primary-50 hover:bg-primary-600 hover:text-white rounded-xl transition-all shadow-sm" title="Edit"><Edit2 size={16} className="md:w-[18px] md:h-[18px]" /></button>
+                  <button onClick={() => handleDelete(product.id, product.images)} className="p-2 md:p-2.5 text-red-600 bg-red-50 hover:bg-red-600 hover:text-white rounded-xl transition-all shadow-sm" title="Delete"><Trash2 size={16} className="md:w-[18px] md:h-[18px]" /></button>
                 </div>
               </div>
             )))}
@@ -369,7 +435,7 @@ const Shopkeeper = () => {
 
       {/* Delete Confirmation Modal */}
       {deleteModal.show && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fade-in">
+          <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fade-in">
               <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl transform scale-100 animate-scale-in">
                   <div className="w-14 h-14 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-5">
                       <Trash2 size={24} />
@@ -433,7 +499,7 @@ const Shopkeeper = () => {
             <div className="relative w-full h-full flex flex-col items-center justify-center" onClick={(e) => e.stopPropagation()}>
                 <img 
                     src={selectedImage.images[selectedImage.index]} 
-                    className="max-w-[95vw] max-h-[80vh] object-contain rounded-lg shadow-2xl animate-fade-in" 
+                    className="max-w-[95vw] max-h-[70vh] md:max-h-[80vh] object-contain rounded-lg shadow-2xl animate-fade-in" 
                     alt="Full View" 
                     onClick={(e) => {
                          if (window.innerWidth < 768 && selectedImage.images.length > 1) {
@@ -461,15 +527,15 @@ const Shopkeeper = () => {
 
       {/* Toast Notification */}
       {toast && createPortal(
-          <div className="fixed bottom-20 md:bottom-6 right-6 z-[200] bg-slate-900 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-4 animate-fade-in-up border border-slate-700">
-              <div className={`${toast.type === 'error' ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'} p-2 rounded-full`}>
-                  {toast.type === 'error' ? <AlertCircle size={24} /> : <CheckCircle size={24} />}
+          <div className="fixed bottom-20 md:bottom-6 right-6 z-[200] max-w-[90vw] bg-slate-900 text-white px-5 py-3 md:px-6 md:py-4 rounded-2xl shadow-2xl flex items-center gap-3 md:gap-4 animate-fade-in-up border border-slate-700">
+              <div className={`${toast.type === 'error' ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'} p-2 rounded-full flex-shrink-0`}>
+                  {toast.type === 'error' ? <AlertCircle size={20} /> : <CheckCircle size={20} />}
               </div>
-              <div>
+              <div className="flex-1 min-w-0">
                   <h4 className="font-bold text-sm">{toast.type === 'error' ? 'Error' : 'Success'}</h4>
-                  <p className="text-sm text-slate-300">{toast.message}</p>
+                  <p className="text-xs md:text-sm text-slate-300 truncate">{toast.message}</p>
               </div>
-              <button onClick={() => setToast(null)} className="ml-2 text-slate-500 hover:text-white transition-colors"><X size={20} /></button>
+              <button onClick={() => setToast(null)} className="ml-2 text-slate-500 hover:text-white transition-colors"><X size={18} /></button>
           </div>, document.body
       )}
     </div>
