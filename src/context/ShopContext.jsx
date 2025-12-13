@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
+import Toast from '../components/Toast';
 
 const ShopContext = createContext();
 
@@ -7,6 +8,7 @@ export const ShopProvider = ({ children }) => {
   const [wishlist, setWishlist] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
+  const [toast, setToast] = useState(null);
 
   // Load from LocalStorage
   useEffect(() => {
@@ -25,7 +27,12 @@ export const ShopProvider = ({ children }) => {
     localStorage.setItem('clc_wishlist', JSON.stringify(wishlist));
   }, [wishlist]);
 
+  const showToast = (message, type = 'info') => {
+    setToast({ message, type });
+  };
+
   const addToCart = (product, selectedSize, selectedColor) => {
+    let success = true;
     setCart(prev => {
       // Check if item exists with same ID, Size, and Color
       const existing = prev.find(item => 
@@ -34,16 +41,28 @@ export const ShopProvider = ({ children }) => {
         item.selectedColor === selectedColor
       );
 
+      const maxStock = Number(product.quantity) || 0;
+
       if (existing) {
+        if (existing.quantity >= maxStock) {
+            success = false;
+            return prev;
+        }
         return prev.map(item => 
           item === existing 
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       }
-      return [...prev, { ...product, selectedSize, selectedColor, quantity: 1 }];
+      return [...prev, { ...product, selectedSize, selectedColor, quantity: 1, stockLimit: maxStock }];
     });
-    setIsCartOpen(true);
+    
+    if (success) {
+        setIsCartOpen(true);
+        showToast('Added to cart', 'success');
+    } else {
+        showToast('Cannot add more. Maximum stock reached.', 'error');
+    }
   };
 
   const removeFromCart = (itemId, size, color) => {
@@ -53,21 +72,32 @@ export const ShopProvider = ({ children }) => {
   };
 
   const updateQuantity = (itemId, size, color, delta) => {
-    setCart(prev => prev.map(item => {
-      if (item.id === itemId && item.selectedSize === size && item.selectedColor === color) {
-        const newQty = Math.max(1, item.quantity + delta);
-        return { ...item, quantity: newQty };
-      }
-      return item;
-    }));
+    setCart(prev => {
+        return prev.map(item => {
+            if (item.id === itemId && item.selectedSize === size && item.selectedColor === color) {
+                const newQty = item.quantity + delta;
+                
+                // Check max stock on increase
+                if (delta > 0 && item.stockLimit && newQty > item.stockLimit) {
+                    showToast('Maximum stock limit available reached', 'error');
+                    return item;
+                }
+
+                return { ...item, quantity: newQty };
+            }
+            return item;
+        }).filter(item => item.quantity > 0);
+    });
   };
 
   const toggleWishlist = (product) => {
     setWishlist(prev => {
       const exists = prev.find(item => item.id === product.id);
       if (exists) {
+        showToast('Removed from wishlist', 'info');
         return prev.filter(item => item.id !== product.id);
       }
+      showToast('Added to wishlist', 'success');
       return [...prev, product];
     });
   };
@@ -91,9 +121,17 @@ export const ShopProvider = ({ children }) => {
       isWishlistOpen,
       setIsWishlistOpen,
       cartTotal,
-      cartCount
+      cartCount,
+      showToast
     }}>
       {children}
+      {toast && (
+          <Toast 
+            message={toast.message} 
+            type={toast.type} 
+            onClose={() => setToast(null)} 
+          />
+      )}
     </ShopContext.Provider>
   );
 };

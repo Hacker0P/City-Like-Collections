@@ -81,6 +81,7 @@ export const translations = {
     locateUs: 'Locate us easily on Google Maps',
     openLargerMap: 'Open Larger Map',
     rightsReserved: 'All rights reserved.',
+    owner: 'Owner',
 
     // Features
     feat_Quality_Title: 'Premium Quality',
@@ -247,6 +248,7 @@ export const translations = {
     locateUs: 'গুগল ম্যাপে আমাদের সহজেই খুঁজুন',
     openLargerMap: 'বড় ম্যাপ খুলুন',
     rightsReserved: 'সর্বস্বত্ব সংরক্ষিত।',
+    owner: 'মালিক',
 
     // Features
     feat_Quality_Title: 'প্রিমিয়াম কোয়ালিটি',

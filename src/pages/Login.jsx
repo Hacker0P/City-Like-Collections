@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
-import { LogIn, Lock, Mail, AlertCircle, ArrowRight } from 'lucide-react';
+import { LogIn, Lock, Mail, AlertCircle, ArrowRight, Eye, EyeOff } from 'lucide-react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ const Login = () => {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       
       if (error) {
-          console.error("Login Error Details:", error); // Help user debug
+          console.error("Login Error Details:", error);
           if (error.message === 'Email not confirmed') {
               throw new Error('Please confirm your email address before logging in.');
           } else if (error.message === 'Invalid login credentials') {
@@ -87,14 +88,21 @@ const Login = () => {
                     <label className="block text-sm font-bold text-slate-700 mb-2">Password</label>
                     <div className="relative">
                         <input 
-                            type="password" 
+                            type={showPassword ? "text" : "password"}
                             required
-                            className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary-100 focus:border-primary-500 transition-all font-medium text-slate-800"
+                            className="w-full pl-10 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary-100 focus:border-primary-500 transition-all font-medium text-slate-800"
                             placeholder="••••••••"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
                         <Lock size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                        <button 
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+                        >
+                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                        </button>
                     </div>
                     <div className="text-right mt-2">
                         <a href="#" className="text-xs font-semibold text-primary-600 hover:text-primary-700">Forgot Password?</a>

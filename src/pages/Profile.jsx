@@ -48,14 +48,21 @@ const Profile = () => {
     if (savedConfig) setConfig(prev => ({ ...prev, ...JSON.parse(savedConfig) }));
 
     const fetchSettings = async () => {
-        // Reverted to only fetch existing columns to prevent PGRST204/400 errors
-        const { data } = await supabase.from('store_settings').select('is_open, notice_message, show_notice').eq('id', 1).single();
+        const { data } = await supabase.from('store_settings').select('*').eq('id', 1).single();
         if (data) {
             setConfig(prev => ({
                 ...prev,
                 isOpen: data.is_open,
                 noticeMessage: data.notice_message,
-                showNotice: data.show_notice
+                showNotice: data.show_notice,
+                ownerName: data.owner_name || prev.ownerName,
+                whatsapp: data.whatsapp_number || prev.whatsapp,
+                alternateMobile: data.mobile_number || prev.alternateMobile,
+                socials: {
+                    instagram: data.instagram_url || prev.socials.instagram,
+                    facebook: data.facebook_url || prev.socials.facebook,
+                    youtube: data.youtube_url || prev.socials.youtube
+                }
             }));
         }
     };
@@ -70,11 +77,15 @@ const Profile = () => {
     localStorage.setItem('clc_config', JSON.stringify(config));
     window.dispatchEvent(new Event('storage'));
 
-    // Save to Supabase (Only existing columns)
+    // Save to Supabase
     try {
         const { error } = await supabase.from('store_settings').update({ 
-            // whatsapp_number: config.whatsapp, // Column missing in DB
-            // alternate_number: config.alternateMobile, // Column missing in DB
+            owner_name: config.ownerName,
+            whatsapp_number: config.whatsapp,
+            mobile_number: config.alternateMobile,
+            instagram_url: config.socials?.instagram,
+            facebook_url: config.socials?.facebook,
+            youtube_url: config.socials?.youtube,
             updated_at: new Date()
         }).eq('id', 1);
 

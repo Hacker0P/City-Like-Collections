@@ -28,13 +28,21 @@ const Home = () => {
     if (savedConfig) setConfig(JSON.parse(savedConfig));
 
     const fetchSettings = async () => {
-      const { data } = await supabase.from('store_settings').select('is_open, notice_message, show_notice').eq('id', 1).single();
+      const { data } = await supabase.from('store_settings').select('*').eq('id', 1).single();
       if (data) {
         setConfig(prev => ({ 
            ...prev, 
            isOpen: data.is_open,
            noticeMessage: data.notice_message,
-           showNotice: data.show_notice
+           showNotice: data.show_notice,
+           ownerName: data.owner_name || prev.ownerName,
+           whatsapp: data.whatsapp_number || prev.whatsapp,
+           alternateMobile: data.mobile_number || prev.alternateMobile,
+           socials: {
+               instagram: data.instagram_url || prev.socials.instagram,
+               facebook: data.facebook_url || prev.socials.facebook,
+               youtube: data.youtube_url || prev.socials.youtube
+           }
         }));
       }
     };
@@ -43,11 +51,20 @@ const Home = () => {
     
     // Subscriptions for settings only
     const settingsChannel = supabase.channel('public:store_settings:home').on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'store_settings', filter: 'id=eq.1' }, (payload) => {
+        const newData = payload.new;
         setConfig(prev => ({ 
             ...prev, 
-            isOpen: payload.new.is_open, 
-            noticeMessage: payload.new.notice_message, 
-            showNotice: payload.new.show_notice
+            isOpen: newData.is_open, 
+            noticeMessage: newData.notice_message, 
+            showNotice: newData.show_notice,
+            ownerName: newData.owner_name || prev.ownerName,
+            whatsapp: newData.whatsapp_number || prev.whatsapp,
+            alternateMobile: newData.mobile_number || prev.alternateMobile,
+            socials: {
+               instagram: newData.instagram_url || prev.socials.instagram,
+               facebook: newData.facebook_url || prev.socials.facebook,
+               youtube: newData.youtube_url || prev.socials.youtube
+           }
         }));
     }).subscribe();
 
@@ -372,7 +389,7 @@ const Home = () => {
                                     <h4 className="text-white font-bold mb-1">{t('contactUs')}</h4>
                                     <div className="text-sm md:text-base text-slate-400 flex flex-col gap-1">
                                         {config.whatsapp && <span>WhatsApp: +91 {config.whatsapp}</span>}
-                                        {config.alternateMobile && <span>Call: {config.alternateMobile}</span>}
+                                        {config.alternateMobile && <span>Alternate Number: {config.alternateMobile}</span>}
                                     </div>
                                 </div>
                             </div>

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, CheckCircle, AlertCircle, Info, AlertTriangle } from 'lucide-react';
 
 const Toast = ({ 
@@ -16,79 +17,53 @@ const Toast = ({
     }
   }, [duration, onClose]);
 
-  const getToastStyles = () => {
+  const getToastConfig = () => {
     switch (type) {
       case 'success':
         return {
-          bg: 'var(--success-light)',
-          border: 'var(--success)',
-          icon: <CheckCircle size={20} color="var(--success-dark)" />
+          wrapper: 'bg-green-50 border-green-200 text-green-800',
+          iconBg: 'bg-green-100 text-green-600',
+          icon: <CheckCircle size={20} />
         };
       case 'error':
         return {
-          bg: 'var(--error-light)',
-          border: 'var(--error)',
-          icon: <AlertCircle size={20} color="var(--error-dark)" />
+          wrapper: 'bg-red-50 border-red-200 text-red-800',
+          iconBg: 'bg-red-100 text-red-600',
+          icon: <AlertCircle size={20} />
         };
       case 'warning':
         return {
-          bg: 'var(--warning-light)',
-          border: 'var(--warning)',
-          icon: <AlertTriangle size={20} color="var(--warning-dark)" />
+          wrapper: 'bg-orange-50 border-orange-200 text-orange-800',
+          iconBg: 'bg-orange-100 text-orange-600',
+          icon: <AlertTriangle size={20} />
         };
       default:
         return {
-          bg: 'var(--info-light)',
-          border: 'var(--info)',
-          icon: <Info size={20} color="var(--info-dark)" />
+          wrapper: 'bg-blue-50 border-blue-200 text-blue-800',
+          iconBg: 'bg-blue-100 text-blue-600',
+          icon: <Info size={20} />
         };
     }
   };
 
-  const styles = getToastStyles();
+  const config = getToastConfig();
 
-  return (
-    <div
-      className="animate-fade-in-up"
-      style={{
-        position: 'fixed',
-        bottom: 'var(--space-6)',
-        right: 'var(--space-6)',
-        zIndex: 9999,
-        background: styles.bg,
-        border: `2px solid ${styles.border}`,
-        borderRadius: 'var(--radius-lg)',
-        padding: 'var(--space-4)',
-        boxShadow: 'var(--shadow-xl)',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 'var(--space-3)',
-        minWidth: '300px',
-        maxWidth: '500px',
-      }}
-    >
-      {styles.icon}
-      <p style={{ flex: 1, margin: 0, fontWeight: 'var(--font-medium)' }}>
-        {message}
-      </p>
-      <button
-        onClick={onClose}
-        style={{
-          background: 'transparent',
-          border: 'none',
-          cursor: 'pointer',
-          padding: 'var(--space-1)',
-          display: 'flex',
-          alignItems: 'center',
-          opacity: 0.6,
-          transition: 'var(--transition-opacity)',
-        }}
-        onMouseEnter={(e) => (e.currentTarget.style.opacity = 1)}
-        onMouseLeave={(e) => (e.currentTarget.style.opacity = 0.6)}
-      >
-        <X size={18} />
-      </button>
-    </div>
+  return createPortal(
+    <div className={`fixed bottom-24 md:bottom-6 right-6 z-[9999] max-w-[90vw] md:max-w-md w-full animate-fade-in-up flex items-center gap-3 p-4 rounded-2xl shadow-2xl border ${config.wrapper}`}>
+       <div className={`p-2 rounded-full flex-shrink-0 ${config.iconBg}`}>
+           {config.icon}
+       </div>
+       <p className="flex-1 font-medium text-sm md:text-base leading-snug">
+           {message}
+       </p>
+       <button 
+         onClick={onClose}
+         className="p-1 opacity-60 hover:opacity-100 transition-opacity"
+       >
+         <X size={18} />
+       </button>
+    </div>,
+    document.body
   );
 };
 
