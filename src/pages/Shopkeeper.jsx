@@ -16,6 +16,8 @@ const Shopkeeper = () => {
   const [storeStatus, setStoreStatus] = useState(true); // Default open
   const [deleteModal, setDeleteModal] = useState({ show: false, id: null, images: [] });
   const [selectedImage, setSelectedImage] = useState(null);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
 
   const [currentTime, setCurrentTime] = useState(new Date());
   const [toast, setToast] = useState(null);
@@ -128,9 +130,33 @@ const Shopkeeper = () => {
     setDeleteModal({ show: false, id: null, images: [] });
     
     try {
-        await supabase.from('products').delete().eq('id', id);
-        // Note: Image deletion from storage skipped for now as per original logic, but should be implemented in production
+        const { error } = await supabase.from('products').delete().eq('id', id);
+        if (error) throw error;
+
+        // Delete images from Storage
+        if (images && images.length > 0) {
+            const filesToRemove = images.map(url => {
+                // Extract filename from URL
+                // URL example: .../storage/v1/object/public/product-images/173408...jpg
+                try {
+                    const urlObj = new URL(url);
+                    const pathParts = urlObj.pathname.split('/');
+                    return pathParts[pathParts.length - 1];
+                } catch (e) {
+                    // Fallback for simple string path if not full URL
+                    return url.split('/').pop();
+                }
+            });
+            
+            if (filesToRemove.length > 0) {
+                const { error: storageError } = await supabase.storage.from('product-images').remove(filesToRemove);
+                if (storageError) console.error("Error deleting images:", storageError);
+            }
+        }
+
         fetchProducts();
+        setToast({ message: 'Product deleted', type: 'success' });
+
         if (editingId === id) {
             setEditMode(false); 
             setEditingId(null); 
@@ -138,7 +164,7 @@ const Shopkeeper = () => {
         }
     } catch (error) {
         console.error("Error deleting:", error);
-        alert("Failed to delete product");
+        setToast({ message: 'Failed to delete product', type: 'error' });
     }
   };
   const totalValue = products.reduce((acc, curr) => acc + (Number(curr.price) * (Number(curr.quantity) || 1)), 0);
@@ -299,7 +325,40 @@ const Shopkeeper = () => {
             <div className="grid grid-cols-2 gap-4">
                 <div>
                 <label className="block text-sm font-bold text-slate-700 mb-1">{t('shop_sizes')}</label>
-                <input className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none" placeholder={t('shop_sizesPlaceholder')} value={formData.sizes} onChange={e => setFormData({...formData, sizes: e.target.value})} />
+                {formData.category && ['T-Shirt', 'Shirt', 'Jeans', 'Trousers', 'Shoes'].includes(formData.category) ? (
+                    <div className="flex flex-wrap gap-2">
+                        {({
+                            'T-Shirt': ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL'],
+                            'Shirt': ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL'],
+                            'Jeans': ['28', '30', '32', '34', '36', '38', '40', '42'],
+                            'Trousers': ['28', '30', '32', '34', '36', '38', '40', '42'],
+                            'Shoes': ['6', '7', '8', '9', '10', '11']
+                        }[formData.category] || []).map(size => {
+                            const currentSizes = formData.sizes ? formData.sizes.split(',').map(s => s.trim()) : [];
+                            const isSelected = currentSizes.includes(size);
+                            return (
+                                <button
+                                    key={size}
+                                    type="button"
+                                    onClick={() => {
+                                        let newSizes = [...currentSizes];
+                                        if (isSelected) {
+                                            newSizes = newSizes.filter(s => s !== size);
+                                        } else {
+                                            newSizes.push(size);
+                                        }
+                                        setFormData({...formData, sizes: newSizes.join(', ')});
+                                    }}
+                                    className={`px-3 py-1.5 text-xs font-bold rounded-lg border transition-all ${isSelected ? 'bg-primary-600 text-white border-primary-600 shadow-md' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'}`}
+                                >
+                                    {size}
+                                </button>
+                            );
+                        })}
+                    </div>
+                ) : (
+                    <input className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none" placeholder={t('shop_sizesPlaceholder')} value={formData.sizes} onChange={e => setFormData({...formData, sizes: e.target.value})} />
+                )}
                 </div>
                 <div>
                 <label className="block text-sm font-bold text-slate-700 mb-1">{t('shop_colors')}</label>
@@ -496,16 +555,42 @@ const Shopkeeper = () => {
                 </>
             )}
 
-            <div className="relative w-full h-full flex flex-col items-center justify-center" onClick={(e) => e.stopPropagation()}>
+            <div 
+                className="relative w-full h-full flex flex-col items-center justify-center" 
+                onClick={(e) => e.stopPropagation()}
+                onTouchStart={(e) => {
+                    e.stopPropagation();
+                    setTouchStart(e.targetTouches[0].clientX);
+                    setTouchEnd(null);
+                }}
+                onTouchMove={(e) => {
+                    e.stopPropagation();
+                    setTouchEnd(e.targetTouches[0].clientX);
+                }}
+                onTouchEnd={(e) => {
+                    e.stopPropagation();
+                    if (!touchStart || !touchEnd) return;
+                    const distance = touchStart - touchEnd;
+                    const minSwipeDistance = 50;
+                    
+                    if (distance > minSwipeDistance) {
+                        // Swipe Left -> Next
+                         if (selectedImage.images.length > 1) {
+                            setSelectedImage(prev => ({ ...prev, index: (prev.index + 1) % prev.images.length }));
+                         }
+                    } else if (distance < -minSwipeDistance) {
+                        // Swipe Right -> Prev
+                         if (selectedImage.images.length > 1) {
+                            setSelectedImage(prev => ({ ...prev, index: (prev.index - 1 + prev.images.length) % prev.images.length }));
+                         }
+                    }
+                }}
+            >
                 <img 
                     src={selectedImage.images[selectedImage.index]} 
-                    className="max-w-[95vw] max-h-[70vh] md:max-h-[80vh] object-contain rounded-lg shadow-2xl animate-fade-in" 
+                    className="max-w-[95vw] max-h-[70vh] md:max-h-[80vh] object-contain rounded-lg shadow-2xl animate-fade-in touch-none select-none" 
                     alt="Full View" 
-                    onClick={(e) => {
-                         if (window.innerWidth < 768 && selectedImage.images.length > 1) {
-                             setSelectedImage(prev => ({ ...prev, index: (prev.index + 1) % prev.images.length }));
-                         }
-                    }}
+                    draggable="false"
                 />
                 
                 {selectedImage.images.length > 1 && (

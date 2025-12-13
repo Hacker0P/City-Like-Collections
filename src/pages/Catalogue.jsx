@@ -28,6 +28,8 @@ const Catalogue = () => {
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [visibleCount, setVisibleCount] = useState(24);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
 
   // Sync state with URL params when they change externally (e.g. from Navbar)
   useEffect(() => {
@@ -324,16 +326,42 @@ const Catalogue = () => {
                 </>
             )}
 
-            <div className="relative w-full h-full flex flex-col items-center justify-center pb-20 md:pb-0" onClick={(e) => e.stopPropagation()}>
+            <div 
+                className="relative w-full h-full flex flex-col items-center justify-center pb-20 md:pb-0" 
+                onClick={(e) => e.stopPropagation()}
+                onTouchStart={(e) => {
+                    e.stopPropagation();
+                    setTouchStart(e.targetTouches[0].clientX);
+                    setTouchEnd(null);
+                }}
+                onTouchMove={(e) => {
+                    e.stopPropagation();
+                    setTouchEnd(e.targetTouches[0].clientX);
+                }}
+                onTouchEnd={(e) => {
+                    e.stopPropagation();
+                    if (!touchStart || !touchEnd) return;
+                    const distance = touchStart - touchEnd;
+                    const minSwipeDistance = 50;
+                    
+                    if (distance > minSwipeDistance) {
+                        // Swipe Left -> Next
+                         if (selectedImage.images.length > 1) {
+                            setSelectedImage(prev => ({ ...prev, index: (prev.index + 1) % prev.images.length }));
+                         }
+                    } else if (distance < -minSwipeDistance) {
+                        // Swipe Right -> Prev
+                         if (selectedImage.images.length > 1) {
+                            setSelectedImage(prev => ({ ...prev, index: (prev.index - 1 + prev.images.length) % prev.images.length }));
+                         }
+                    }
+                }}
+            >
                 <img 
                     src={selectedImage.images[selectedImage.index]} 
-                    className="max-w-[95vw] max-h-[70vh] md:max-h-[85vh] object-contain rounded-lg shadow-2xl animate-fade-in" 
+                    className="max-w-[95vw] max-h-[70vh] md:max-h-[85vh] object-contain rounded-lg shadow-2xl animate-fade-in touch-none select-none" 
                     alt="Full View" 
-                    onClick={(e) => { 
-                        if (selectedImage.images.length > 1) {
-                            setSelectedImage(prev => ({ ...prev, index: (prev.index + 1) % prev.images.length })); 
-                        }
-                    }} 
+                    draggable="false"
                 />
             </div>
         </div>, document.body

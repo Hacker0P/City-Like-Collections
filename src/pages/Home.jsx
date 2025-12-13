@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Megaphone, ShoppingBag, MapPin, ArrowRight, Instagram, Facebook, Youtube, X, Map as MapIcon, Phone, Search, Shirt, Footprints, Watch, Star, TrendingUp, Sparkles, Tag, Package } from 'lucide-react';
+import { Megaphone, ShoppingBag, MapPin, ArrowRight, Instagram, Facebook, Youtube, X, Map as MapIcon, Phone, Search, Shirt, Footprints, Watch, Star, TrendingUp, Sparkles, Tag, Package, User } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { supabase } from '../supabaseClient';
 
@@ -133,45 +133,51 @@ const Home = () => {
       )}
 
       {/* Hero Section */}
-      <div className="bg-white border-b border-slate-100 relative overflow-hidden">
+      <div className="bg-slate-50 border-b border-slate-100 relative overflow-hidden">
         {/* Subtle Background Pattern */}
-        <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] opacity-30"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:20px_20px] opacity-40"></div>
         
-        <div className="container mx-auto px-4 py-12 md:py-20 relative z-10">
-           <div className="grid lg:grid-cols-2 gap-12 items-center">
+        {/* Animated Background Blobs */}
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-purple-200/40 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob"></div>
+        <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-blue-200/40 rounded-full mix-blend-multiply filter blur-3xl opacity-50 animate-blob animation-delay-2000"></div>
+        
+        <div className="container mx-auto px-4 py-16 md:py-24 relative z-10">
+           <div className="grid lg:grid-cols-2 gap-12 md:gap-20 items-center">
                <div className="space-y-8 text-center lg:text-left order-2 lg:order-1">
-                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm text-alert shadow-sm border border-slate-200 hover:border-slate-300 transition-colors cursor-default">
+                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 backdrop-blur-md text-alert shadow-sm border border-slate-200/60 hover:border-slate-300 transition-colors cursor-default mb-4">
                        <span className="relative flex h-3 w-3">
-                         <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${config.isOpen ? 'bg-green-400' : 'bg-red-400'}`}></span>
-                         <span className={`relative inline-flex rounded-full h-3 w-3 ${config.isOpen ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                         <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${config.isOpen ? 'bg-emerald-400' : 'bg-rose-400'}`}></span>
+                         <span className={`relative inline-flex rounded-full h-3 w-3 ${config.isOpen ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
                        </span>
-                       <span className="text-sm font-bold text-slate-700 uppercase tracking-wide">
+                       <span className="text-xs font-bold text-slate-700 uppercase tracking-widest">
                             {config.isOpen ? t('storeOpen') : t('storeClosed')}
                        </span>
                    </div>
                    
-                   <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 leading-[1.1] tracking-tight">
+                   <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-slate-900 leading-[0.95] tracking-tight">
                        {t('heroTitle1')} <br />
-                       <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 via-purple-600 to-indigo-600">
+                       <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-violet-600 to-fuchsia-600 animate-gradient-x">
                            {t('heroTitle2')}
                        </span>
                    </h1>
                    
-                   <p className="text-lg md:text-xl text-slate-600 max-w-xl mx-auto lg:mx-0 leading-relaxed font-light">
+                   <p className="text-lg md:text-2xl text-slate-600 max-w-xl mx-auto lg:mx-0 leading-relaxed font-light tracking-wide">
                        {t('heroSubtitle') || "Explore our exclusive collection of premium mens clothing tailored to perfection. Elevate your wardrobe with City Like Collection."}
                    </p>
                    
-                   <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                   <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
                         <button 
                             onClick={() => navigate('/catalogue')}
-                            className="group bg-slate-900 text-white px-8 py-4 rounded-full font-bold text-lg shadow-xl shadow-slate-900/20 hover:shadow-2xl hover:shadow-slate-900/30 hover:bg-black transition-all active:scale-95 flex items-center justify-center gap-2 ring-4 ring-transparent hover:ring-slate-100"
+                            className="group relative px-8 py-4 rounded-full font-bold text-lg bg-slate-900 text-white shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.4)] transition-all active:scale-95 flex items-center justify-center gap-3 overflow-hidden"
                         >
-                            <ShoppingBag size={20} className="group-hover:-translate-y-0.5 transition-transform" /> 
-                            {t('explore')}
+                            <span className="relative z-10 flex items-center gap-2">
+                                {t('explore')} <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" /> 
+                            </span>
+                            <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                         </button>
                         <button 
                             onClick={() => document.getElementById('footer').scrollIntoView({ behavior: 'smooth' })}
-                            className="bg-white border-2 border-slate-200 text-slate-700 px-8 py-4 rounded-full font-bold text-lg hover:border-slate-300 hover:bg-slate-50 transition-all flex items-center justify-center gap-2"
+                            className="px-8 py-4 rounded-full font-bold text-lg bg-white text-slate-700 border border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition-all flex items-center justify-center gap-2 shadow-sm hover:shadow-md"
                         >
                             {t('contactUs')}
                         </button>
@@ -184,44 +190,31 @@ const Home = () => {
                     <div className="hidden md:block absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 bg-primary-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
                     <div className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
                     
-                    <div className="relative bg-white/50 backdrop-blur-2xl p-4 md:p-6 rounded-[2rem] md:rounded-[2.5rem] border border-white/50 shadow-2xl skew-y-1 hover:skew-y-0 transition-transform duration-700">
-                         <div className="aspect-square lg:aspect-[4/5] rounded-3xl md:rounded-[2rem] bg-slate-100 overflow-hidden relative group shadow-inner">
-                             <img 
-                                src="/hero_men_fashion.png" 
-                                alt={t('premiumMensWear')} 
-                                className="w-full h-full object-cover object-top transform scale-100 group-hover:scale-105 transition-transform duration-1000" 
-                             />
-                             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-500"></div>
-                             
-                             <div className="absolute bottom-6 left-6 right-6 md:bottom-8 md:left-8 md:right-8 text-white transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
-                                 <div className="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest mb-2 md:mb-3 border border-white/10">
-                                     {t('newSeason')}
+                    <div className="relative">
+                         <div className="absolute inset-0 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-[2.5rem] rotate-6 blur-2xl opacity-20 animate-pulse"></div>
+                         <div className="relative bg-white p-2 rounded-[2.5rem] shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-700 ease-out">
+                             <div className="aspect-[4/5] rounded-[2rem] overflow-hidden relative group">
+                                 <img 
+                                    src="/hero_men_fashion.png" 
+                                    alt={t('premiumMensWear')} 
+                                    className="w-full h-full object-cover object-top transform scale-100 group-hover:scale-110 transition-transform duration-1000" 
+                                 />
+                                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-80"></div>
+                                 
+                                 <div className="absolute bottom-8 left-8 right-8 text-white">
+                                     <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-widest mb-3 border border-white/10">
+                                         <Sparkles size={12} className="text-yellow-300" />
+                                         {t('newSeason')}
+                                     </div>
+                                     <p className="font-black text-3xl md:text-4xl leading-none mb-2">{t('premiumMensWear')}</p>
+                                     <p className="text-slate-200 text-lg font-light tracking-wide">{t('latestCollection')}</p>
                                  </div>
-                                 <p className="font-bold text-2xl md:text-3xl leading-none mb-1 md:mb-2">{t('premiumMensWear')}</p>
-                                 <p className="text-slate-300 text-base md:text-lg font-light">{t('latestCollection')}</p>
                              </div>
                          </div>
                     </div>
                </div>
            </div>
         </div>
-      </div>
-
-      {/* Features Grid */}
-      <div className="container mx-auto px-4 py-16 md:py-24">
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-              {features.map((feature, idx) => (
-                  <div key={idx} className="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all group hover:-translate-y-1 text-center md:text-left">
-                      <div className="w-14 h-14 mx-auto md:mx-0 bg-gradient-to-br from-primary-50 to-purple-50 text-primary-600 rounded-2xl flex items-center justify-center mb-4 md:mb-6 group-hover:scale-110 transition-transform shadow-sm ring-1 ring-slate-100">
-                          <feature.icon size={28} />
-                      </div>
-                      <div>
-                          <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-2">{feature.title}</h3>
-                          <p className="text-slate-500 text-sm md:text-base leading-relaxed font-medium">{feature.desc}</p>
-                      </div>
-                  </div>
-              ))}
-          </div>
       </div>
 
       {/* Shop By Category */}
@@ -252,7 +245,7 @@ const Home = () => {
                             alt={cat.label} 
                             className="absolute inset-0 w-full h-full object-cover transform scale-100 group-hover:scale-110 transition-transform duration-1000"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500"></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-500"></div>
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500"></div>
                         
                         <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-8 text-left z-10">
@@ -261,7 +254,7 @@ const Home = () => {
                                 {cat.description}
                             </p>
                             <div className="mt-2 md:mt-6 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 delay-150">
-                                <span className="inline-flex items-center gap-2 text-white font-bold text-[10px] md:text-sm bg-white/20 backdrop-blur-xl border border-white/30 px-3 py-1.5 md:px-5 md:py-2.5 rounded-full hover:bg-white hover:text-black transition-colors">
+                                <span className="inline-flex items-center gap-2 text-white font-bold text-[10px] md:text-sm bg-white/20 backdrop-blur-md border border-white/40 px-4 py-2 rounded-full hover:bg-white hover:text-black transition-all shadow-lg">
                                     {t('shopNow')} <ArrowRight size={14} className="md:w-4 md:h-4" />
                                 </span>
                             </div>
@@ -278,6 +271,25 @@ const Home = () => {
                       {t('viewFullCatalogue')} <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                   </button>
               </div>
+          </div>
+      </div>
+
+      {/* Features Grid */}
+      <div className="container mx-auto px-4 py-16 md:py-24">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+              {features.map((feature, idx) => (
+                  <div key={idx} className="bg-slate-50/50 p-6 md:p-8 rounded-3xl border border-white shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-slate-200/80 transition-all group hover:-translate-y-2 text-center md:text-left relative overflow-hidden">
+                      <div className="absolute top-0 right-0 -mr-8 -mt-8 w-24 h-24 bg-gradient-to-br from-slate-100 to-transparent rounded-full opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
+                      
+                      <div className="w-16 h-16 mx-auto md:mx-0 bg-white shadow-lg text-slate-900 rounded-2xl flex items-center justify-center mb-6 group-hover:rotate-6 transition-transform duration-300 ring-1 ring-slate-100 relative z-10">
+                          <feature.icon size={32} className="text-primary-600" />
+                      </div>
+                      <div className="relative z-10">
+                          <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-primary-600 transition-colors">{feature.title}</h3>
+                          <p className="text-slate-500 leading-relaxed font-medium">{feature.desc}</p>
+                      </div>
+                  </div>
+              ))}
           </div>
       </div>
 
@@ -355,6 +367,18 @@ const Home = () => {
                                         {config.whatsapp && <span>WhatsApp: +91 {config.whatsapp}</span>}
                                         {config.alternateMobile && <span>Call: {config.alternateMobile}</span>}
                                     </div>
+                                </div>
+                            </div>
+                         )}
+
+                         {config.ownerName && (
+                            <div className="flex items-start gap-4 md:gap-5 p-4 md:p-5 rounded-3xl bg-slate-900/30 border border-slate-800/50 hover:border-slate-700 hover:bg-slate-900/50 transition-all group">
+                                <div className="p-3 md:p-3.5 rounded-2xl bg-slate-800 text-yellow-500 group-hover:scale-110 transition-transform shadow-inner ring-1 ring-white/5">
+                                   <User size={20} className="md:w-6 md:h-6" />
+                                </div>
+                                <div>
+                                    <h4 className="text-white font-bold mb-1">{t('owner') || 'Owner'}</h4>
+                                    <p className="text-sm md:text-base text-slate-400 leading-snug">{config.ownerName}</p>
                                 </div>
                             </div>
                          )}
