@@ -48,6 +48,7 @@ const Profile = () => {
     if (savedConfig) setConfig(prev => ({ ...prev, ...JSON.parse(savedConfig) }));
 
     const fetchSettings = async () => {
+        // Reverted to only fetch existing columns to prevent PGRST204/400 errors
         const { data } = await supabase.from('store_settings').select('is_open, notice_message, show_notice').eq('id', 1).single();
         if (data) {
             setConfig(prev => ({
@@ -64,12 +65,27 @@ const Profile = () => {
   const handleConfigSave = async (e) => {
     e.preventDefault();
     setSaving(true);
-    await new Promise(r => setTimeout(r, 500));
+    
+    // Save to LocalStorage (This is the primary source for contact info now)
     localStorage.setItem('clc_config', JSON.stringify(config));
     window.dispatchEvent(new Event('storage'));
-    setSaving(false);
-    setSaving(false);
-    setToast({ message: 'Profile details saved successfully!', type: 'success' });
+
+    // Save to Supabase (Only existing columns)
+    try {
+        const { error } = await supabase.from('store_settings').update({ 
+            // whatsapp_number: config.whatsapp, // Column missing in DB
+            // alternate_number: config.alternateMobile, // Column missing in DB
+            updated_at: new Date()
+        }).eq('id', 1);
+
+        if (error) throw error;
+        setToast({ message: 'Profile details saved successfully!', type: 'success' });
+    } catch (error) {
+        console.error("Error saving to supabase:", error);
+        setToast({ message: 'Saved locally. (Server sync failed)', type: 'warning' });
+    } finally {
+        setSaving(false);
+    }
   };
 
   const handleLocationChange = (field, value) => {
@@ -192,23 +208,29 @@ const Profile = () => {
                  <div className="grid md:grid-cols-2 gap-4 md:gap-6">
                     <div>
                         <label className="block text-sm font-bold text-slate-700 mb-1 md:mb-2">{t('profile_whatsapp')}</label>
-                        <input 
-                            type="text" 
-                            className="w-full px-3 md:px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none transition-all text-sm md:text-base" 
-                            placeholder="e.g. 919876543210"
-                            value={config.whatsapp}
-                            onChange={e => setConfig({...config, whatsapp: e.target.value})}
-                        />
+                        <div className="relative">
+                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold border-r border-slate-300 pr-2">+91</span>
+                            <input 
+                                type="tel" 
+                                className="w-full pl-16 pr-3 md:pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none transition-all text-sm md:text-base font-bold" 
+                                placeholder="XXXXXXXXXX"
+                                value={config.whatsapp}
+                                onChange={e => setConfig({...config, whatsapp: e.target.value.replace(/\D/g, '').slice(0, 10)})}
+                            />
+                        </div>
                     </div>
                     <div>
                         <label className="block text-sm font-bold text-slate-700 mb-1 md:mb-2">{t('profile_alternate')}</label>
-                        <input 
-                            type="text" 
-                            className="w-full px-3 md:px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none transition-all text-sm md:text-base" 
-                            placeholder="e.g. 919876543210"
-                            value={config.alternateMobile || ''}
-                            onChange={e => setConfig({...config, alternateMobile: e.target.value})}
-                        />
+                        <div className="relative">
+                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold border-r border-slate-300 pr-2">+91</span>
+                            <input 
+                                type="tel" 
+                                className="w-full pl-16 pr-3 md:pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none transition-all text-sm md:text-base font-bold" 
+                                placeholder="XXXXXXXXXX"
+                                value={config.alternateMobile || ''}
+                                onChange={e => setConfig({...config, alternateMobile: e.target.value.replace(/\D/g, '').slice(0, 10)})}
+                            />
+                        </div>
                     </div>
                 </div>
 

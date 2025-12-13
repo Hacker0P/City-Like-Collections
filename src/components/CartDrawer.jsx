@@ -4,13 +4,15 @@ import { X, Minus, Plus, Trash2, ShoppingBag, MessageCircle, ArrowRight } from '
 import { useShop } from '../context/ShopContext';
 import { useLanguage } from '../context/LanguageContext';
 
+import { supabase } from '../supabaseClient';
+
 const CartDrawer = () => {
   const { cart, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, cartTotal } = useShop();
   const { t } = useLanguage();
 
   if (!isCartOpen) return null;
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     // Construct WhatsApp Message
     let message = `*New Order Request*\n\n`;
     cart.forEach((item, index) => {
@@ -19,7 +21,6 @@ const CartDrawer = () => {
         if (item.selectedColor && item.selectedColor !== 'All') message += `   Color: ${item.selectedColor}\n`;
         message += `   Qty: ${item.quantity} x ₹${item.price} = ₹${item.quantity * item.price}\n`;
         
-        // Add Image URL if available
         let imgUrl = '';
         if (Array.isArray(item.images) && item.images.length > 0) imgUrl = item.images[0];
         else if (typeof item.images === 'string' && item.images.startsWith('http')) imgUrl = item.images;
@@ -32,29 +33,39 @@ const CartDrawer = () => {
     message += `Please confirm availability.`;
 
     const encodedMessage = encodeURIComponent(message);
-    // WhatsApp URL (Use config number if available? Need to pass it or access it).
-    // For now hardcode or use a default.
-    // Better to pass store number via props or fetch config context.
-    // I'll assume standard number or the one in Home (I don't have access to Home config here easily unless I use Context or Props).
-    // I'll use a placeholder or generic link, BUT Home.jsx had it in config. 
-    // I should create a "ConfigContext" or just assume a number.
-    // Or I'll just open WhatsApp with empty number (user picks contact) or use the one from translations?
-    // Home.jsx reads from Supabase.
-    // Ideally Config should be global.
-    // For now, I'll direct to the number from translations/config if I can.
-    // I'll use a hardcoded fallback or try to read from localStorage 'clc_config' (Profile updates it!).
     
-    // Retrieve config from local storage (hacky but works since Profile saves it)
-    const savedConfig = localStorage.getItem('clc_config');
-    let phone = '';
-    if (savedConfig) {
-        const conf = JSON.parse(savedConfig);
-        phone = conf.whatsapp || conf.alternateMobile || '';
+    // 1. Default fallback
+    let phone = '9800000000'; 
+    
+    // 2. Try Local Storage (Robust Fallback)
+    try {
+        const savedConfig = localStorage.getItem('clc_config');
+        if (savedConfig) {
+            const conf = JSON.parse(savedConfig);
+            if (conf.whatsapp) phone = conf.whatsapp;
+        }
+    } catch (err) {
+        console.error("Error reading local config", err);
     }
+
+    // 3. Try Supabase (Source of Truth)
+    try {
+        const { data, error } = await supabase.from('store_settings').select('whatsapp_number').eq('id', 1).single();
+        if (error) throw error; // Throw to catch block if table/column missing
+        if (data && data.whatsapp_number) {
+            phone = data.whatsapp_number;
+        }
+    } catch (e) {
+        console.warn("Could not fetch remote settings (using local fallback):", e.message);
+    }
+
+    // Construct formatting
+
+    // Construct formatting
+    const cleanPhone = phone.replace(/\D/g, '');
+    const finalPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
     
-    // Default to +91 if not present?
-    const target = phone ? `https://wa.me/91${phone.replace(/\D/g, '').slice(-10)}` : `https://wa.me/?`;
-    
+    const target = `https://wa.me/${finalPhone}`;
     window.open(`${target}?text=${encodedMessage}`, '_blank');
   };
 

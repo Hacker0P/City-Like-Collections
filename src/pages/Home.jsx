@@ -42,7 +42,14 @@ const Home = () => {
     fetchSettings();
     
     // Subscriptions for settings only
-    const settingsChannel = supabase.channel('public:store_settings:home').on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'store_settings', filter: 'id=eq.1' }, (payload) => setConfig(prev => ({ ...prev, isOpen: payload.new.is_open, noticeMessage: payload.new.notice_message, showNotice: payload.new.show_notice }))).subscribe();
+    const settingsChannel = supabase.channel('public:store_settings:home').on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'store_settings', filter: 'id=eq.1' }, (payload) => {
+        setConfig(prev => ({ 
+            ...prev, 
+            isOpen: payload.new.is_open, 
+            noticeMessage: payload.new.notice_message, 
+            showNotice: payload.new.show_notice
+        }));
+    }).subscribe();
 
     return () => {
       supabase.removeChannel(settingsChannel);

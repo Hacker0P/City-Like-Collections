@@ -15,10 +15,24 @@ const Login = () => {
     setLoading(true);
     setError(null);
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-      navigate('/shopkeeper');
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      
+      if (error) {
+          console.error("Login Error Details:", error); // Help user debug
+          if (error.message === 'Email not confirmed') {
+              throw new Error('Please confirm your email address before logging in.');
+          } else if (error.message === 'Invalid login credentials') {
+              throw new Error('Invalid email or password. Please try again.');
+          } else {
+              throw error;
+          }
+      }
+      
+      if (data.session) {
+        navigate('/shopkeeper');
+      }
     } catch (error) {
+      console.error("Login Failed:", error.message);
       setError(error.message);
     } finally {
       setLoading(false);

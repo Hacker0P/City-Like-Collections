@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { useNetworkStatus } from '../hooks/useNetworkStatus';
-import { Plus, Trash2, Save, Package, Image as ImageIcon, Edit2, X, Camera, RefreshCcw, Power, AlertCircle, ChevronLeft, ChevronRight, WifiOff, CheckCircle, ChevronDown, ChevronUp, Search, Filter } from 'lucide-react';
+import { Plus, Trash2, Save, Package, Image as ImageIcon, Edit2, X, Camera, RefreshCcw, Power, AlertCircle, ChevronLeft, ChevronRight, WifiOff, CheckCircle, ChevronDown, ChevronUp, Search, Filter, Settings } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 
 const Shopkeeper = () => {
@@ -383,7 +383,7 @@ const Shopkeeper = () => {
                 )}
             </div>
             </form>
-          </div>
+        </div>
         </div>
 
         {/* Right Column: Inventory List */}
