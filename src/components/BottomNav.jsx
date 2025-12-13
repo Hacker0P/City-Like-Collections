@@ -35,30 +35,48 @@ const BottomNav = () => {
 
     return (
         <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex justify-around items-stretch z-[100] pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
-            <NavItem to="/" icon={Home} label="Home" />
-            
-            <button 
-                onClick={() => setIsCartOpen(true)}
-                className="flex flex-col items-center justify-center gap-1 flex-1 py-3 relative group text-slate-400 hover:text-slate-600"
-            >
-                <div className="relative p-1.5 transition-all duration-300">
-                    <ShoppingBag size={24} strokeWidth={2} className="transition-transform group-active:scale-90" />
-                    {cartCount > 0 && (
-                        <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center border border-white">
-                            {cartCount}
-                        </span>
-                    )}
-                </div>
-                <span className="text-[10px] font-medium tracking-wide">Cart</span>
-            </button>
             
             {currentUser ? (
                 <>
+                    <NavItem to="/" icon={Home} label="Home" />
+                    
+                    <button 
+                        onClick={() => setIsCartOpen(true)}
+                        className="flex flex-col items-center justify-center gap-1 flex-1 py-3 relative group text-slate-400 hover:text-slate-600"
+                    >
+                        <div className="relative p-1.5 transition-all duration-300">
+                            <ShoppingBag size={24} strokeWidth={2} className="transition-transform group-active:scale-90" />
+                            {cartCount > 0 && (
+                                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center border border-white">
+                                    {cartCount}
+                                </span>
+                            )}
+                        </div>
+                        <span className="text-[10px] font-medium tracking-wide">Cart</span>
+                    </button>
+
                     <NavItem to="/shopkeeper" icon={LayoutDashboard} label="Admin" />
                     <NavItem to="/profile" icon={User} label="Profile" />
                 </>
             ) : (
-                <NavItem to="/login" icon={LogIn} label="Login" />
+                <>
+                     <NavItem to="/" icon={Home} label="Home" />
+                     <button 
+                        onClick={() => setIsCartOpen(true)}
+                        className="flex flex-col items-center justify-center gap-1 flex-1 py-3 relative group text-slate-400 hover:text-slate-600"
+                    >
+                        <div className="relative p-1.5 transition-all duration-300">
+                            <ShoppingBag size={24} strokeWidth={2} className="transition-transform group-active:scale-90" />
+                            {cartCount > 0 && (
+                                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center border border-white">
+                                    {cartCount}
+                                </span>
+                            )}
+                        </div>
+                        <span className="text-[10px] font-medium tracking-wide">Cart</span>
+                    </button>
+                    <NavItem to="/login" icon={LogIn} label="Login" />
+                </>
             )}
         </div>
     );

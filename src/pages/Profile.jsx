@@ -26,8 +26,14 @@ const Profile = () => {
   const [toast, setToast] = useState(null);
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    navigate('/login');
+        // Manually clear local storage to force logout
+        Object.keys(localStorage).forEach(key => {
+            if (key.startsWith('sb-') && key.endsWith('-auth-token')) {
+                localStorage.removeItem(key);
+            }
+        });
+        window.location.href = '/login';
+        return;
   };
 
   useEffect(() => {
