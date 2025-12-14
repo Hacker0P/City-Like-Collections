@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Filter, Search, X, Check, SlidersHorizontal, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Filter, Search, X, Check, SlidersHorizontal, ArrowLeft, ChevronLeft, ChevronRight, ArrowDownUp } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useShop } from '../context/ShopContext';
 import { getColorHex } from '../utils/colors';
@@ -90,30 +90,45 @@ const Catalogue = () => {
   return (
     <div className="min-h-screen bg-slate-50 pb-24 md:pb-12">
       {/* Header / Search Bar */}
-      <div className="bg-white border-b border-slate-200 sticky top-[70px] z-30 shadow-sm">
-          <div className="container mx-auto px-4 py-4">
-              <div className="flex items-center gap-4">
-                  <button onClick={() => navigate('/')} className="md:hidden p-2 -ml-2 text-slate-500">
+      <div className="bg-white border-b border-slate-200 sticky top-0 md:top-[70px] z-30 shadow-sm transition-all duration-300">
+          <div className="container mx-auto px-4 py-3 md:py-4">
+              <div className="flex items-center gap-3 md:gap-4">
+                  <button onClick={() => navigate(-1)} className="md:hidden p-1 -ml-1 text-slate-500">
                      <ArrowLeft />
                   </button>
                   <div className="relative flex-1">
                       <input 
                           type="text" 
                           placeholder="Search for products..." 
-                          className="w-full pl-10 pr-4 py-2.5 bg-slate-100 border-none rounded-xl focus:ring-2 focus:ring-primary-500 transition-all font-medium text-slate-800"
+                          className="w-full pl-10 pr-4 py-2 bg-slate-100 border-none rounded-lg focus:ring-2 focus:ring-primary-500 transition-all font-medium text-slate-800 text-sm md:text-base"
                           value={filters.search}
                           onChange={(e) => updateFilter('search', e.target.value)}
                       />
                       <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
                   </div>
-                  <button 
-                    onClick={() => setShowMobileFilters(true)}
-                    className="p-2.5 bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200 lg:hidden relative"
-                  >
-                      <SlidersHorizontal size={20} />
-                      {/* Active Filter Indicator could go here */}
-                  </button>
               </div>
+          </div>
+          
+          {/* Mobile Filter & Sort Bar (Sticky Sub-header) */}
+          <div className="grid grid-cols-2 border-t border-slate-100 lg:hidden">
+              <button 
+                className="flex items-center justify-center gap-2 py-3 bg-white hover:bg-slate-50 active:bg-slate-100 transition-colors border-r border-slate-100"
+                // Placeholder for Sort
+              >
+                  <ArrowDownUp size={16} className="text-slate-500" />
+                  <span className="text-sm font-bold text-slate-700">Sort</span>
+              </button>
+              <button 
+                onClick={() => setShowMobileFilters(true)}
+                className="flex items-center justify-center gap-2 py-3 bg-white hover:bg-slate-50 active:bg-slate-100 transition-colors"
+              >
+                  <SlidersHorizontal size={16} className="text-slate-500" />
+                  <span className="text-sm font-bold text-slate-700">Filter</span>
+                  {/* Active Filter Dot */}
+                  {(filters.category !== 'All' || filters.color !== 'All' || filters.size !== 'All' || filters.priceRange[1] !== 10000) && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary-600"></span>
+                  )}
+              </button>
           </div>
       </div>
 
@@ -124,111 +139,145 @@ const Catalogue = () => {
               <div className="fixed inset-0 bg-black/50 z-40 lg:hidden backdrop-blur-sm" onClick={() => setShowMobileFilters(false)}></div>
           )}
 
-          {/* Filters Sidebar */}
-          <div className={`fixed inset-y-0 right-0 lg:left-0 z-50 w-80 bg-white p-6 shadow-2xl transition-transform duration-300 lg:sticky lg:top-32 lg:z-10 lg:block lg:shadow-none lg:bg-transparent lg:p-0 lg:w-64 lg:translate-x-0 ${showMobileFilters ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}`}>
-             <div className="flex justify-between items-center mb-6 pb-4 border-b border-slate-100 lg:hidden">
-                <h3 className="font-bold text-slate-800 flex items-center gap-2">
-                    <Filter size={18} /> Filters
+          {/* Filters Sidebar / Bottom Sheet */}
+          <div className={`
+              fixed inset-x-0 bottom-0 z-[60] h-[85vh] w-full bg-white rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.2)] flex flex-col transition-transform duration-300 
+              lg:translate-y-0 lg:inset-auto lg:right-auto lg:bottom-auto lg:top-32 lg:sticky lg:z-10 lg:w-64 lg:h-auto lg:bg-transparent lg:shadow-none lg:rounded-none lg:block
+              ${showMobileFilters ? 'translate-y-0' : 'translate-y-full lg:translate-y-0'}
+          `}>
+             {/* Mobile Sheet Handle */}
+             <div className="w-full h-1.5 absolute top-3 left-1/2 -translate-x-1/2 w-12 bg-slate-200 rounded-full lg:hidden"></div>
+
+             {/* Header */}
+             <div className="flex justify-between items-center p-6 border-b border-slate-100 lg:p-0 lg:border-none lg:mb-6">
+                <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+                    <Filter size={20} className="text-primary-600" /> Filters
                 </h3>
-                <button onClick={() => setShowMobileFilters(false)} className="text-slate-400 hover:text-slate-600">
+                <button 
+                    onClick={() => setShowMobileFilters(false)} 
+                    className="p-2 bg-slate-100 rounded-full text-slate-500 hover:bg-slate-200 lg:hidden"
+                >
                     <X size={20} />
                 </button>
              </div>
              
-             <div className="bg-white lg:rounded-2xl lg:border lg:border-slate-200 lg:p-6 lg:shadow-sm">
-                 {/* Reset */}
-                 <div className="flex justify-between items-center mb-6">
-                    <h3 className="font-bold text-slate-800 hidden lg:block">Filters</h3>
-                    <button 
-                        onClick={() => setFilters({ category: 'All', priceRange: [0, 10000], size: 'All', color: 'All', search: '' })}
-                        className="text-xs font-bold text-primary-600 hover:text-primary-700 uppercase tracking-wide"
-                    >
-                        Reset All
-                    </button>
-                 </div>
-
-                 {/* Price Filter */}
-                 <div className="mb-8">
-                     <div className="flex justify-between items-center mb-3">
-                        <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Max Price</label>
-                        <span className="text-sm font-bold text-slate-900">₹{filters.priceRange[1]}</span>
+             {/* Scrollable Content */}
+             <div className="flex-1 overflow-y-auto p-6 lg:p-0 lg:overflow-visible">
+                 <div className="bg-white lg:rounded-2xl lg:border lg:border-slate-200 lg:p-6 lg:shadow-sm">
+                     {/* Reset */}
+                     <div className="flex justify-between items-center mb-6 hidden lg:flex">
+                        <h3 className="font-bold text-slate-800">Filters</h3>
+                        <button 
+                            onClick={() => setFilters({ category: 'All', priceRange: [0, 10000], size: 'All', color: 'All', search: '' })}
+                            className="text-xs font-bold text-primary-600 hover:text-primary-700 uppercase tracking-wide"
+                        >
+                            Reset All
+                        </button>
                      </div>
-                     <input 
-                        type="range" 
-                        min="0" 
-                        max="10000" 
-                        step="100"
-                        value={filters.priceRange[1]} 
-                        onChange={(e) => updateFilter('priceRange', [0, parseInt(e.target.value)])}
-                        className="w-full h-2 rounded-lg appearance-none cursor-pointer accent-primary-600 bg-slate-200"
-                     />
-                 </div>
+                     
+                     {/* Mobile Reset (Inline) */}
+                     <div className="lg:hidden mb-8 flex justify-end">
+                        <button 
+                            onClick={() => setFilters({ category: 'All', priceRange: [0, 10000], size: 'All', color: 'All', search: '' })}
+                            className="text-xs font-bold text-primary-600 hover:text-primary-700 uppercase tracking-wide bg-primary-50 px-3 py-1.5 rounded-full"
+                        >
+                            Reset Filters
+                        </button>
+                     </div>
 
-                 {/* Category Filter */}
-                 <div className="mb-8">
-                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">{t('category')}</label>
-                    <div className="flex flex-col gap-1">
-                        {['All', ...uniqueCategories].map(cat => (
-                            <label key={cat} className={`flex items-center gap-3 cursor-pointer py-2 px-3 rounded-lg transition-colors ${filters.category === cat ? 'bg-primary-50 text-primary-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}>
-                                <input type="radio" name="category" checked={filters.category === cat} onChange={() => updateFilter('category', cat)} className="sr-only" />
-                                <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${filters.category === cat ? 'border-primary-600' : 'border-slate-300'}`}>
-                                    {filters.category === cat && <div className="w-2 h-2 bg-primary-600 rounded-full"></div>}
-                                </div>
-                                <span>{cat === 'All' ? t('cat_All') : cat}</span>
-                            </label>
-                        ))}
-                    </div>
-                 </div>
-                 
-                 {/* Sizes Filter */}
-                 <div className="mb-8">
-                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">{t('size')}</label>
-                    <div className="flex flex-wrap gap-2">
-                         {sizes.map(size => (
-                             <button
-                                key={size}
-                                onClick={() => updateFilter('size', filters.size === size ? 'All' : size)}
-                                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all border ${
-                                    filters.size === size 
-                                      ? 'bg-slate-900 text-white border-slate-900 shadow-md' 
-                                      : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
-                                }`}
-                             >
-                                {size}
-                             </button>
-                         ))}
-                    </div>
-                 </div>
+                     {/* Price Filter */}
+                     <div className="mb-8">
+                         <div className="flex justify-between items-center mb-3">
+                            <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Max Price</label>
+                            <span className="text-sm font-bold text-slate-900">₹{filters.priceRange[1]}</span>
+                         </div>
+                         <input 
+                            type="range" 
+                            min="0" 
+                            max="10000" 
+                            step="100"
+                            value={filters.priceRange[1]} 
+                            onChange={(e) => updateFilter('priceRange', [0, parseInt(e.target.value)])}
+                            className="w-full h-2 rounded-lg appearance-none cursor-pointer accent-primary-600 bg-slate-200"
+                         />
+                     </div>
 
-                 {/* Colors Filter */}
-                 <div>
-                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">{t('color')}</label>
-                    <div className="flex flex-wrap gap-2">
-                         {uniqueColors.map(color => (
-                             <button
-                                key={color}
-                                onClick={() => updateFilter('color', filters.color === color ? 'All' : color)}
-                                title={color}
-                                className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-transform hover:scale-110 ${
-                                    filters.color === color 
-                                      ? 'border-primary-600 ring-2 ring-primary-100 scale-110' 
-                                      : 'border-slate-200'
-                                }`}
-                             >
-                                {color === 'All' ? (
-                                    <span className="text-[10px] font-bold text-slate-500">All</span>
-                                ) : (
-                                    <span 
-                                        className="w-full h-full rounded-full" 
-                                        style={{ backgroundColor: getColorHex(color) || 'transparent' }}
-                                    >
-                                        {!getColorHex(color) && <span className="text-[8px] flex w-full h-full items-center justify-center font-bold text-slate-500 bg-slate-100/50 rounded-full">{color.charAt(0)}</span>}
-                                    </span>
-                                )}
-                             </button>
-                         ))}
-                    </div>
+                     {/* Category Filter */}
+                     <div className="mb-8">
+                        <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">{t('category')}</label>
+                        <div className="flex flex-col gap-1">
+                            {['All', ...uniqueCategories].map(cat => (
+                                <label key={cat} className={`flex items-center gap-3 cursor-pointer py-2 px-3 rounded-lg transition-colors ${filters.category === cat ? 'bg-primary-50 text-primary-700 font-semibold' : 'text-slate-600 hover:bg-slate-50'}`}>
+                                    <input type="radio" name="category" checked={filters.category === cat} onChange={() => updateFilter('category', cat)} className="sr-only" />
+                                    <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${filters.category === cat ? 'border-primary-600' : 'border-slate-300'}`}>
+                                        {filters.category === cat && <div className="w-2 h-2 bg-primary-600 rounded-full"></div>}
+                                    </div>
+                                    <span>{cat === 'All' ? t('cat_All') : cat}</span>
+                                </label>
+                            ))}
+                        </div>
+                     </div>
+                     
+                     {/* Sizes Filter */}
+                     <div className="mb-8">
+                        <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">{t('size')}</label>
+                        <div className="flex flex-wrap gap-2">
+                             {sizes.map(size => (
+                                 <button
+                                    key={size}
+                                    onClick={() => updateFilter('size', filters.size === size ? 'All' : size)}
+                                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all border ${
+                                        filters.size === size 
+                                          ? 'bg-slate-900 text-white border-slate-900 shadow-md' 
+                                          : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
+                                    }`}
+                                 >
+                                    {size}
+                                 </button>
+                             ))}
+                        </div>
+                     </div>
+
+                     {/* Colors Filter */}
+                     <div className="mb-8 lg:mb-0">
+                        <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">{t('color')}</label>
+                        <div className="flex flex-wrap gap-2">
+                             {uniqueColors.map(color => (
+                                 <button
+                                    key={color}
+                                    onClick={() => updateFilter('color', filters.color === color ? 'All' : color)}
+                                    title={color}
+                                    className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-transform hover:scale-110 ${
+                                        filters.color === color 
+                                          ? 'border-primary-600 ring-2 ring-primary-100 scale-110' 
+                                          : 'border-slate-200'
+                                    }`}
+                                 >
+                                    {color === 'All' ? (
+                                        <span className="text-[10px] font-bold text-slate-500">All</span>
+                                    ) : (
+                                        <span 
+                                            className="w-full h-full rounded-full" 
+                                            style={{ backgroundColor: getColorHex(color) || 'transparent' }}
+                                        >
+                                            {!getColorHex(color) && <span className="text-[8px] flex w-full h-full items-center justify-center font-bold text-slate-500 bg-slate-100/50 rounded-full">{color.charAt(0)}</span>}
+                                        </span>
+                                    )}
+                                 </button>
+                             ))}
+                        </div>
+                     </div>
                  </div>
+             </div>
+
+             {/* Mobile Sticky Action Button */}
+             <div className="p-4 border-t border-slate-100 bg-white lg:hidden mt-auto">
+                 <button 
+                    onClick={() => setShowMobileFilters(false)}
+                    className="w-full py-3.5 bg-slate-900 text-white rounded-xl font-bold text-base shadow-lg active:scale-95 transition-transform"
+                 >
+                     View {filteredProducts.length} Results
+                 </button>
              </div>
           </div>
 

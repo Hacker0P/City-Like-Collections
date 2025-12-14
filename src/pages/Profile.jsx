@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, Save, MapPin, Instagram, Facebook, Youtube, CheckCircle, X, LogOut, Globe } from 'lucide-react';
+import { Settings, Save, MapPin, Instagram, Facebook, Youtube, CheckCircle, X, LogOut, Globe, User, Phone, Briefcase, Store, Navigation, AlertTriangle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { useLanguage } from '../context/LanguageContext';
@@ -25,7 +25,9 @@ const Profile = () => {
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState(null);
 
-  const handleLogout = async () => {
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
+  const performLogout = async () => {
         // Manually clear local storage to force logout
         Object.keys(localStorage).forEach(key => {
             if (key.startsWith('sb-') && key.endsWith('-auth-token')) {
@@ -34,6 +36,10 @@ const Profile = () => {
         });
         window.location.href = '/login';
         return;
+  };
+
+  const handleLogoutClick = () => {
+    setShowLogoutConfirm(true);
   };
 
   useEffect(() => {
@@ -118,308 +124,460 @@ const Profile = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 md:py-12 mb-20 md:mb-20">
-      
-      {/* Header */}
-      <div className="text-center mb-6 md:mb-10">
-        <h1 className="text-2xl md:text-4xl font-extrabold text-slate-900 mb-2 md:mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-indigo-600 inline-block">{t('profile_title')}</h1>
-        <p className="text-slate-500 max-w-lg mx-auto text-sm md:text-lg leading-relaxed">{t('profile_subtitle')}</p>
-      </div>
+    <div className="min-h-screen bg-slate-50/50 pb-24 md:pb-12">
+      {/* Top Background Decoration */}
+      <div className="absolute top-0 left-0 right-0 h-80 bg-gradient-to-b from-primary-50/50 to-transparent -z-10 pointer-events-none" />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 items-start">
+      <div className="container mx-auto px-4 py-6 md:py-10 max-w-7xl">
+        
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 md:mb-12">
+          <div className="text-center md:text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-100/50 text-primary-700 text-xs font-bold uppercase tracking-wider mb-4 shadow-sm md:mx-0 mx-auto">
+                <User size={14} /> <span>{t('profile_title')}</span>
+            </div>
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight mb-3">
+              {config.storeName || 'Store Profile'}
+            </h1>
+            <p className="text-slate-500 text-base md:text-lg font-medium max-w-xl md:mx-0 mx-auto leading-relaxed">
+              {t('profile_subtitle')}
+            </p>
+          </div>
           
-        <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-200 p-5 md:p-8">
-            <h3 className="text-lg md:text-xl font-bold text-slate-800 mb-4 md:mb-6 flex items-center gap-2 md:gap-3 pb-3 md:pb-4 border-b border-slate-100">
-              <Settings className="text-primary-600" size={20} /> {t('profile_generalConfig')}
-            </h3>
+          <div className="flex items-center justify-center gap-3">
+             <button 
+                type="button" 
+                onClick={handleLogoutClick}
+                className="group flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 text-red-600 font-bold rounded-xl hover:bg-red-50 hover:border-red-100 hover:shadow-sm transition-all text-sm"
+            >
+                <LogOut size={18} className="transition-transform group-hover:-translate-x-1" /> 
+                <span>Logout</span>
+            </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
-            <form onSubmit={handleConfigSave} className="space-y-6 md:space-y-8">
+          {/* Left Column: Settings Form */}
+          <div className="lg:col-span-8 space-y-6">
+              
+            <form onSubmit={handleConfigSave} className="bg-white rounded-2xl md:rounded-3xl shadow-sm border border-slate-200/60 overflow-hidden">
+                
+                {/* Section Header */}
+                <div className="bg-slate-50/50 px-6 py-5 md:px-8 border-b border-slate-100 flex items-center justify-between backdrop-blur-sm">
+                    <h3 className="text-lg md:text-xl font-bold text-slate-800 flex items-center gap-3">
+                        <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-white shadow-sm border border-slate-100 text-primary-600 flex items-center justify-center">
+                            <Settings size={20} className="md:w-6 md:h-6" />
+                        </div>
+                        {t('profile_generalConfig')}
+                    </h3>
+                </div>
+                
+                <div className="p-6 md:p-8 space-y-8 md:space-y-10">
 
-                 {/* Language Settings - Added based on user request */}
-                 <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 md:p-6 flex items-center justify-between">
-                    <div>
-                        <h4 className="font-bold text-slate-800 flex items-center gap-2 text-sm md:text-base mb-1">
-                            <Globe className="text-primary-600" size={18} /> {t('profile_appLanguage')}
-                        </h4>
-                        <p className="text-xs md:text-sm text-slate-500">{t('profile_chooseLanguage')}</p>
-                    </div>
-                    <div className="flex bg-white rounded-lg border border-slate-200 p-1">
-                        <button 
-                            type="button"
-                            onClick={() => language !== 'en' && toggleLanguage()}
-                            className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${language === 'en' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
-                        >
-                            English
-                        </button>
-                        <button 
-                            type="button"
-                            onClick={() => language !== 'bn' && toggleLanguage()}
-                            className={`px-3 py-1.5 rounded-md text-xs font-bold transition-all ${language === 'bn' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-500 hover:text-slate-900'}`}
-                        >
-                            বাংলা
-                        </button>
-                    </div>
-                 </div>
+                    {/* Language Settings */}
+                    <section>
+                        <div className="flex items-center gap-4 mb-4">
+                            <h4 className="font-bold text-slate-900 text-base md:text-lg flex items-center gap-2">
+                                    <Globe className="text-slate-400" size={20} /> {t('profile_appLanguage')}
+                            </h4>
+                            <div className="h-px bg-slate-100 flex-1"></div>
+                        </div>
+                        <div className="bg-slate-50 rounded-xl p-1.5 flex border border-slate-200/50 max-w-sm">
+                            <button 
+                                type="button"
+                                onClick={() => language !== 'en' && toggleLanguage()}
+                                className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all duration-300 ${language === 'en' ? 'bg-white text-slate-900 shadow-sm ring-1 ring-black/5' : 'text-slate-500 hover:text-slate-700'}`}
+                            >
+                                English
+                            </button>
+                            <button 
+                                type="button"
+                                onClick={() => language !== 'bn' && toggleLanguage()}
+                                className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all duration-300 ${language === 'bn' ? 'bg-white text-slate-900 shadow-sm ring-1 ring-black/5' : 'text-slate-500 hover:text-slate-700'}`}
+                            >
+                                বাংলা
+                            </button>
+                        </div>
+                    </section>
 
-                {/* Store Notice Section */}
-                <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 md:p-6">
-                    <div className="flex justify-between items-center mb-3 md:mb-4">
-                        <label className="text-orange-800 font-bold flex items-center gap-2 text-sm md:text-base">
-                           📢 {t('profile_noticeBanner')}
-                        </label>
-                        <div className="flex items-center gap-2 md:gap-3">
-                            <span className={`text-xs md:text-sm font-semibold ${config.showNotice ? 'text-orange-700' : 'text-slate-400'}`}>
-                                {config.showNotice ? t('profile_noticeVisible') : t('profile_noticeHidden')}
-                            </span>
+                    {/* Store Notice Section */}
+                    <section>
+                        <div className="flex items-center justify-between mb-4">
+                            <label className="text-slate-900 font-bold text-base md:text-lg flex items-center gap-2">
+                                📣 {t('profile_noticeBanner')}
+                            </label>
+                            
                             <button 
                                 type="button"
                                 onClick={toggleNotice}
-                                className={`px-2 md:px-3 py-1 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-wider transition-colors ${config.showNotice ? 'bg-red-100 text-red-600 hover:bg-red-200' : 'bg-green-100 text-green-600 hover:bg-green-200'}`}
+                                className={`group flex items-center gap-2 pl-1 pr-3 py-1 rounded-full text-xs font-bold border transition-all cursor-pointer select-none ${config.showNotice ? 'bg-orange-50 text-orange-700 border-orange-200' : 'bg-slate-50 text-slate-400 border-slate-200 hover:bg-slate-100'}`}
                             >
-                                {config.showNotice ? t('profile_turnOff') : t('profile_turnOn')}
+                                <div className={`w-5 h-5 rounded-full flex items-center justify-center transition-colors ${config.showNotice ? 'bg-orange-500 text-white' : 'bg-slate-200 text-slate-400'}`}>
+                                    {config.showNotice ? <CheckCircle size={10} strokeWidth={4} /> : <X size={10} strokeWidth={4} />}
+                                </div>
+                                {config.showNotice ? t('profile_visible') : t('profile_hidden')}
                             </button>
                         </div>
-                    </div>
-                    <input 
-                      type="text" 
-                      className="w-full px-3 md:px-4 py-2 border border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-200 focus:border-orange-400 outline-none text-orange-900 placeholder-orange-300 text-sm md:text-base" 
-                      placeholder={t('profile_noticePlaceholder')}
-                      value={config.noticeMessage || ''}
-                      onChange={handleNoticeChange}
-                    />
-                    <p className="text-orange-600 text-xs md:text-sm mt-2 opacity-80">
-                      {t('profile_noticeHint')}
-                    </p>
-                </div>
-
-                {/* Identity */}
-                <div className="grid md:grid-cols-2 gap-4 md:gap-6">
-                    <div>
-                        <label className="block text-sm font-bold text-slate-700 mb-1 md:mb-2">{t('profile_brandName')}</label>
-                        <input 
-                            type="text" 
-                            className="w-full px-3 md:px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none transition-all text-sm md:text-base" 
-                            value={config.storeName}
-                            onChange={e => setConfig({...config, storeName: e.target.value})}
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-slate-700 mb-1 md:mb-2">{t('profile_ownerName')}</label>
-                        <input 
-                            type="text" 
-                            className="w-full px-3 md:px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none transition-all text-sm md:text-base" 
-                            placeholder="e.g. Rahul Kumar"
-                            value={config.ownerName || ''}
-                            onChange={e => setConfig({...config, ownerName: e.target.value})}
-                        />
-                    </div>
-                </div>
-
-                 {/* Contact */}
-                 <div className="grid md:grid-cols-2 gap-4 md:gap-6">
-                    <div>
-                        <label className="block text-sm font-bold text-slate-700 mb-1 md:mb-2">{t('profile_whatsapp')}</label>
-                        <div className="relative">
-                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold border-r border-slate-300 pr-2">+91</span>
-                            <input 
-                                type="tel" 
-                                className="w-full pl-16 pr-3 md:pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none transition-all text-sm md:text-base font-bold" 
-                                placeholder="XXXXXXXXXX"
-                                value={config.whatsapp}
-                                onChange={e => setConfig({...config, whatsapp: e.target.value.replace(/\D/g, '').slice(0, 10)})}
-                            />
-                        </div>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-bold text-slate-700 mb-1 md:mb-2">{t('profile_alternate')}</label>
-                        <div className="relative">
-                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold border-r border-slate-300 pr-2">+91</span>
-                            <input 
-                                type="tel" 
-                                className="w-full pl-16 pr-3 md:pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none transition-all text-sm md:text-base font-bold" 
-                                placeholder="XXXXXXXXXX"
-                                value={config.alternateMobile || ''}
-                                onChange={e => setConfig({...config, alternateMobile: e.target.value.replace(/\D/g, '').slice(0, 10)})}
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <label className="block text-sm font-bold text-slate-700 mb-1 md:mb-2">{t('profile_address')}</label>
-                    <input 
-                        type="text" 
-                        className="w-full px-3 md:px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none transition-all text-sm md:text-base" 
-                        placeholder="Full address displaying on home page"
-                        value={config.address || ''}
-                        onChange={e => setConfig({...config, address: e.target.value})}
-                    />
-                </div>
-                
-                {/* Location */}
-                <div className="bg-slate-50 rounded-xl p-4 md:p-6 border border-slate-200">
-                    <h4 className="text-base md:text-lg font-bold text-slate-800 mb-3 md:mb-4 flex items-center gap-2">
-                        <MapPin className="text-primary-600" size={18} /> {t('profile_locationSettings')}
-                    </h4>
-                    
-                    <div className="space-y-4">
-                        <div>
-                        <label className="block text-sm font-bold text-slate-700 mb-1 md:mb-2">{t('profile_mapsLink')}</label>
-                        <input 
-                            type="text" 
-                            className="w-full px-3 md:px-4 py-2 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none transition-all text-sm md:text-base" 
-                            placeholder="https://maps.google.com/..."
-                            value={config.googleMapsLink || ''}
-                            onChange={e => setConfig({...config, googleMapsLink: e.target.value})}
-                        />
-                        </div>
                         
-                        <div className="grid md:grid-cols-2 gap-4">
-                             <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-1 md:mb-2">{t('profile_cid')}</label>
-                                <input 
-                                    type="text" 
-                                    className="w-full px-3 md:px-4 py-2 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none transition-all text-sm md:text-base" 
-                                    placeholder="e.g. 5610898517208768605"
-                                    value={config.cid || ''}
-                                    onChange={e => setConfig({...config, cid: e.target.value})}
-                                />
-                             </div>
-                             <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-1 md:mb-2">{t('profile_coordinates')}</label>
-                                <div className="grid grid-cols-2 gap-2">
+                        <div className={`relative transition-all duration-300 rounded-xl md:rounded-2xl p-1 border-2 group focus-within:ring-4 focus-within:ring-primary-500/10 ${config.showNotice ? 'border-orange-100 bg-orange-50/30' : 'border-slate-100 bg-slate-50'}`}>
+                            <div className="absolute top-3.5 left-4 text-slate-400 pointer-events-none group-focus-within:text-orange-500 transition-colors">
+                                <span className="text-xl">✍️</span>
+                            </div>
+                            <input 
+                                type="text" 
+                                className="w-full pl-12 pr-4 py-3 bg-white/50 rounded-lg md:rounded-xl outline-none text-slate-700 font-medium placeholder:text-slate-300 transition-all bg-transparent border-none text-base" 
+                                placeholder={t('profile_noticePlaceholder')}
+                                value={config.noticeMessage || ''}
+                                onChange={handleNoticeChange}
+                            />
+                        </div>
+                        <p className="text-slate-400 text-xs md:text-sm mt-2 ml-1">
+                            {t('profile_noticeHint')}
+                        </p>
+                    </section>
+
+                    {/* Identity */}
+                    <section>
+                        <div className="flex items-center gap-4 mb-5">
+                            <h4 className="font-bold text-slate-900 text-base md:text-lg flex items-center gap-2">
+                                    <Store className="text-slate-400" size={20} /> {t('profile_storeIdentity')}
+                            </h4>
+                            <div className="h-px bg-slate-100 flex-1"></div>
+                        </div>
+
+                        <div className="grid md:grid-cols-2 gap-5 md:gap-6">
+                            <div className="group">
+                                <label className="block text-sm font-bold text-slate-500 mb-2 ml-1 transition-colors group-focus-within:text-primary-600">{t('profile_brandName')}</label>
+                                <div className="relative">
+                                    <Store className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors" size={18} />
                                     <input 
-                                        className="w-full px-3 md:px-4 py-2 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none transition-all text-sm md:text-base" 
-                                        placeholder="Lat" 
-                                        type="number" 
-                                        step="any"
-                                        value={config.location?.lat || ''}
-                                        onChange={e => handleLocationChange('lat', e.target.value)}
-                                    />
-                                    <input 
-                                        className="w-full px-3 md:px-4 py-2 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none transition-all text-sm md:text-base" 
-                                        placeholder="Lng" 
-                                        type="number" 
-                                        step="any"
-                                        value={config.location?.lng || ''}
-                                        onChange={e => handleLocationChange('lng', e.target.value)}
+                                        type="text" 
+                                        className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all font-semibold text-slate-700 text-base placeholder:text-slate-300" 
+                                        value={config.storeName}
+                                        onChange={e => setConfig({...config, storeName: e.target.value})}
                                     />
                                 </div>
-                             </div>
+                            </div>
+                            <div className="group">
+                                <label className="block text-sm font-bold text-slate-500 mb-2 ml-1 transition-colors group-focus-within:text-primary-600">{t('profile_ownerName')}</label>
+                                <div className="relative">
+                                    <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors" size={18} />
+                                    <input 
+                                        type="text" 
+                                        className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all font-semibold text-slate-700 text-base placeholder:text-slate-300" 
+                                        placeholder="e.g. Rahul Kumar"
+                                        value={config.ownerName || ''}
+                                        onChange={e => setConfig({...config, ownerName: e.target.value})}
+                                    />
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </section>
+
+                    {/* Contact */}
+                    <section>
+                        <div className="flex items-center gap-4 mb-5">
+                            <h4 className="font-bold text-slate-900 text-base md:text-lg flex items-center gap-2">
+                                    <Phone className="text-slate-400" size={20} /> {t('profile_contactInfo')}
+                            </h4>
+                            <div className="h-px bg-slate-100 flex-1"></div>
+                        </div>
+                        <div className="grid md:grid-cols-2 gap-5 md:gap-6">
+                            <div className="group">
+                                <label className="block text-sm font-bold text-slate-500 mb-2 ml-1 transition-colors group-focus-within:text-primary-600">{t('profile_whatsapp')}</label>
+                                <div className="relative">
+                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors pointer-events-none font-bold border-r border-slate-300 pr-2 mr-2 text-sm">
+                                        +91
+                                    </div>
+                                    <input 
+                                        type="tel" 
+                                        className="w-full pl-[4.5rem] pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all font-bold tracking-wide text-slate-700 text-base placeholder:text-slate-300" 
+                                        placeholder="XXXXXXXXXX"
+                                        value={config.whatsapp}
+                                        onChange={e => setConfig({...config, whatsapp: e.target.value.replace(/\D/g, '').slice(0, 10)})}
+                                    />
+                                </div>
+                            </div>
+                            <div className="group">
+                                <label className="block text-sm font-bold text-slate-500 mb-2 ml-1 transition-colors group-focus-within:text-primary-600">{t('profile_alternate')}</label>
+                                <div className="relative">
+                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors pointer-events-none font-bold border-r border-slate-300 pr-2 mr-2 text-sm">
+                                        +91
+                                    </div>
+                                    <input 
+                                        type="tel" 
+                                        className="w-full pl-[4.5rem] pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all font-bold tracking-wide text-slate-700 text-base placeholder:text-slate-300" 
+                                        placeholder="XXXXXXXXXX"
+                                        value={config.alternateMobile || ''}
+                                        onChange={e => setConfig({...config, alternateMobile: e.target.value.replace(/\D/g, '').slice(0, 10)})}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Location */}
+                    <section>
+                        <div className="flex items-center gap-4 mb-5">
+                            <h4 className="font-bold text-slate-900 text-base md:text-lg flex items-center gap-2">
+                                    <MapPin className="text-slate-400" size={20} /> {t('profile_locationDetails')}
+                            </h4>
+                            <div className="h-px bg-slate-100 flex-1"></div>
+                        </div>
+
+                        <div className="space-y-6">
+                            <div className="group">
+                                <label className="block text-sm font-bold text-slate-500 mb-2 ml-1 transition-colors group-focus-within:text-primary-600">{t('profile_address')}</label>
+                                <div className="relative">
+                                    <MapPin className="absolute left-4 top-3.5 text-slate-400 group-focus-within:text-primary-500 transition-colors" size={18} />
+                                    <textarea 
+                                        className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-500/10 outline-none transition-all font-medium text-slate-700 min-h-[80px] text-base placeholder:text-slate-300 resize-y" 
+                                        placeholder="Full address displaying on home page"
+                                        value={config.address || ''}
+                                        onChange={e => setConfig({...config, address: e.target.value})}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="p-5 bg-slate-50/80 rounded-2xl border border-slate-200/60">
+                                <h5 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                    <Navigation className="text-primary-600" size={16} /> Advanced Coordinates
+                                </h5>
+                                
+                                <div className="space-y-4">
+                                    <div className="group">
+                                        <label className="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wide">{t('profile_mapsLink')}</label>
+                                        <input 
+                                            type="text" 
+                                            className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-500/10 outline-none transition-all text-base md:text-sm font-medium placeholder:text-slate-300" 
+                                            placeholder="https://maps.google.com/..."
+                                            value={config.googleMapsLink || ''}
+                                            onChange={e => setConfig({...config, googleMapsLink: e.target.value})}
+                                        />
+                                    </div>
+                                    
+                                    <div className="grid md:grid-cols-2 gap-4">
+                                            <div className="group">
+                                            <label className="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wide">{t('profile_cid')}</label>
+                                            <input 
+                                                type="text" 
+                                                className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-500/10 outline-none transition-all text-base md:text-sm font-medium placeholder:text-slate-300" 
+                                                placeholder="e.g. 5610898517208768605"
+                                                value={config.cid || ''}
+                                                onChange={e => setConfig({...config, cid: e.target.value})}
+                                            />
+                                            </div>
+                                            <div className="group">
+                                            <label className="block text-xs font-bold text-slate-400 mb-1.5 uppercase tracking-wide">{t('profile_coordinates')}</label>
+                                            <div className="grid grid-cols-2 gap-2">
+                                                <input 
+                                                    className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-500/10 outline-none transition-all text-base md:text-sm font-medium placeholder:text-slate-300" 
+                                                    placeholder="Lat" 
+                                                    type="number" 
+                                                    step="any"
+                                                    value={config.location?.lat || ''}
+                                                    onChange={e => handleLocationChange('lat', e.target.value)}
+                                                />
+                                                <input 
+                                                    className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:border-primary-500 focus:ring-2 focus:ring-primary-500/10 outline-none transition-all text-base md:text-sm font-medium placeholder:text-slate-300" 
+                                                    placeholder="Lng" 
+                                                    type="number" 
+                                                    step="any"
+                                                    value={config.location?.lng || ''}
+                                                    onChange={e => handleLocationChange('lng', e.target.value)}
+                                                />
+                                            </div>
+                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+
+                    {/* Socials */}
+                    <section>
+                        <div className="flex items-center gap-4 mb-5">
+                            <h4 className="font-bold text-slate-900 text-base md:text-lg flex items-center gap-2">
+                                    Share Your Socials
+                            </h4>
+                            <div className="h-px bg-slate-100 flex-1"></div>
+                        </div>
+                        <div className="grid md:grid-cols-1 gap-4">
+                            <div className="flex items-center gap-3 group">
+                                <div className="w-10 h-10 rounded-full bg-pink-50 text-pink-600 flex items-center justify-center border border-pink-100 flex-shrink-0 group-focus-within:bg-pink-100 group-focus-within:scale-110 transition-all duration-300">
+                                    <Instagram size={20} />
+                                </div>
+                                <input 
+                                    type="text" 
+                                    className="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-pink-500 focus:ring-4 focus:ring-pink-500/10 outline-none transition-all font-medium text-slate-700 text-base placeholder:text-slate-300" 
+                                    placeholder="Instagram Profile URL"
+                                    value={config.socials?.instagram || ''}
+                                    onChange={e => setConfig({ ...config, socials: { ...config.socials, instagram: e.target.value } })}
+                                />
+                            </div>
+                            <div className="flex items-center gap-3 group">
+                                <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100 flex-shrink-0 group-focus-within:bg-blue-100 group-focus-within:scale-110 transition-all duration-300">
+                                    <Facebook size={20} />
+                                </div>
+                                <input 
+                                    type="text" 
+                                    className="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-medium text-slate-700 text-base placeholder:text-slate-300" 
+                                    placeholder="Facebook Page URL"
+                                    value={config.socials?.facebook || ''}
+                                    onChange={e => setConfig({ ...config, socials: { ...config.socials, facebook: e.target.value } })}
+                                />
+                            </div>
+                            <div className="flex items-center gap-3 group">
+                                <div className="w-10 h-10 rounded-full bg-red-50 text-red-600 flex items-center justify-center border border-red-100 flex-shrink-0 group-focus-within:bg-red-100 group-focus-within:scale-110 transition-all duration-300">
+                                    <Youtube size={20} />
+                                </div>
+                                <input 
+                                    type="text" 
+                                    className="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 outline-none transition-all font-medium text-slate-700 text-base placeholder:text-slate-300" 
+                                    placeholder="YouTube Channel URL"
+                                    value={config.socials?.youtube || ''}
+                                    onChange={e => setConfig({ ...config, socials: { ...config.socials, youtube: e.target.value } })}
+                                />
+                            </div>
+                        </div>
+                    </section>
+                
+                    {/* Spacer for bottom bar */}
+                    <div className="h-20 md:hidden"></div>
                 </div>
 
-                {/* Socials */}
-                <div className="pt-4 md:pt-6 border-t border-slate-100">
-                    <h4 className="text-base md:text-lg font-bold text-slate-800 mb-3 md:mb-4 flex items-center gap-2">
-                        {t('profile_socialLinks')}
-                    </h4>
-                    <div className="space-y-4">
-                        <div className="flex items-center gap-4">
-                            <Instagram className="text-pink-600 flex-shrink-0" size={20} />
-                            <input 
-                                type="text" 
-                                className="w-full px-3 md:px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none transition-all text-sm md:text-base" 
-                                placeholder="Instagram Profile URL"
-                                value={config.socials?.instagram || ''}
-                                onChange={e => setConfig({ ...config, socials: { ...config.socials, instagram: e.target.value } })}
-                            />
+                {/* Sticky Action Bar */}
+                <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/90 backdrop-blur-xl border-t border-slate-200 z-50 md:sticky md:bottom-0 md:bg-gray-50/50 md:border-t md:border-slate-100">
+                    <div className="container mx-auto flex items-center justify-between px-0 md:px-4 max-w-7xl">
+                        <div className="hidden md:block text-slate-400 text-xs font-medium">
+                            {saving ? 'Syncing to cloud...' : 'Last synced just now'}
                         </div>
-                        <div className="flex items-center gap-4">
-                            <Facebook className="text-blue-600 flex-shrink-0" size={20} />
-                            <input 
-                                type="text" 
-                                className="w-full px-3 md:px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none transition-all text-sm md:text-base" 
-                                placeholder="Facebook Page URL"
-                                value={config.socials?.facebook || ''}
-                                onChange={e => setConfig({ ...config, socials: { ...config.socials, facebook: e.target.value } })}
-                            />
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <Youtube className="text-red-600 flex-shrink-0" size={20} />
-                            <input 
-                                type="text" 
-                                className="w-full px-3 md:px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none transition-all text-sm md:text-base" 
-                                placeholder="YouTube Channel URL"
-                                value={config.socials?.youtube || ''}
-                                onChange={e => setConfig({ ...config, socials: { ...config.socials, youtube: e.target.value } })}
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                <div className="pt-4 md:pt-6 border-t border-slate-100">
-                    <h4 className="text-base md:text-lg font-bold text-slate-800 mb-3 md:mb-4 flex items-center gap-2">
-                        {t('profile_accountActions')}
-                    </h4>
-                    <button 
-                        type="button" 
-                        onClick={handleLogout}
-                        className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-50 text-red-600 font-bold rounded-xl border border-red-100 hover:bg-red-100 transition-colors"
-                    >
-                        <LogOut size={18} /> {t('profile_logout')}
-                    </button>
-                </div>
-
-                <div className="h-24 md:h-12"></div>
-
-                <div className="fixed bottom-[58px] md:bottom-0 left-0 right-0 p-4 bg-white/90 backdrop-blur-md border-t border-slate-200 z-[150] animate-slide-in-up md:sticky md:bottom-0 md:bg-white md:border-t-0 md:p-0">
-                    <div className="container mx-auto flex justify-end px-0 md:px-4">
                         <button 
-                            className="bg-primary-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-primary-600/20 hover:bg-primary-700 hover:shadow-xl transition-all active:scale-95 flex items-center gap-2 disabled:opacity-70 disabled:scale-100 w-full md:w-auto justify-center"
+                            className="w-full md:w-auto bg-slate-900 text-white px-8 py-3.5 rounded-xl font-bold hover:bg-slate-800 hover:shadow-lg hover:shadow-slate-900/20 transition-all active:scale-95 flex items-center justify-center gap-3 disabled:opacity-70 disabled:scale-100"
                             type="button" 
                             onClick={handleConfigSave}
                             disabled={saving}
                         >
-                            {saving ? t('profile_saving') : <><Save size={18} /> {t('profile_save')}</>}
+                            {saving ? (
+                                <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> {t('profile_saving')}</>
+                            ) : (
+                                <><Save size={20} /> {t('profile_save')}</>
+                            )}
                         </button>
                     </div>
                 </div>
             </form>
-        </div>
+          </div>
 
-        {/* Map Preview */}
-        <div className="bg-slate-50 rounded-2xl border border-slate-200 p-4 md:p-6 lg:sticky lg:top-24">
-            <h3 className="text-base md:text-lg font-bold text-slate-800 mb-2">{t('profile_mapPreview')}</h3>
-            <p className="text-slate-500 text-xs md:text-sm mb-4">{t('profile_mapHint')}</p>
-            <div className="aspect-square w-full rounded-xl overflow-hidden border border-slate-200 bg-slate-200 shadow-inner">
-            {(config.location?.lat && config.location?.lng) ? (
-                <iframe 
-                    width="100%" 
-                    height="100%" 
-                    title="Map Preview"
-                    frameBorder="0" 
-                    scrolling="no"
-                    marginHeight="0" 
-                    marginWidth="0"
-                    src={`https://maps.google.com/maps?q=${config.location.lat},${config.location.lng}&z=15&output=embed&iwloc=B`}
-                    className="grayscale-[20%]"
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                ></iframe>
-            ) : (
-                <div className="h-full flex flex-col items-center justify-center text-slate-400 gap-2">
-                    <MapPin size={32} />
-                    <span>{t('profile_setCoordinates')}</span>
+          {/* Right Column: Map & Extras */}
+          <div className="lg:col-span-4 space-y-6 lg:sticky lg:top-8">
+              
+            {/* Map Card */}
+            <div className="bg-white rounded-2xl md:rounded-3xl border border-slate-200/60 shadow-sm overflow-hidden">
+                <div className="p-5 md:p-6 border-b border-slate-100">
+                    <h3 className="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2">
+                        <MapPin className="text-primary-600" size={20} /> {t('profile_mapPreview')}
+                    </h3>
+                    <p className="text-slate-500 text-xs md:text-sm leading-relaxed">
+                        {t('profile_mapHint')}
+                    </p>
                 </div>
-            )}
+                
+                <div className="p-5 md:p-6 bg-slate-50">
+                    <div className="aspect-[4/5] w-full rounded-2xl overflow-hidden border-4 border-white shadow-xl shadow-slate-200/50 bg-slate-100 relative group">
+                        {(config.location?.lat && config.location?.lng) ? (
+                            <>
+                                <iframe 
+                                    width="100%" 
+                                    height="100%" 
+                                    title="Map Preview"
+                                    frameBorder="0" 
+                                    scrolling="no"
+                                    marginHeight="0" 
+                                    marginWidth="0"
+                                    src={`https://maps.google.com/maps?q=${config.location.lat},${config.location.lng}&z=15&output=embed&iwloc=B`}
+                                    className="grayscale-[20%] transition-all duration-700 group-hover:grayscale-0 hover:scale-105"
+                                    loading="lazy"
+                                    referrerPolicy="no-referrer-when-downgrade"
+                                ></iframe>
+                                <div className="absolute inset-0 border-4 border-black/5 rounded-2xl pointer-events-none mix-blend-multiply"></div>
+                            </>
+                        ) : (
+                            <div className="h-full flex flex-col items-center justify-center text-slate-400 gap-3">
+                                <div className="w-16 h-16 rounded-full bg-slate-200 flex items-center justify-center text-slate-400">
+                                <MapPin size={32} />
+                                </div>
+                                <span className="font-bold text-slate-500">{t('profile_setCoordinates')}</span>
+                            </div>
+                        )}
+                    </div>
+                </div>
             </div>
+
+            {/* Pro Tip Card */}
+            <div className="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-3xl p-6 text-white shadow-xl shadow-indigo-200 relative overflow-hidden">
+                <div className="relative z-10">
+                    <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mb-4 backdrop-blur-sm">
+                        <span className="text-xl">💡</span>
+                    </div>
+                    <h4 className="font-bold text-lg mb-2">Pro Tip</h4>
+                    <p className="text-indigo-100 text-sm leading-relaxed font-medium">
+                        Keep your profile updated with correct contact numbers so customers can reach you easily!
+                    </p>
+                </div>
+                {/* Decorative circles */}
+                <div className="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+                <div className="absolute bottom-0 left-0 -ml-8 -mb-8 w-24 h-24 bg-black/10 rounded-full blur-xl"></div>
+            </div>
+            
+          </div>
+
         </div>
 
       </div>
 
-
       {/* Toast Notification */}
       {toast && (
-          <div className="fixed bottom-20 md:bottom-6 right-6 z-[200] max-w-[90vw] bg-slate-900 text-white px-5 py-3 md:px-6 md:py-4 rounded-2xl shadow-2xl flex items-center gap-3 md:gap-4 animate-fade-in-up border border-slate-700">
-              <div className="bg-green-500/20 p-2 rounded-full text-green-400 flex-shrink-0"><CheckCircle size={20} /></div>
-              <div className="flex-1 min-w-0">
-                  <h4 className="font-bold text-sm">Success</h4>
-                  <p className="text-xs md:text-sm text-slate-300 truncate">{toast.message}</p>
+          <div className="fixed bottom-24 md:bottom-12 right-6 z-[100] max-w-[90vw] w-auto bg-slate-900/90 backdrop-blur-md text-white px-5 py-4 rounded-2xl shadow-2xl flex items-center gap-4 animate-fade-in-up border border-slate-700 ring-1 ring-white/10">
+              <div className={`p-2 rounded-full flex-shrink-0 ${toast.type === 'success' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
+                {toast.type === 'success' ? <CheckCircle size={20} /> : <div className="w-5 h-5 rounded-full border-2 border-current" />}
               </div>
-              <button onClick={() => setToast(null)} className="ml-2 text-slate-500 hover:text-white transition-colors"><X size={18} /></button>
+              <div className="flex-1 min-w-0 pr-4">
+                  <h4 className="font-bold text-sm leading-tight">{toast.type === 'success' ? 'Success' : 'Notice'}</h4>
+                  <p className="text-xs text-slate-300 truncate mt-0.5">{toast.message}</p>
+              </div>
+              <button onClick={() => setToast(null)} className="p-1 -mr-2 text-slate-500 hover:text-white transition-colors rounded-full hover:bg-white/10"><X size={18} /></button>
           </div>
+      )}
+      {/* Logout Confirmation Modal */}
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 animate-scale-up border border-slate-100">
+                <div className="w-12 h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center mb-4 mx-auto">
+                    <AlertTriangle size={24} strokeWidth={2.5} />
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 text-center mb-2">Logout?</h3>
+                <p className="text-slate-500 text-center mb-6 leading-relaxed">
+                    Are you sure you want to log out of your account? You will need to sign in again to access the store settings.
+                </p>
+                <div className="grid grid-cols-2 gap-3">
+                    <button 
+                        onClick={() => setShowLogoutConfirm(false)}
+                        className="py-3 px-4 rounded-xl font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors"
+                    >
+                        Cancel
+                    </button>
+                    <button 
+                        onClick={performLogout}
+                        className="py-3 px-4 rounded-xl font-bold text-white bg-red-600 hover:bg-red-700 shadow-lg shadow-red-600/20 transition-all active:scale-95"
+                    >
+                        Yes, Logout
+                    </button>
+                </div>
+            </div>
+        </div>
       )}
     </div>
   );

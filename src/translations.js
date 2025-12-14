@@ -163,8 +163,30 @@ export const translations = {
     profile_mapPreview: 'Map Preview',
     profile_mapHint: 'This is how your location will appear to customers.',
     profile_setCoordinates: 'Set coordinates',
+    profile_visible: 'Visible',
+    profile_hidden: 'Hidden',
+    profile_storeIdentity: 'Store Identity',
+    profile_contactInfo: 'Contact Information',
+    profile_locationDetails: 'Location Details',
     bg_english: 'English',
-    bg_bengali: 'Bengali'
+    bg_bengali: 'Bengali',
+    
+    // Carousel
+    carousel_title1: "Smart Casuals",
+    carousel_subtitle1: "Elevate your daily look",
+    carousel_title2: "Urban Street",
+    carousel_subtitle2: "Bold styles for the city",
+    carousel_title3: "Formal Elegance",
+    carousel_subtitle3: "For special occasions",
+    
+    // Mobile Discover Card
+    discover_title: "Discover More",
+    discover_desc: "Browse our full collection of premium wear",
+    
+    // Search
+    trending_now: "Trending Now",
+    results_for: "Results for",
+    search_placeholder: "Search for clothes, shoes..."
   },
   bn: {
     // Header/Footer
@@ -330,7 +352,29 @@ export const translations = {
     profile_mapPreview: 'ম্যাপ প্রিভিউ',
     profile_mapHint: 'গ্রাহকদের কাছে আপনার অবস্থান এভাবেই দেখাবে।',
     profile_setCoordinates: 'কোঅর্ডিনেট সেট করুন',
+    profile_visible: 'দৃশ্যমান',
+    profile_hidden: 'লুকানো',
+    profile_storeIdentity: 'দোকানের পরিচয়',
+    profile_contactInfo: 'যোগাযোগের তথ্য',
+    profile_locationDetails: 'অবস্থানের বিবরণ',
     bg_english: 'ইংরেজি',
-    bg_bengali: 'বাংলা'
+    bg_bengali: 'বাংলা',
+
+    // Carousel
+    carousel_title1: "স্মার্ট ক্যাজুয়াল",
+    carousel_subtitle1: "আপনার প্রতিদিনের লুক উন্নত করুন",
+    carousel_title2: "আরবান স্ট্রিট",
+    carousel_subtitle2: "শহরের জন্য বোল্ড স্টাইল",
+    carousel_title3: "ফরমাল এলিগেন্স",
+    carousel_subtitle3: "বিশেষ অনুষ্ঠানের জন্য",
+    
+    // Mobile Discover Card
+    discover_title: "আরও দেখুন",
+    discover_desc: "আমাদের প্রিমিয়াম কালেকশনের সম্পূর্ণ সম্ভার দেখুন",
+    
+    // Search
+    trending_now: "জনপ্রিয় এখন",
+    results_for: "ফলাফল",
+    search_placeholder: "জামা, জুতো খুঁজুন..."
   }
 };

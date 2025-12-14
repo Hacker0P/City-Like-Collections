@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Search, ShoppingBag, LogIn, LayoutDashboard, User, LogOut, Globe } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
@@ -12,6 +12,7 @@ const Navbar = () => {
     const { setIsCartOpen, cartCount } = useShop();
     const navigate = useNavigate();
     const location = useLocation();
+
     const [searchTerm, setSearchTerm] = useState('');
 
     const handleLogout = async () => {
@@ -35,7 +36,7 @@ const Navbar = () => {
     };
 
     return (
-        <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200 h-[70px]">
+        <header className="relative md:sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200 h-[70px]">
            <div className="container mx-auto px-4 h-full flex items-center justify-between">
                
                {/* Brand */}
