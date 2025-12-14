@@ -4,6 +4,7 @@ import Navbar from './Navbar';
 import BottomNav from './BottomNav';
 import { useShop } from '../context/ShopContext';
 import CartDrawer from './CartDrawer';
+import WishlistDrawer from './WishlistDrawer';
 import InstallPrompt from './InstallPrompt';
 
 const Layout = ({ children }) => {
@@ -23,6 +24,7 @@ const Layout = ({ children }) => {
       <BottomNav />
 
       <CartDrawer />
+      <WishlistDrawer />
       <InstallPrompt />
     </div>
   );

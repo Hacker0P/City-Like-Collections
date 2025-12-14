@@ -24,19 +24,21 @@ export default defineConfig({
         icons: [
           {
             src: 'clc_logo.png',
-            sizes: '192x192', // ideally should be resized, but using original for now
-            type: 'image/png'
-          },
-          {
-            src: 'clc_logo.png',
-            sizes: '512x512',
-            type: 'image/png'
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'any'
           },
           {
             src: 'clc_logo.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any maskable'
+            purpose: 'any'
+          },
+          {
+            src: 'pwa-maskable-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable'
           }
         ]
       },

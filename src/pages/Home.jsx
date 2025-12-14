@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
-import { Megaphone, ShoppingBag, MapPin, ArrowRight, Instagram, Facebook, Youtube, X, Map as MapIcon, Phone, Search, Shirt, Footprints, Watch, Star, TrendingUp, Sparkles, Tag, Package, User, ChevronLeft, ChevronRight, Check, RefreshCcw, ShieldCheck } from 'lucide-react';
+import { Megaphone, ShoppingBag, MapPin, ArrowRight, Instagram, Facebook, Youtube, X, Map as MapIcon, Phone, Search, Shirt, Footprints, Watch, Star, TrendingUp, Sparkles, Tag, Package, User, ChevronLeft, ChevronRight, Check, RefreshCcw, ShieldCheck, Heart } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useShop } from '../context/ShopContext';
 import { supabase } from '../supabaseClient';
 import ProductCard from '../components/ProductCard';
 
@@ -96,6 +97,7 @@ const CarouselBanner = ({ t }) => {
 const Home = () => {
   const { t, language } = useLanguage();
   const navigate = useNavigate();
+  const { setIsWishlistOpen, wishlist } = useShop();
   const [loading, setLoading] = useState(false); 
   
   const [config, setConfig] = useState({
@@ -296,6 +298,27 @@ const Home = () => {
                    />
                </div>
                
+               {/* Wishlist Toggle Mobile */}
+               <button 
+                  onClick={() => setIsWishlistOpen(true)}
+                  className="shrink-0 w-10 h-10 bg-white border border-slate-200 text-slate-500 rounded-lg flex items-center justify-center relative active:scale-95 transition-transform"
+               >
+                   <Heart size={20} className={wishlist.length > 0 ? "fill-rose-500 text-rose-500" : ""} />
+                   {wishlist.length > 0 && (
+                       <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-rose-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center border border-white">
+                           {wishlist.length}
+                       </span>
+                   )}
+               </button>
+
+               {/* Mobile Shop Status */}
+               <div className={`shrink-0 h-10 px-3 rounded-lg border flex items-center gap-2 shadow-sm ${config.isOpen ? 'bg-emerald-50 border-emerald-100 text-emerald-700' : 'bg-rose-50 border-rose-100 text-rose-700'}`}>
+                   <span className="relative flex h-2 w-2">
+                     <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${config.isOpen ? 'bg-emerald-400' : 'bg-rose-400'}`}></span>
+                     <span className={`relative inline-flex rounded-full h-2 w-2 ${config.isOpen ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
+                   </span>
+                   <span className="text-[10px] font-bold uppercase tracking-wider">{config.isOpen ? 'Open' : 'Closed'}</span>
+               </div>
            </div>
            
            {/* Mobile Categories Row (Horizontal Scroll) */}
@@ -608,8 +631,7 @@ const Home = () => {
           {/* Section Header */}
           <div className="flex items-end justify-between px-2">
               <h2 className="text-2xl font-black text-slate-900 tracking-tight leading-none">
-                  Curated <br />
-                  <span className="text-slate-400">Collections</span>
+                  Curated <span className="text-slate-400">Collections</span>
               </h2>
           </div>
 
