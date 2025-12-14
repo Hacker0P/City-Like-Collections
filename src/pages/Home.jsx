@@ -10,24 +10,24 @@ const CarouselBanner = ({ t }) => {
     const banners = [
         { 
             id: 1, 
-            image: "/carousel_men_1.png", 
+            image: "/indian_fashion_1.png", 
             title: t('carousel_title1'), 
             subtitle: t('carousel_subtitle1'), 
-            accent: "from-amber-600/80" 
+            accent: "" 
         },
         { 
             id: 2, 
-            image: "/carousel_men_2.png", 
+            image: "/indian_fashion_2.png", 
             title: t('carousel_title2'), 
             subtitle: t('carousel_subtitle2'), 
-            accent: "from-blue-600/80" 
+            accent: "" 
         },
         { 
             id: 3, 
-            image: "/carousel_men_3.png", 
+            image: "/indian_fashion_3.png", 
             title: t('carousel_title3'), 
             subtitle: t('carousel_subtitle3'), 
-            accent: "from-slate-800/90" 
+            accent: "" 
         }
     ];
 
@@ -72,7 +72,7 @@ const CarouselBanner = ({ t }) => {
                             alt={banner.title} 
                             className="w-full h-full object-cover object-top" 
                         />
-                        <div className={`absolute inset-0 bg-gradient-to-t ${banner.accent} via-transparent to-transparent flex flex-col justify-end p-4`}>
+                        <div className={`absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex flex-col justify-end p-4`}>
                             <h2 className="text-white text-xl font-black leading-tight drop-shadow-md">{banner.title}</h2>
                             <p className="text-white/90 text-xs mt-1 font-medium drop-shadow-sm">{banner.subtitle}</p>
                         </div>
@@ -557,35 +557,35 @@ const Home = () => {
               
               <div className="mt-10 md:mt-20">
                   {/* Mobile Premium Card */}
-                  {/* Mobile App Grid Navigation */}
-                  <div className="md:hidden grid grid-cols-2 gap-3 px-2">
-                        <div onClick={() => navigate('/catalogue?sort=newest')} className="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center justify-center gap-3 aspect-square active:scale-95 transition-transform">
-                            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center">
-                                <Star size={24} fill="currentColor" className="opacity-20" />
-                                <Star size={24} className="absolute" />
+                  {/* Mobile App Grid Navigation - Fixed Single Line */}
+                  <div className="md:hidden flex gap-2 px-2 pb-2">
+                        <div onClick={() => navigate('/catalogue?sort=newest')} className="flex-1 min-w-0 bg-white py-3 px-1 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center gap-2 active:scale-95 transition-transform h-auto aspect-auto">
+                            <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-1">
+                                <Star size={20} fill="currentColor" className="opacity-20" />
+                                <Star size={20} className="absolute" />
                             </div>
-                            <span className="text-sm font-bold text-slate-800 text-center leading-tight">{t('feat_Quality_Title')}</span>
+                            <span className="text-[10px] font-bold text-slate-800 text-center leading-tight px-1 line-clamp-2">{t('feat_Quality_Title')}</span>
                         </div>
 
-                        <div onClick={() => navigate('/catalogue?featured=true')} className="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center justify-center gap-3 aspect-square active:scale-95 transition-transform">
-                            <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
-                                <TrendingUp size={24} />
+                        <div onClick={() => navigate('/catalogue?featured=true')} className="flex-1 min-w-0 bg-white py-3 px-1 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center gap-2 active:scale-95 transition-transform h-auto aspect-auto">
+                            <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-1">
+                                <TrendingUp size={20} />
                             </div>
-                            <span className="text-sm font-bold text-slate-800 text-center leading-tight">{t('feat_Trends_Title')}</span>
+                            <span className="text-[10px] font-bold text-slate-800 text-center leading-tight px-1 line-clamp-2">{t('feat_Trends_Title')}</span>
                         </div>
 
-                        <div onClick={() => navigate('/catalogue?sort=price_asc')} className="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center justify-center gap-3 aspect-square active:scale-95 transition-transform">
-                            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                                <Tag size={24} />
+                        <div onClick={() => navigate('/catalogue?sort=price_asc')} className="flex-1 min-w-0 bg-white py-3 px-1 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center gap-2 active:scale-95 transition-transform h-auto aspect-auto">
+                            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-1">
+                                <Tag size={20} />
                             </div>
-                            <span className="text-sm font-bold text-slate-800 text-center leading-tight">{t('feat_Prices_Title')}</span>
+                            <span className="text-[10px] font-bold text-slate-800 text-center leading-tight px-1 line-clamp-2">{t('feat_Prices_Title')}</span>
                         </div>
 
-                        <div onClick={() => navigate('/catalogue')} className="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-center justify-center gap-3 aspect-square active:scale-95 transition-transform">
-                            <div className="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center">
-                                <Package size={24} />
+                        <div onClick={() => navigate('/catalogue')} className="flex-1 min-w-0 bg-white py-3 px-1 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center gap-2 active:scale-95 transition-transform h-auto aspect-auto">
+                            <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-1">
+                                <Package size={20} />
                             </div>
-                            <span className="text-sm font-bold text-slate-800 text-center leading-tight">{t('feat_Collection_Title')}</span>
+                            <span className="text-[10px] font-bold text-slate-800 text-center leading-tight px-1 line-clamp-2">{t('feat_Collection_Title')}</span>
                         </div>
                   </div>
 
@@ -611,51 +611,52 @@ const Home = () => {
                   Curated <br />
                   <span className="text-slate-400">Collections</span>
               </h2>
-              <span className="text-xs font-bold text-primary-600 uppercase tracking-widest mb-1">SS/25</span>
           </div>
 
-          {/* 1. Hero Editorial Card - Formal */}
-          <div 
-            onClick={() => navigate('/catalogue?category=Shirt')}
-            className="relative h-[400px] rounded-[2rem] overflow-hidden group shadow-2xl shadow-indigo-900/20 active:scale-[0.98] transition-all"
-          >
-              <img 
-                src="/carousel_men_3.png" 
-                alt="Formal Collection" 
-                className="absolute inset-0 w-full h-full object-cover object-top"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/20 to-transparent opacity-90"></div>
-              
-              <div className="absolute bottom-0 left-0 right-0 p-8">
-                  <span className="inline-block px-3 py-1 bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] font-bold uppercase tracking-widest rounded-full mb-3">
-                      Office & Events
-                  </span>
-                  <h3 className="text-4xl font-black text-white leading-[0.9] mb-3">
-                      Formal <br /> Excellence
-                  </h3>
-                  <button className="flex items-center gap-2 text-white font-bold text-sm">
-                      Shop the Look <ArrowRight size={16} />
-                  </button>
+          {/* Grid Layout for Editorial Cards */}
+          <div className="grid grid-cols-2 gap-3">
+              {/* 1. Hero Editorial Card - Formal */}
+              <div 
+                onClick={() => navigate('/catalogue?category=Shirt')}
+                className="relative aspect-[3/5] rounded-[2rem] overflow-hidden group shadow-lg shadow-indigo-900/10 active:scale-[0.98] transition-all"
+              >
+                  <img 
+                    src="/curated_formal.png" 
+                    alt="Formal Collection" 
+                    className="absolute inset-0 w-full h-full object-cover object-top"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/10 to-transparent opacity-80"></div>
+                  
+                  <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <span className="inline-block px-2 py-0.5 bg-white/20 backdrop-blur-md border border-white/20 text-white text-[9px] font-bold uppercase tracking-widest rounded-full mb-2">
+                          Office
+                      </span>
+                      <h3 className="text-xl font-black text-white leading-tight mb-1">
+                          Formal <br /> Edit
+                      </h3>
+                  </div>
               </div>
-          </div>
 
-          {/* 2. Secondary Editorial Card - Casual */}
-          <div 
-             onClick={() => navigate('/catalogue?category=T-Shirt')}
-             className="relative h-[320px] rounded-[2rem] overflow-hidden group shadow-xl shadow-orange-900/10 active:scale-[0.98] transition-all"
-          >
-              <img 
-                src="/carousel_men_1.png" 
-                alt="Casual Vibe" 
-                className="absolute inset-0 w-full h-full object-cover object-top"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
-              
-              <div className="absolute bottom-0 left-0 right-0 p-8">
-                  <h3 className="text-3xl font-black text-white leading-tight mb-1">
-                      Weekend <br /> Vibes
-                  </h3>
-                  <p className="text-slate-300 text-sm font-medium mb-3">Relaxed fits for your downtime.</p>
+              {/* 2. Secondary Editorial Card - Casual */}
+              <div 
+                 onClick={() => navigate('/catalogue?category=T-Shirt')}
+                 className="relative aspect-[3/5] rounded-[2rem] overflow-hidden group shadow-lg shadow-orange-900/10 active:scale-[0.98] transition-all"
+              >
+                  <img 
+                    src="/curated_casual.png" 
+                    alt="Casual Vibe" 
+                    className="absolute inset-0 w-full h-full object-cover object-top"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
+                  
+                  <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <span className="inline-block px-2 py-0.5 bg-white/20 backdrop-blur-md border border-white/20 text-white text-[9px] font-bold uppercase tracking-widest rounded-full mb-2">
+                          Weekend
+                      </span>
+                      <h3 className="text-xl font-black text-white leading-tight mb-1">
+                          Street <br /> Vibe
+                      </h3>
+                  </div>
               </div>
           </div>
 
@@ -733,7 +734,7 @@ const Home = () => {
       </div>
 
       {/* Footer */}
-      <footer id="footer" className="relative mt-0 bg-black text-slate-400 pt-8 pb-32 md:pb-12 md:pt-24 overflow-hidden font-sans">
+      <footer id="footer" className="relative mt-0 bg-black text-slate-400 pt-8 pb-6 md:pb-12 md:pt-24 overflow-hidden font-sans">
          {/* Decorative Top Border */}
          <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-slate-800 to-transparent"></div>
          
@@ -743,11 +744,29 @@ const Home = () => {
                  {/* Left: Brand & Info */}
                  <div className="space-y-6 md:space-y-10">
                      <div className="flex items-center gap-3 md:gap-6">
-                        <img src="/clc_logo.png" alt={config.storeName} className="w-12 h-12 md:w-20 md:h-20 rounded-2xl md:rounded-3xl shadow-2xl border-2 border-slate-800/50 object-cover" />
+                        <img src="/clc_logo.png" alt={config.storeName} className="w-8 h-8 md:w-20 md:h-20 rounded-lg md:rounded-3xl shadow-md object-cover" />
                         <div>
-                            <h3 className="text-xl md:text-3xl font-bold text-white tracking-tight leading-none mb-0.5 md:mb-2">{config.storeName}</h3>
+                            <h3 className="text-base md:text-3xl font-bold tracking-tighter text-white leading-none mb-0.5 md:mb-2">
+                                CityLike<span className="text-primary-600">Collection</span>
+                            </h3>
                             <p className="text-slate-500 text-[10px] md:text-sm font-bold tracking-[0.2em] uppercase">{t('exclusiveMensWear')}</p>
                         </div>
+                     </div>
+
+                     {/* Mobile Map (New) */}
+                     <div className="md:hidden w-full h-48 rounded-2xl overflow-hidden border border-slate-800 shadow-lg relative bg-slate-900 mt-4">
+                           <iframe 
+                             width="100%" 
+                             height="100%" 
+                             title="Mobile Footer Map"
+                             frameBorder="0" 
+                             scrolling="no" 
+                             marginHeight="0" 
+                             marginWidth="0" 
+                             src={`https://maps.google.com/maps?q=${config.location.lat},${config.location.lng}&z=15&output=embed&iwloc=B`}
+                             referrerPolicy="no-referrer-when-downgrade"
+                             className="w-full h-full grayscale-[100%] invert-[.9]"
+                           ></iframe>
                      </div>
                      
                      <p className="text-slate-400 leading-relaxed max-w-md text-sm md:text-lg font-light hidden md:block">
@@ -797,29 +816,30 @@ const Home = () => {
                          )}
                      </div>
 
-                     {/* Mobile Compact Contact (New) */}
-                     <div className="md:hidden space-y-4">
-                        <div className="space-y-1">
-                            <h4 className="text-white font-bold text-sm">Contact & Support</h4>
-                            <div className="flex flex-col gap-2 text-xs text-slate-500">
-                                <a href={config.googleMapsLink} className="flex items-center gap-2 hover:text-white transition-colors">
-                                    <MapPin size={14} /> {config.address}
+                     {/* Mobile Compact Contact (Improved) */}
+                     <div className="md:hidden grid grid-cols-1 gap-3 text-sm">
+                        <a href={config.googleMapsLink} className="flex items-start gap-3 p-3 rounded-xl bg-slate-900/50 border border-slate-800 hover:bg-slate-800 transition-colors">
+                            <MapPin size={18} className="shrink-0 text-primary-500" />
+                            <span className="text-slate-300 leading-tight text-xs">{config.address}</span>
+                        </a>
+                        
+                        <div className="grid grid-cols-2 gap-3">
+                            {config.whatsapp && (
+                                <a href={`https://wa.me/91${config.whatsapp}`} className="flex items-center gap-2 p-3 rounded-xl bg-slate-900/50 border border-slate-800 hover:bg-slate-800 transition-colors">
+                                    <Phone size={18} className="shrink-0 text-green-500" />
+                                    <span className="text-slate-300 text-xs truncate">+91 {config.whatsapp}</span>
                                 </a>
-                                {config.whatsapp && (
-                                    <a href={`https://wa.me/91${config.whatsapp}`} className="flex items-center gap-2 hover:text-white transition-colors">
-                                        <Phone size={14} /> +91 {config.whatsapp}
-                                    </a>
-                                )}
-                                {config.ownerName && (
-                                    <span className="flex items-center gap-2">
-                                        <User size={14} /> {config.ownerName} (Owner)
-                                    </span>
-                                )}
-                            </div>
+                            )}
+                             {config.ownerName && (
+                                <div className="flex items-center gap-2 p-3 rounded-xl bg-slate-900/50 border border-slate-800">
+                                    <User size={18} className="shrink-0 text-yellow-500" />
+                                    <span className="text-slate-300 text-xs truncate">{config.ownerName}</span>
+                                </div>
+                            )}
                         </div>
                      </div>
 
-                     <div className="flex gap-4 pt-4 md:pt-6">
+                     <div className="flex gap-4 pt-2 md:pt-6 justify-center md:justify-start">
                          {config.socials?.instagram && <a href={config.socials.instagram} target="_blank" rel="noreferrer" className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-xl md:rounded-2xl bg-slate-900 border border-slate-800 text-slate-400 hover:bg-gradient-to-br hover:from-purple-600 hover:to-pink-600 hover:text-white hover:border-transparent transition-all shadow-lg hover:shadow-purple-500/20 hover:-translate-y-2"><Instagram size={18} className="md:w-6 md:h-6" /></a>}
                          {config.socials?.facebook && <a href={config.socials.facebook} target="_blank" rel="noreferrer" className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-xl md:rounded-2xl bg-slate-900 border border-slate-800 text-slate-400 hover:bg-blue-600 hover:text-white hover:border-transparent transition-all shadow-lg hover:shadow-blue-500/20 hover:-translate-y-2"><Facebook size={18} className="md:w-6 md:h-6" /></a>}
                          {config.socials?.youtube && <a href={config.socials.youtube} target="_blank" rel="noreferrer" className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-xl md:rounded-2xl bg-slate-900 border border-slate-800 text-slate-400 hover:bg-red-600 hover:text-white hover:border-transparent transition-all shadow-lg hover:shadow-red-500/20 hover:-translate-y-2"><Youtube size={18} className="md:w-6 md:h-6" /></a>}
@@ -857,11 +877,7 @@ const Home = () => {
                  </div>
              </div>
 
-             <div className="border-t border-slate-900 mt-10 md:mt-24 pt-8 md:pt-10 text-center">
-                 <p className="text-slate-600 text-sm">
-                     © {new Date().getFullYear()} <span className="text-slate-300 font-bold tracking-wide">{config.storeName}</span>. {t('rightsReserved')}
-                 </p>
-             </div>
+
          </div>
       </footer>
 

@@ -41,10 +41,15 @@ const Navbar = () => {
                
                {/* Brand */}
                <Link to="/" className="flex items-center gap-3 group">
-                  <img src="/clc_logo.png" alt="Logo" className="w-10 h-10 rounded-lg shadow-md group-hover:scale-105 transition-transform object-cover" />
-                  <span className="text-xl font-bold tracking-tight text-slate-900">
-                      CityLike<span className="text-primary-600">Collection</span>
-                  </span>
+                  <img src="/clc_logo.png" alt="Logo" className="w-8 h-8 md:w-10 md:h-10 rounded-lg shadow-md group-hover:scale-105 transition-transform object-cover" />
+                  <div className="flex flex-col">
+                      <span className="text-base md:text-xl font-bold tracking-tighter text-slate-900 leading-none">
+                          CityLike<span className="text-primary-600">Collection</span>
+                      </span>
+                      <span className="text-[8px] font-bold text-slate-500 uppercase tracking-widest md:hidden">
+                          {t('exclusiveMensWear')}
+                      </span>
+                  </div>
                </Link>
 
 

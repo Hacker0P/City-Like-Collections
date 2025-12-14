@@ -444,28 +444,25 @@ const Profile = () => {
                         </div>
                     </section>
                 
-                    {/* Spacer for bottom bar */}
-                    <div className="h-20 md:hidden"></div>
-                </div>
-
-                {/* Sticky Action Bar */}
-                <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/90 backdrop-blur-xl border-t border-slate-200 z-50 md:sticky md:bottom-0 md:bg-gray-50/50 md:border-t md:border-slate-100">
-                    <div className="container mx-auto flex items-center justify-between px-0 md:px-4 max-w-7xl">
-                        <div className="hidden md:block text-slate-400 text-xs font-medium">
-                            {saving ? 'Syncing to cloud...' : 'Last synced just now'}
+                    {/* Save Action Bar */}
+                    <div className="w-full mt-6 md:mt-0 p-4 md:sticky md:bottom-0 md:bg-gray-50/50 md:border-t md:border-slate-100 bg-white/50 backdrop-blur-sm rounded-xl border border-slate-100 md:rounded-none md:border-x-0 md:border-b-0">
+                        <div className="container mx-auto flex items-center justify-between px-0 md:px-4 max-w-7xl">
+                            <div className="hidden md:block text-slate-400 text-xs font-medium">
+                                {saving ? 'Syncing to cloud...' : 'Last synced just now'}
+                            </div>
+                            <button 
+                                className="w-full md:w-auto bg-slate-900 text-white px-8 py-3.5 rounded-xl font-bold hover:bg-slate-800 hover:shadow-lg hover:shadow-slate-900/20 transition-all active:scale-95 flex items-center justify-center gap-3 disabled:opacity-70 disabled:scale-100"
+                                type="button" 
+                                onClick={handleConfigSave}
+                                disabled={saving}
+                            >
+                                {saving ? (
+                                    <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> {t('profile_saving')}</>
+                                ) : (
+                                    <><Save size={20} /> {t('profile_save')}</>
+                                )}
+                            </button>
                         </div>
-                        <button 
-                            className="w-full md:w-auto bg-slate-900 text-white px-8 py-3.5 rounded-xl font-bold hover:bg-slate-800 hover:shadow-lg hover:shadow-slate-900/20 transition-all active:scale-95 flex items-center justify-center gap-3 disabled:opacity-70 disabled:scale-100"
-                            type="button" 
-                            onClick={handleConfigSave}
-                            disabled={saving}
-                        >
-                            {saving ? (
-                                <><div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> {t('profile_saving')}</>
-                            ) : (
-                                <><Save size={20} /> {t('profile_save')}</>
-                            )}
-                        </button>
                     </div>
                 </div>
             </form>

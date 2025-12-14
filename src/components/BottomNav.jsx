@@ -14,7 +14,11 @@ const BottomNav = () => {
     const NavItem = ({ to, icon: Icon, label }) => {
         const active = isActive(to);
         return (
-            <Link to={to} className={`flex flex-col items-center justify-center gap-1 flex-1 py-3 relative group ${active ? 'text-primary-600' : 'text-slate-400 hover:text-slate-600'}`}>
+            <Link 
+                to={to} 
+                onClick={() => setIsCartOpen(false)}
+                className={`flex flex-col items-center justify-center gap-1 flex-1 py-3 relative group ${active ? 'text-primary-600' : 'text-slate-400 hover:text-slate-600'}`}
+            >
                 <div className="relative p-1.5 transition-all duration-300">
                      {active && (
                        <div className="absolute inset-0 bg-primary-50 rounded-xl scale-110 -z-10 animate-fade-in"></div>

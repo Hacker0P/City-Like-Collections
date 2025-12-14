@@ -70,15 +70,15 @@ const CartDrawer = () => {
   };
 
   return createPortal(
-    <div className="fixed inset-0 z-[100] flex justify-end">
-      {/* Backdrop */}
-      <div 
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" 
-        onClick={() => setIsCartOpen(false)}
-      ></div>
+      <div className="fixed inset-0 z-[90] flex justify-end">
+        {/* Backdrop */}
+        <div 
+          className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" 
+          onClick={() => setIsCartOpen(false)}
+        ></div>
 
-      {/* Drawer */}
-      <div className="relative w-full max-w-md bg-white h-full shadow-2xl flex flex-col animate-slide-in-right">
+        {/* Drawer */}
+        <div className="relative w-full max-w-md bg-white h-full shadow-2xl flex flex-col animate-slide-in-right pb-[80px] md:pb-0">
         
         {/* Header */}
         <div className="p-5 border-b border-slate-100 flex justify-between items-center bg-white z-10">
