@@ -27,6 +27,7 @@ const Shopkeeper = () => {
   const [activeTab, setActiveTab] = useState('list');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
+  const [isAuthVerified, setIsAuthVerified] = useState(false);
 
   // 1. Auth Check - Redirect to login if no session
   useEffect(() => {
@@ -34,8 +35,21 @@ const Shopkeeper = () => {
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) {
             navigate('/login', { replace: true });
+        } else {
+            setIsAuthVerified(true);
         }
     };
+    
+    // BFCache handling for back button security
+    const handlePageShow = (event) => {
+        if (event.persisted) {
+            // Page restored from cache, re-verify auth
+            setIsAuthVerified(false);
+            checkAuth();
+        }
+    };
+    window.addEventListener('pageshow', handlePageShow);
+    
     checkAuth();
     
     // Subscribe to auth changes (keep user logged out if session expires)
@@ -45,7 +59,10 @@ const Shopkeeper = () => {
         }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+        subscription.unsubscribe();
+        window.removeEventListener('pageshow', handlePageShow);
+    };
   }, [navigate]);
 
   const handleLogout = async () => {
@@ -202,6 +219,14 @@ const Shopkeeper = () => {
     }
   };
   const totalValue = products.reduce((acc, curr) => acc + (Number(curr.price) * (Number(curr.quantity) || 1)), 0);
+
+  if (!isAuthVerified) {
+      return (
+        <div className="min-h-screen w-full flex items-center justify-center bg-slate-50">
+            <RefreshCcw className="animate-spin text-slate-400" size={32} />
+        </div>
+      );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 pb-32 md:pb-12">
@@ -458,7 +483,7 @@ const Shopkeeper = () => {
 
         {/* Right Column: Inventory List */}
         <div className={`lg:col-span-2 ${activeTab === 'list' ? 'block' : 'hidden'} lg:block`}>
-          <div className="sticky top-[70px] z-30 bg-white/80 backdrop-blur-md p-2 -mx-2 md:static md:bg-transparent md:p-0 md:mx-0 rounded-xl mb-4 transition-all">
+          <div className="sticky top-0 z-30 bg-white/80 backdrop-blur-md p-2 -mx-2 md:static md:bg-transparent md:p-0 md:mx-0 rounded-xl mb-4 transition-all">
           <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3">
               <h2 className="text-lg md:text-xl font-bold text-slate-900 hidden md:block">{t('shop_inventoryList')}</h2>
               
