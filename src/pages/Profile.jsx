@@ -188,7 +188,7 @@ const Profile = () => {
                 className="group flex items-center gap-2 px-5 py-2.5 bg-white border border-slate-200 text-red-600 font-bold rounded-xl hover:bg-red-50 hover:border-red-100 hover:shadow-sm transition-all text-sm"
             >
                 <LogOut size={18} className="transition-transform group-hover:-translate-x-1" /> 
-                <span>Logout</span>
+                <span>{t('profile_logout')}</span>
             </button>
           </div>
         </div>
@@ -226,14 +226,14 @@ const Profile = () => {
                                 onClick={() => language !== 'en' && toggleLanguage()}
                                 className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all duration-300 ${language === 'en' ? 'bg-white text-slate-900 shadow-sm ring-1 ring-black/5' : 'text-slate-500 hover:text-slate-700'}`}
                             >
-                                English
+                                {t('bg_english')}
                             </button>
                             <button 
                                 type="button"
                                 onClick={() => language !== 'bn' && toggleLanguage()}
                                 className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all duration-300 ${language === 'bn' ? 'bg-white text-slate-900 shadow-sm ring-1 ring-black/5' : 'text-slate-500 hover:text-slate-700'}`}
                             >
-                                বাংলা
+                                {t('bg_bengali')}
                             </button>
                         </div>
                     </section>
@@ -437,7 +437,7 @@ const Profile = () => {
                     <section>
                         <div className="flex items-center gap-4 mb-5">
                             <h4 className="font-bold text-slate-900 text-base md:text-lg flex items-center gap-2">
-                                    Share Your Socials
+                                    {t('profile_shareSocials')}
                             </h4>
                             <div className="h-px bg-slate-100 flex-1"></div>
                         </div>
@@ -449,7 +449,7 @@ const Profile = () => {
                                 <input 
                                     type="text" 
                                     className="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-pink-500 focus:ring-4 focus:ring-pink-500/10 outline-none transition-all font-medium text-slate-700 text-base placeholder:text-slate-300" 
-                                    placeholder="Instagram Profile URL"
+                                    placeholder={t('profile_instagram_ph')}
                                     value={config.socials?.instagram || ''}
                                     onChange={e => setConfig({ ...config, socials: { ...config.socials, instagram: e.target.value } })}
                                 />
@@ -461,7 +461,7 @@ const Profile = () => {
                                 <input 
                                     type="text" 
                                     className="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-medium text-slate-700 text-base placeholder:text-slate-300" 
-                                    placeholder="Facebook Page URL"
+                                    placeholder={t('profile_facebook_ph')}
                                     value={config.socials?.facebook || ''}
                                     onChange={e => setConfig({ ...config, socials: { ...config.socials, facebook: e.target.value } })}
                                 />
@@ -473,7 +473,7 @@ const Profile = () => {
                                 <input 
                                     type="text" 
                                     className="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-red-500 focus:ring-4 focus:ring-red-500/10 outline-none transition-all font-medium text-slate-700 text-base placeholder:text-slate-300" 
-                                    placeholder="YouTube Channel URL"
+                                    placeholder={t('profile_youtube_ph')}
                                     value={config.socials?.youtube || ''}
                                     onChange={e => setConfig({ ...config, socials: { ...config.socials, youtube: e.target.value } })}
                                 />
@@ -556,9 +556,9 @@ const Profile = () => {
                     <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mb-4 backdrop-blur-sm">
                         <span className="text-xl">💡</span>
                     </div>
-                    <h4 className="font-bold text-lg mb-2">Pro Tip</h4>
+                    <h4 className="font-bold text-lg mb-2">{t('pro_tip')}</h4>
                     <p className="text-indigo-100 text-sm leading-relaxed font-medium">
-                        Keep your profile updated with correct contact numbers so customers can reach you easily!
+                        {t('pro_tip_desc')}
                     </p>
                 </div>
                 {/* Decorative circles */}
@@ -592,22 +592,22 @@ const Profile = () => {
                 <div className="w-12 h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center mb-4 mx-auto">
                     <AlertTriangle size={24} strokeWidth={2.5} />
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 text-center mb-2">Logout?</h3>
+                <h3 className="text-xl font-bold text-slate-900 text-center mb-2">{t('logout_confirm')}</h3>
                 <p className="text-slate-500 text-center mb-6 leading-relaxed">
-                    Are you sure you want to log out of your account? You will need to sign in again to access the store settings.
+                    {t('logout_message')}
                 </p>
                 <div className="grid grid-cols-2 gap-3">
                     <button 
                         onClick={() => setShowLogoutConfirm(false)}
                         className="py-3 px-4 rounded-xl font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors"
                     >
-                        Cancel
+                        {t('shop_cancel')}
                     </button>
                     <button 
                         onClick={performLogout}
                         className="py-3 px-4 rounded-xl font-bold text-white bg-red-600 hover:bg-red-700 shadow-lg shadow-red-600/20 transition-all active:scale-95"
                     >
-                        Yes, Logout
+                        {t('confirm_logout')}
                     </button>
                 </div>
             </div>

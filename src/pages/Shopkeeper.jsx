@@ -245,7 +245,7 @@ const Shopkeeper = () => {
       {!isOnline && (
         <div className="bg-red-50 text-red-600 border border-red-200 p-4 rounded-xl mb-6 flex items-center gap-3 font-bold shadow-sm animate-fade-in-up">
             <WifiOff size={20} className="flex-shrink-0" />
-            <span>You are currently offline. Changes will not be saved.</span>
+            <span>{t('offline_message')}</span>
         </div>
       )}
       <div className="mb-6 flex flex-col gap-4">
@@ -254,7 +254,7 @@ const Shopkeeper = () => {
              <div className="w-full">
                 <div className="flex justify-between items-center mb-1">
                     <h1 className="text-xl md:text-3xl font-bold text-slate-900 flex items-center gap-2">
-                        {currentTime.getHours() < 12 ? 'Good Morning' : currentTime.getHours() < 18 ? 'Good Afternoon' : 'Good Evening'}, {ownerName ? ownerName.split(' ')[0] : 'Owner'}
+                        {currentTime.getHours() < 12 ? t('good_morning') : currentTime.getHours() < 18 ? t('good_afternoon') : t('good_evening')}, {ownerName ? ownerName.split(' ')[0] : t('owner')}
                     </h1>
                     <div className="text-xs font-bold text-slate-400 md:hidden bg-slate-100 px-2 py-1 rounded-md">
                         {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -282,7 +282,7 @@ const Shopkeeper = () => {
                     title="Sign Out"
                 >
                     <LogOut size={20} />
-                    <span className="text-[10px] font-bold uppercase tracking-wide">Exit</span>
+                    <span className="text-[10px] font-bold uppercase tracking-wide">{t('exit')}</span>
                 </button>
             </div>
             
@@ -292,8 +292,10 @@ const Shopkeeper = () => {
       </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
-            <div 
-                className={`col-span-2 md:col-span-1 bg-white p-4 md:p-6 rounded-2xl border-l-4 shadow-sm flex items-center gap-4 text-left w-full relative overflow-hidden ${storeStatus ? 'border-green-500' : 'border-red-500'} ${!isOnline ? 'opacity-70' : ''}`}
+            <button 
+                onClick={isOnline ? toggleStoreStatus : undefined}
+                disabled={!isOnline}
+                className={`col-span-2 md:col-span-1 bg-white p-4 md:p-6 rounded-2xl border-l-4 shadow-sm flex items-center gap-4 text-left w-full relative overflow-hidden transition-all active:scale-95 group ${storeStatus ? 'border-green-500' : 'border-red-500'} ${!isOnline ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer hover:shadow-md'}`}
             >
                 <div className={`absolute right-4 top-1/2 -translate-y-1/2 opacity-10 scale-150 pointer-events-none`}>
                     <Power size={64} />
@@ -302,24 +304,19 @@ const Shopkeeper = () => {
                     <Power size={20} className="md:w-6 md:h-6" />
                 </div>
                 <div className="flex-1 relative z-10">
-                    <h4 className="text-xs md:text-sm font-semibold text-slate-500 uppercase tracking-wider">Store Status</h4>
+                    <h4 className="text-xs md:text-sm font-semibold text-slate-500 uppercase tracking-wider">{t('store_status_label')}</h4>
                     <div className="flex items-center justify-between mt-1">
                       <span className={`text-lg md:text-xl font-black ${storeStatus ? 'text-green-700' : 'text-red-700'}`}>
-                        {storeStatus ? 'OPEN' : 'CLOSED'}
+                        {storeStatus ? t('status_open') : t('status_closed')}
                       </span>
-                      <button 
-                        onClick={(e) => {
-                            e.stopPropagation(); 
-                            if(isOnline) toggleStoreStatus();
-                        }}
-                        disabled={!isOnline}
-                        className={`text-[10px] md:text-xs font-bold px-3 py-1 rounded-full border transition-all active:scale-95 cursor-pointer ${!isOnline ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed' : (storeStatus ? 'border-red-200 text-red-600 bg-red-50 hover:bg-red-100' : 'border-green-200 text-green-600 bg-green-50 hover:bg-green-100')}`}
+                      <span 
+                        className={`text-[10px] md:text-xs font-bold px-3 py-1 rounded-full border transition-all ${!isOnline ? 'bg-slate-100 text-slate-400 border-slate-200' : (storeStatus ? 'border-red-200 text-red-600 bg-red-50 group-hover:bg-red-100' : 'border-green-200 text-green-600 bg-green-50 group-hover:bg-green-100')}`}
                       >
-                        {storeStatus ? 'Tap to Close' : 'Tap to Open'}
-                      </button>
+                        {storeStatus ? t('tap_to_close') : t('tap_to_open')}
+                      </span>
                     </div>
                 </div>
-            </div>
+            </button>
 
             <div className="bg-white p-4 md:p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-center items-center text-center gap-1 md:gap-4 md:flex-row md:text-left">
                 <div className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mb-1 md:mb-0">

@@ -58,7 +58,7 @@ const Navbar = () => {
                            <input
                              type="text"
                              className="w-full pl-10 pr-4 py-2 bg-slate-100 hover:bg-slate-200 focus:bg-white border-transparent focus:border-primary-500 rounded-lg focus:ring-2 focus:ring-primary-200 transition-all font-medium text-slate-800"
-                             placeholder="Search for products..."
+                             placeholder={t('search_placeholder')}
                              value={searchTerm}
                              onChange={(e) => setSearchTerm(e.target.value)}
                              onKeyDown={(e) => { if (e.key === 'Enter') navigate(`/catalogue?search=${searchTerm}`)}}
@@ -88,11 +88,11 @@ const Navbar = () => {
                    <div className="hidden md:flex items-center gap-2">
                        {currentUser ? (
                            <>
-                               <Link to="/shopkeeper" className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg transition-colors" title="Dashboard">
-                                   <LayoutDashboard size={18} /> Dashboard
+                               <Link to="/shopkeeper" className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg transition-colors" title={t('nav_dashboard')}>
+                                   <LayoutDashboard size={18} /> {t('nav_dashboard')}
                                </Link>
-                               <Link to="/profile" className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg transition-colors" title="Profile">
-                                   <User size={18} /> Profile
+                               <Link to="/profile" className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg transition-colors" title={t('nav_profile')}>
+                                   <User size={18} /> {t('nav_profile')}
                                </Link>
                                <button onClick={handleLogout} className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Logout">
                                    <LogOut size={18} />
@@ -100,7 +100,7 @@ const Navbar = () => {
                            </>
                        ) : (
                            <Link to="/login" className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white text-sm font-semibold rounded-lg hover:bg-primary-700 hover:shadow-lg transition-all active:scale-95">
-                               <LogIn size={18} /> Login
+                               <LogIn size={18} /> {t('nav_login')}
                            </Link>
                        )}
                    </div>

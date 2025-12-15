@@ -317,7 +317,7 @@ const Home = () => {
                      <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${config.isOpen ? 'bg-emerald-400' : 'bg-rose-400'}`}></span>
                      <span className={`relative inline-flex rounded-full h-2 w-2 ${config.isOpen ? 'bg-emerald-500' : 'bg-rose-500'}`}></span>
                    </span>
-                   <span className="text-[10px] font-bold uppercase tracking-wider">{config.isOpen ? 'Open' : 'Closed'}</span>
+                   <span className="text-[10px] font-bold uppercase tracking-wider">{config.isOpen ? t('status_open') : t('status_closed')}</span>
                </div>
            </div>
            
@@ -391,7 +391,7 @@ const Home = () => {
                    <div className="relative max-w-lg mt-8 mb-2">
                        <input 
                             type="text" 
-                            placeholder="What are you looking for? (e.g. Jeans, Shirt)" 
+                            placeholder={t('search_placeholder_desktop')} 
                             value={mobileSearch}
                             onChange={(e) => setMobileSearch(e.target.value)}
                             onKeyDown={handleMobileSearch}
@@ -478,7 +478,7 @@ const Home = () => {
                   <p className="text-slate-500 max-w-2xl mx-auto text-base md:text-xl font-light">
                       {t('shopByCategoryDesc')}
                   </p>
-                  {mobileSearch && <p className="mt-4 text-primary-600 font-bold animate-pulse">Showing results for "{mobileSearch}"</p>}
+                  {mobileSearch && <p className="mt-4 text-primary-600 font-bold animate-pulse">{t('showing_results_for')} "{mobileSearch}"</p>}
               </div>
               
               {/* Product Match Results / Trending */}
@@ -529,7 +529,7 @@ const Home = () => {
               )}
 
               {/* Category Grid */}
-              <h3 className="text-xl font-bold text-slate-400 uppercase tracking-widest mb-6">{searchedProducts.length > 0 ? "Related Categories" : "Categories"}</h3>
+              <h3 className="text-xl font-bold text-slate-400 uppercase tracking-widest mb-6">{searchedProducts.length > 0 ? t('related_categories') : t('all_categories')}</h3>
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 lg:gap-8">
                 {filteredCategories.length > 0 ? (
                     filteredCategories.map((cat) => (
@@ -565,13 +565,13 @@ const Home = () => {
                              <div className="bg-slate-100 p-4 rounded-full mb-4">
                                 <Search size={32} className="text-slate-400" />
                              </div>
-                             <p className="text-slate-900 font-medium text-lg">No matching items found</p>
-                             <p className="text-slate-500 text-sm mt-1">Try checking for typos or using broader terms.</p>
+                             <p className="text-slate-900 font-medium text-lg">{t('no_matching_items')}</p>
+                             <p className="text-slate-500 text-sm mt-1">{t('try_checking_typos')}</p>
                              <button 
                                 onClick={() => setMobileSearch('')}
                                 className="mt-4 text-primary-600 font-bold hover:underline"
                             >
-                                Clear Search
+                                {t('clear_search')}
                             </button>
                         </div>
                     )
@@ -631,7 +631,7 @@ const Home = () => {
           {/* Section Header */}
           <div className="flex items-end justify-between px-2">
               <h2 className="text-2xl font-black text-slate-900 tracking-tight leading-none">
-                  Curated <span className="text-slate-400">Collections</span>
+                  {t('curated')} <span className="text-slate-400">{t('collections_title')}</span>
               </h2>
           </div>
 
@@ -651,10 +651,10 @@ const Home = () => {
                   
                   <div className="absolute bottom-0 left-0 right-0 p-4">
                       <span className="inline-block px-2 py-0.5 bg-white/20 backdrop-blur-md border border-white/20 text-white text-[9px] font-bold uppercase tracking-widest rounded-full mb-2">
-                          Office
+                          {t('editorial_office')}
                       </span>
                       <h3 className="text-xl font-black text-white leading-tight mb-1">
-                          Formal <br /> Edit
+                          {t('editorial_formal')}
                       </h3>
                   </div>
               </div>
@@ -673,10 +673,10 @@ const Home = () => {
                   
                   <div className="absolute bottom-0 left-0 right-0 p-4">
                       <span className="inline-block px-2 py-0.5 bg-white/20 backdrop-blur-md border border-white/20 text-white text-[9px] font-bold uppercase tracking-widest rounded-full mb-2">
-                          Weekend
+                          {t('editorial_weekend')}
                       </span>
                       <h3 className="text-xl font-black text-white leading-tight mb-1">
-                          Street <br /> Vibe
+                          {t('editorial_street')}
                       </h3>
                   </div>
               </div>
@@ -685,14 +685,14 @@ const Home = () => {
           {/* 3. Horizontal Scroll "Vibes" */}
           <div>
               <h4 className="px-2 text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
-                  <Sparkles size={14} className="text-amber-500" /> Shop by Vibe
+                  <Sparkles size={14} className="text-amber-500" /> {t('shop_by_vibe')}
               </h4>
               <div className="flex overflow-x-auto gap-3 pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
                   {[
-                      { title: "Street", img: "/carousel_men_2.png" },
-                      { title: "Vintage", img: "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=400" }, // Keeping one Unsplash but a known one if possible, otherwise use local
-                      { title: "Classy", img: "/hero_men_fashion.png" },
-                      { title: "Sport", img: "/men_sport_fashion.png" }
+                      { title: t('vibe_street'), img: "/carousel_men_2.png" },
+                      { title: t('vibe_vintage'), img: "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=400" }, // Keeping one Unsplash but a known one if possible, otherwise use local
+                      { title: t('vibe_classy'), img: "/hero_men_fashion.png" },
+                      { title: t('vibe_sport'), img: "/men_sport_fashion.png" }
                   ].map((vibe, i) => (
                       <div key={i} className="min-w-[120px] h-[160px] rounded-2xl relative overflow-hidden flex-shrink-0 active:scale-95 transition-transform" onClick={() => navigate('/catalogue')}>
                           <img src={vibe.img} className="w-full h-full object-cover" />
