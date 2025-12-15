@@ -852,6 +852,12 @@ const Home = () => {
                                     <span className="text-slate-300 text-xs truncate">+91 {config.whatsapp}</span>
                                 </a>
                             )}
+                            {config.alternateMobile && (
+                                <a href={`tel:${config.alternateMobile}`} className="flex items-center gap-2 p-3 rounded-xl bg-slate-900/50 border border-slate-800 hover:bg-slate-800 transition-colors">
+                                    <Phone size={18} className="shrink-0 text-blue-400" />
+                                    <span className="text-slate-300 text-xs truncate">{config.alternateMobile}</span>
+                                </a>
+                            )}
                              {config.ownerName && (
                                 <div className="flex items-center gap-2 p-3 rounded-xl bg-slate-900/50 border border-slate-800">
                                     <User size={18} className="shrink-0 text-yellow-500" />

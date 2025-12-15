@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { useNetworkStatus } from '../hooks/useNetworkStatus';
-import { Plus, Trash2, Save, Package, Image as ImageIcon, Edit2, X, Camera, RefreshCcw, Power, AlertCircle, ChevronLeft, ChevronRight, WifiOff, CheckCircle, ChevronDown, ChevronUp, Search, Filter, Settings } from 'lucide-react';
+import { Plus, Trash2, Save, Package, Image as ImageIcon, Edit2, X, Camera, RefreshCcw, Power, AlertCircle, ChevronLeft, ChevronRight, WifiOff, CheckCircle, ChevronDown, ChevronUp, Search, Filter, Settings, LogOut } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 
 const Shopkeeper = () => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const isOnline = useNetworkStatus();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,6 +16,7 @@ const Shopkeeper = () => {
   const [editingId, setEditingId] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [storeStatus, setStoreStatus] = useState(true); // Default open
+  const [ownerName, setOwnerName] = useState('');
   const [deleteModal, setDeleteModal] = useState({ show: false, id: null, images: [] });
   const [selectedImage, setSelectedImage] = useState(null);
   const [touchStart, setTouchStart] = useState(null);
@@ -24,6 +27,31 @@ const Shopkeeper = () => {
   const [activeTab, setActiveTab] = useState('list');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
+
+  // 1. Auth Check - Redirect to login if no session
+  useEffect(() => {
+    const checkAuth = async () => {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+            navigate('/login', { replace: true });
+        }
+    };
+    checkAuth();
+    
+    // Subscribe to auth changes (keep user logged out if session expires)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+        if (!session) {
+            navigate('/login', { replace: true });
+        }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
+
+  const handleLogout = async () => {
+      await supabase.auth.signOut();
+      navigate('/login', { replace: true });
+  };
 
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -47,8 +75,11 @@ const Shopkeeper = () => {
   
   // State management functions
   const fetchStoreSettings = async () => {
-    const { data } = await supabase.from('store_settings').select('is_open').eq('id', 1).single();
-    if (data) setStoreStatus(data.is_open);
+    const { data } = await supabase.from('store_settings').select('is_open, owner_name').eq('id', 1).single();
+    if (data) {
+        setStoreStatus(data.is_open);
+        setOwnerName(data.owner_name || '');
+    }
   };
   const toggleStoreStatus = async () => {
     const newStatus = !storeStatus;
@@ -58,7 +89,10 @@ const Shopkeeper = () => {
   };
   useEffect(() => {
     fetchStoreSettings();
-    const sub = supabase.channel('public:store_settings').on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'store_settings', filter: 'id=eq.1' }, (payload) => setStoreStatus(payload.new.is_open)).subscribe();
+    const sub = supabase.channel('public:store_settings').on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'store_settings', filter: 'id=eq.1' }, (payload) => {
+        setStoreStatus(payload.new.is_open);
+        if (payload.new.owner_name) setOwnerName(payload.new.owner_name);
+    }).subscribe();
     return () => supabase.removeChannel(sub);
   }, []);
   const [formData, setFormData] = useState({ name: '', price: '', description: '', quantity: '', category: '', sizes: '', colors: '', images: [] });
@@ -179,87 +213,123 @@ const Shopkeeper = () => {
             <span>You are currently offline. Changes will not be saved.</span>
         </div>
       )}
-      <div className="mb-8 md:mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
-        <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-1 md:mb-2">{t('shop_title')}</h1>
-            <p className="text-sm md:text-base text-slate-500">{t('shop_subtitle')}</p>
-        </div>
-        <div className="bg-white px-4 md:px-5 py-2 md:py-3 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-end min-w-[150px] md:min-w-[180px]">
-             <div className="text-xl md:text-2xl font-bold text-primary-600 font-mono leading-none">
-                {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
-             </div>
-             <div className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">
-                {currentTime.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}
-             </div>
+      <div className="mb-6 flex flex-col gap-4">
+        <div className="relative flex flex-col md:flex-row justify-between items-start md:items-end gap-3">
+             {/* Header Title & Date */}
+             <div className="w-full">
+                <div className="flex justify-between items-center mb-1">
+                    <h1 className="text-xl md:text-3xl font-bold text-slate-900 flex items-center gap-2">
+                        {currentTime.getHours() < 12 ? 'Good Morning' : currentTime.getHours() < 18 ? 'Good Afternoon' : 'Good Evening'}, {ownerName ? ownerName.split(' ')[0] : 'Owner'}
+                    </h1>
+                    <div className="text-xs font-bold text-slate-400 md:hidden bg-slate-100 px-2 py-1 rounded-md">
+                        {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </div>
+                </div>
+                <p className="text-sm text-slate-500 hidden md:block">{t('shop_subtitle')}</p>
+                 <div className="text-xs font-medium text-slate-400 md:hidden">
+                    {currentTime.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' })}
+                 </div>
+            </div>
+
+            {/* Desktop Time Display & Logout */}
+            <div className="hidden md:flex gap-4 items-center">
+                <div className="bg-white px-5 py-3 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-end min-w-[180px]">
+                     <div className="text-2xl font-bold text-primary-600 font-mono leading-none">
+                        {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                     </div>
+                     <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">
+                        {currentTime.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}
+                     </div>
+                </div>
+                <button 
+                    onClick={handleLogout}
+                    className="h-[68px] w-[68px] bg-slate-900 text-white rounded-2xl flex flex-col items-center justify-center gap-1 hover:bg-slate-800 transition-colors shadow-lg shadow-slate-900/20"
+                    title="Sign Out"
+                >
+                    <LogOut size={20} />
+                    <span className="text-[10px] font-bold uppercase tracking-wide">Exit</span>
+                </button>
+            </div>
+            
+            {/* Mobile Logout (absolute top right) */}
+
         </div>
       </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-            <button 
-                onClick={isOnline ? toggleStoreStatus : undefined}
-                disabled={!isOnline}
-                className={`bg-white p-5 md:p-6 rounded-2xl border-l-4 shadow-sm flex items-center gap-4 text-left w-full transition-all active:scale-95 group ${storeStatus ? 'border-green-500' : 'border-red-500'} ${!isOnline ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer hover:shadow-md'}`}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
+            <div 
+                className={`col-span-2 md:col-span-1 bg-white p-4 md:p-6 rounded-2xl border-l-4 shadow-sm flex items-center gap-4 text-left w-full relative overflow-hidden ${storeStatus ? 'border-green-500' : 'border-red-500'} ${!isOnline ? 'opacity-70' : ''}`}
             >
-                <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shrink-0 transition-colors ${storeStatus ? 'bg-green-100 text-green-600 group-hover:bg-green-200' : 'bg-red-100 text-red-600 group-hover:bg-red-200'}`}>
+                <div className={`absolute right-4 top-1/2 -translate-y-1/2 opacity-10 scale-150 pointer-events-none`}>
+                    <Power size={64} />
+                </div>
+                <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shrink-0 transition-colors relative z-10 ${storeStatus ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
                     <Power size={20} className="md:w-6 md:h-6" />
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 relative z-10">
                     <h4 className="text-xs md:text-sm font-semibold text-slate-500 uppercase tracking-wider">Store Status</h4>
                     <div className="flex items-center justify-between mt-1">
-                      <span className={`text-lg md:text-xl font-bold ${storeStatus ? 'text-green-700' : 'text-red-700'}`}>
+                      <span className={`text-lg md:text-xl font-black ${storeStatus ? 'text-green-700' : 'text-red-700'}`}>
                         {storeStatus ? 'OPEN' : 'CLOSED'}
                       </span>
-                      <span 
-                        className={`text-[10px] md:text-xs font-bold px-2 md:px-3 py-1 rounded-full border transition-all ${!isOnline ? 'bg-slate-100 text-slate-400 border-slate-200' : (storeStatus ? 'border-red-200 text-red-600 bg-red-50' : 'border-green-200 text-green-600 bg-green-50')}`}
+                      <button 
+                        onClick={(e) => {
+                            e.stopPropagation(); 
+                            if(isOnline) toggleStoreStatus();
+                        }}
+                        disabled={!isOnline}
+                        className={`text-[10px] md:text-xs font-bold px-3 py-1 rounded-full border transition-all active:scale-95 cursor-pointer ${!isOnline ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed' : (storeStatus ? 'border-red-200 text-red-600 bg-red-50 hover:bg-red-100' : 'border-green-200 text-green-600 bg-green-50 hover:bg-green-100')}`}
                       >
-                        {storeStatus ? 'Close Shop' : 'Open Shop'}
-                      </span>
+                        {storeStatus ? 'Tap to Close' : 'Tap to Open'}
+                      </button>
                     </div>
-                </div>
-            </button>
-
-            <div className="bg-white p-5 md:p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
-                    <Package size={20} className="md:w-6 md:h-6" />
-                </div>
-                <div>
-                    <h4 className="text-xs md:text-sm font-semibold text-slate-500 uppercase tracking-wider">{t('shop_totalProducts')}</h4>
-                    <span className="text-xl md:text-2xl font-bold text-slate-900">{products.length}</span>
                 </div>
             </div>
 
-            <div className="bg-white p-5 md:p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-4">
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
+            <div className="bg-white p-4 md:p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-center items-center text-center gap-1 md:gap-4 md:flex-row md:text-left">
+                <div className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mb-1 md:mb-0">
+                    <Package size={18} className="md:w-6 md:h-6" />
+                </div>
+                <div>
+                    <h4 className="text-[10px] md:text-sm font-bold text-slate-400 uppercase tracking-wider">{t('shop_totalProducts')}</h4>
+                    <span className="text-lg md:text-2xl font-black text-slate-900">{products.length}</span>
+                </div>
+            </div>
+
+            <div className="bg-white p-4 md:p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-center items-center text-center gap-1 md:gap-4 md:flex-row md:text-left">
+                <div className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mb-1 md:mb-0">
                     <span className="text-lg md:text-xl font-bold">₹</span>
                 </div>
                 <div>
-                    <h4 className="text-xs md:text-sm font-semibold text-slate-500 uppercase tracking-wider">{t('shop_inventoryValue')}</h4>
-                    <span className="text-xl md:text-2xl font-bold text-slate-900">₹{totalValue.toLocaleString()}</span>
+                    <h4 className="text-[10px] md:text-sm font-bold text-slate-400 uppercase tracking-wider">{t('shop_inventoryValue')}</h4>
+                    <span className="text-lg md:text-2xl font-black text-slate-900">
+                        {totalValue >= 100000 ? `${(totalValue/100000).toFixed(1)}L` : totalValue.toLocaleString()}
+                    </span>
                 </div>
             </div>
         </div>
 
         {/* Mobile Tab Navigation */}
-        <div className="flex p-1 bg-slate-200/50 rounded-xl mt-8 md:hidden">
+        <div className="flex p-1 bg-slate-100 rounded-xl mt-6 md:hidden shadow-inner">
             <button 
                 onClick={() => setActiveTab('list')}
-                className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all flex items-center justify-center gap-2 ${activeTab === 'list' ? 'bg-white text-primary-600 shadow-sm ring-1 ring-black/5' : 'text-slate-500 hover:text-slate-700'}`}
+                className={`flex-1 py-3 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-2 ${activeTab === 'list' ? 'bg-white text-slate-900 shadow-sm ring-1 ring-black/5' : 'text-slate-400 hover:text-slate-600'}`}
             >
-                <Package size={16} /> Inventory List
+                <Package size={16} /> Inventory
             </button>
             <button 
                 onClick={() => setActiveTab('add')}
-                className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-all flex items-center justify-center gap-2 ${activeTab === 'add' ? 'bg-white text-primary-600 shadow-sm ring-1 ring-black/5' : 'text-slate-500 hover:text-slate-700'}`}
+                className={`flex-1 py-3 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-2 ${activeTab === 'add' ? 'bg-white text-primary-600 shadow-sm ring-1 ring-black/5' : 'text-slate-400 hover:text-slate-600'}`}
             >
                 {editMode ? <Edit2 size={16} /> : <Plus size={16} />} 
-                {editMode ? 'Edit Product' : 'Add Product'}
+                {editMode ? 'Edit Product' : 'Add Item'}
             </button>
         </div>
 
       <div className="grid lg:grid-cols-3 gap-6 md:gap-8 items-start mt-6 md:mt-8">
         
         {/* Left Column: Form */}
-        <div className={`lg:sticky lg:top-24 ${activeTab === 'add' ? 'block' : 'hidden'} lg:block`}>
+        <div className={`lg:col-span-1 lg:sticky lg:top-24 ${activeTab === 'add' ? 'block' : 'hidden'} lg:block`}>
           <div className="bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden">
             <div className="bg-slate-50 px-5 md:px-6 py-4 border-b border-slate-200 flex justify-between items-center">
                 <h3 className="font-bold text-slate-800 flex items-center gap-2">
@@ -325,11 +395,11 @@ const Shopkeeper = () => {
             <div className="grid grid-cols-2 gap-4">
                 <div>
                 <label className="block text-sm font-bold text-slate-700 mb-1">{t('shop_sizes')}</label>
-                {formData.category && ['T-Shirt', 'Shirt', 'Jeans', 'Trousers', 'Shoes'].includes(formData.category) ? (
+                 {formData.category && ['T-Shirt', 'Shirt', 'Jeans', 'Trousers', 'Shoes'].includes(formData.category) ? (
                     <div className="flex flex-wrap gap-2">
                         {({
                             'T-Shirt': ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL'],
-                            'Shirt': ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL'],
+                             'Shirt': ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL'],
                             'Jeans': ['28', '30', '32', '34', '36', '38', '40', '42'],
                             'Trousers': ['28', '30', '32', '34', '36', '38', '40', '42'],
                             'Shoes': ['6', '7', '8', '9', '10', '11']
@@ -383,23 +453,24 @@ const Shopkeeper = () => {
                 )}
             </div>
             </form>
-        </div>
+          </div>
         </div>
 
         {/* Right Column: Inventory List */}
         <div className={`lg:col-span-2 ${activeTab === 'list' ? 'block' : 'hidden'} lg:block`}>
-          <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
-              <h2 className="text-lg md:text-xl font-bold text-slate-900">{t('shop_inventoryList')}</h2>
+          <div className="sticky top-[70px] z-30 bg-white/80 backdrop-blur-md p-2 -mx-2 md:static md:bg-transparent md:p-0 md:mx-0 rounded-xl mb-4 transition-all">
+          <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3">
+              <h2 className="text-lg md:text-xl font-bold text-slate-900 hidden md:block">{t('shop_inventoryList')}</h2>
               
-              <div className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
+              <div className="flex gap-2 w-full md:w-auto">
                   <div className="relative flex-1 md:w-64">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                       <input 
                         type="text" 
                         placeholder={t('search_placeholder') || "Search products..."} 
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none text-sm font-medium transition-all shadow-sm"
+                        className="w-full pl-9 pr-8 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none text-sm font-medium transition-all shadow-sm focus:shadow-md"
                       />
                       {searchTerm && (
                         <button onClick={() => setSearchTerm('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
@@ -411,17 +482,18 @@ const Shopkeeper = () => {
                   <select 
                     value={filterCategory}
                     onChange={(e) => setFilterCategory(e.target.value)}
-                    className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none text-sm font-medium transition-all shadow-sm cursor-pointer"
+                    className="pl-3 pr-8 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none text-sm font-bold text-slate-600 transition-all shadow-sm cursor-pointer focus:shadow-md"
                   >
-                      <option value="">All Categories</option>
-                      <option value="T-Shirt">T-Shirt</option>
-                      <option value="Shirt">Shirt</option>
+                      <option value="">All</option>
+                      <option value="T-Shirt">T-Shirts</option>
+                      <option value="Shirt">Shirts</option>
                       <option value="Jeans">Jeans</option>
                       <option value="Trousers">Trousers</option>
                       <option value="Shoes">Shoes</option>
                       <option value="Other">Other</option>
                   </select>
               </div>
+          </div>
           </div>
 
           <div className="space-y-4">

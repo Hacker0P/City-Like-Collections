@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
-import { MessageCircle, ShoppingBag, Heart } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { MessageCircle, ShoppingBag, Heart, Share2 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useShop } from '../context/ShopContext';
 import { getColorHex } from '../utils/colors';
 import ProductImageSlider from './ProductImageSlider';
 
 const ProductCard = ({ product, config, onImageClick }) => {
+  const navigate = useNavigate();
   const { t } = useLanguage();
   const { addToCart, toggleWishlist, wishlist } = useShop();
   const [showOptionsModal, setShowOptionsModal] = useState(false);
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
+
+  const handleCardClick = () => {
+    navigate(`/product/${product.id}`);
+  };
 
   // Parse variants
   const colors = product.colors ? product.colors.split(',').map(c => c.trim().toUpperCase()) : [];
@@ -18,7 +24,8 @@ const ProductCard = ({ product, config, onImageClick }) => {
   
   const hasVariants = sizes.length > 0 || colors.length > 0;
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e) => {
+      if (e) e.stopPropagation();
       // If we already have selections or no variants exist, add immediately
       if (!hasVariants && !isOutOfStock) {
         addToCart(product, 'One Size', 'Any Color');
@@ -45,15 +52,41 @@ const ProductCard = ({ product, config, onImageClick }) => {
   const isNew = new Date(product.created_at) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
   const isWishlisted = wishlist.some(item => item.id === product.id);
 
+  const handleShare = async (e) => {
+      e.stopPropagation();
+      const shareData = {
+          title: config?.storeName || 'City Like Collection',
+          text: `Check out ${product.name} - ₹${product.price}\n\n`,
+          url: `${window.location.origin}/catalogue?search=${encodeURIComponent(product.name)}`
+      };
+
+      try {
+          if (navigator.share) {
+              await navigator.share(shareData);
+          } else {
+              await navigator.clipboard.writeText(`${shareData.text}${shareData.url}`);
+              // You might want to use a toast here instead of alert in future
+              alert('Product link copied to clipboard!');
+          }
+      } catch (err) {
+          console.debug('Share cancelled or failed', err);
+      }
+  };
+
   return (
     <>
-    <div className="bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col h-full hover:shadow-lg transition-all duration-300 group relative">
+    <div 
+    onClick={handleCardClick} 
+    className="bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col h-full hover:shadow-lg transition-all duration-300 group relative cursor-pointer"
+>
         {/* Image Section */}
         <div className="relative aspect-square bg-slate-50">
-             <ProductImageSlider 
-                product={product} 
-                onImageClick={onImageClick} 
-             />
+             <div className="w-full h-full pointer-events-none">
+    <ProductImageSlider 
+        product={product} 
+        // onImageClick removed in favor of card click
+    />
+</div>
              
              {/* Badges */}
              <div className="absolute top-2 left-2 flex flex-col gap-1.5 z-10">
@@ -79,13 +112,21 @@ const ProductCard = ({ product, config, onImageClick }) => {
 
              </div>
 
-             {/* Wishlist Button */}
-             <button 
-                onClick={(e) => { e.stopPropagation(); toggleWishlist(product); }}
-                className="absolute top-2 right-2 p-1.5 bg-white/80 backdrop-blur-sm rounded-full shadow-sm z-10 hover:bg-white active:scale-90 transition-all"
-             >
-                 <Heart size={16} className={isWishlisted ? "fill-red-500 text-red-500" : "text-slate-400"} />
-             </button>
+             {/* Action Buttons (Top Right) */}
+             <div className="absolute top-2 right-2 flex flex-col gap-2 z-10">
+                 <button 
+                    onClick={(e) => { e.stopPropagation(); toggleWishlist(product); }}
+                    className="p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-sm hover:bg-white active:scale-90 transition-all text-slate-700"
+                 >
+                     <Heart size={18} className={isWishlisted ? "fill-red-500 text-red-500" : "text-slate-600"} />
+                 </button>
+                 <button 
+                    onClick={handleShare}
+                    className="p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-sm hover:bg-white active:scale-90 transition-all text-slate-700"
+                 >
+                     <Share2 size={18} />
+                 </button>
+             </div>
         </div>
 
         {/* Content Section */}

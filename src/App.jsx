@@ -9,6 +9,7 @@ import Shopkeeper from './pages/Shopkeeper';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
 import Catalogue from './pages/Catalogue';
+import ProductDetails from './pages/ProductDetails';
 
 function App() {
   return (
@@ -19,7 +20,8 @@ function App() {
           <Layout>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/catalogue" element={<Catalogue />} />
+               <Route path="/catalogue" element={<Catalogue />} />
+              <Route path="/product/:id" element={<ProductDetails />} />
               <Route path="/shopkeeper" element={
                 <ProtectedRoute>
                   <Shopkeeper />
