@@ -17,22 +17,20 @@ const Navbar = () => {
 
     const handleLogout = async () => {
         try {
-            // Manually clear local storage to force logout without triggering 403 network errors
-            // Supabase uses keys like `sb-<project ref>-auth-token`
-            Object.keys(localStorage).forEach(key => {
-                if (key.startsWith('sb-') && key.endsWith('-auth-token')) {
-                    localStorage.removeItem(key);
-                }
-            });
-            // Force reload to update auth state immediately
-            window.location.href = '/login';
-            return;
+            await supabase.auth.signOut();
         } catch (error) {
-            // Ignore errors during logout (like 403 if token expired)
-            console.log("Logout cleanup");
-        } finally {
-            navigate('/login');
+            console.error('Logout error:', error);
         }
+
+        // Manually clear local storage to force logout/cleanup
+        Object.keys(localStorage).forEach(key => {
+            if (key.startsWith('sb-') && key.endsWith('-auth-token')) {
+                localStorage.removeItem(key);
+            }
+        });
+        
+        // Use navigate with replace to clear history
+        navigate('/login', { replace: true });
     };
 
     return (

@@ -24,18 +24,26 @@ const Profile = () => {
   const navigate = useNavigate();
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState(null);
+  const [isAuthVerified, setIsAuthVerified] = useState(false);
 
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const performLogout = async () => {
-        // Manually clear local storage to force logout
+        try {
+            await supabase.auth.signOut();
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
+        
+        // Manually clear local storage to force clean state
         Object.keys(localStorage).forEach(key => {
             if (key.startsWith('sb-') && key.endsWith('-auth-token')) {
                 localStorage.removeItem(key);
             }
         });
-        window.location.href = '/login';
-        return;
+        
+        // Use navigate with replace to clear history stack
+        navigate('/login', { replace: true });
   };
 
   const handleLogoutClick = () => {
@@ -50,6 +58,27 @@ const Profile = () => {
   }, [toast]);
 
   useEffect(() => {
+    // Auth Check & Security
+    const checkAuth = async () => {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+            navigate('/login', { replace: true });
+        } else {
+            setIsAuthVerified(true);
+        }
+    };
+    
+    // BFCache handling for back button security (Mobile & Desktop)
+    const handlePageShow = (event) => {
+        if (event.persisted) {
+            setIsAuthVerified(false);
+            checkAuth();
+        }
+    };
+    window.addEventListener('pageshow', handlePageShow);
+    
+    checkAuth();
+
     const savedConfig = localStorage.getItem('clc_config');
     if (savedConfig) setConfig(prev => ({ ...prev, ...JSON.parse(savedConfig) }));
 
@@ -73,7 +102,11 @@ const Profile = () => {
         }
     };
     fetchSettings();
-  }, []);
+
+    return () => {
+        window.removeEventListener('pageshow', handlePageShow);
+    };
+  }, [navigate]);
 
   const handleConfigSave = async (e) => {
     e.preventDefault();
@@ -122,6 +155,10 @@ const Profile = () => {
     const { error } = await supabase.from('store_settings').update({ notice_message: newVal }).eq('id', 1);
     if (error) console.error("Error updating notice message:", error);
   };
+
+  if (!isAuthVerified) {
+      return <div className="min-h-screen bg-slate-50"></div>; // Or a spinner
+  }
 
   return (
     <div className="min-h-screen bg-slate-50/50 pb-24 md:pb-12">
