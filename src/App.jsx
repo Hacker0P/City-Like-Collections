@@ -11,30 +11,34 @@ import Profile from './pages/Profile';
 import Catalogue from './pages/Catalogue';
 import ProductDetails from './pages/ProductDetails';
 
+import { ThemeProvider } from './context/ThemeContext';
+
 function App() {
   return (
     <BrowserRouter>
       <LanguageProvider>
         <AuthProvider>
           <ShopProvider>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<Home />} />
-               <Route path="/catalogue" element={<Catalogue />} />
-              <Route path="/product/:id" element={<ProductDetails />} />
-              <Route path="/shopkeeper" element={
-                <ProtectedRoute>
-                  <Shopkeeper />
-                </ProtectedRoute>
-              } />
-              <Route path="/login" element={<Login />} />
-              <Route path="/profile" element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              } />
-            </Routes>
-          </Layout>
+            <ThemeProvider>
+              <Layout>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/catalogue" element={<Catalogue />} />
+                  <Route path="/product/:id" element={<ProductDetails />} />
+                  <Route path="/shopkeeper" element={
+                    <ProtectedRoute>
+                      <Shopkeeper />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/profile" element={
+                    <ProtectedRoute>
+                      <Profile />
+                    </ProtectedRoute>
+                  } />
+                </Routes>
+              </Layout>
+            </ThemeProvider>
           </ShopProvider>
         </AuthProvider>
       </LanguageProvider>

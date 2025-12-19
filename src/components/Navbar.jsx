@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Search, ShoppingBag, LogIn, LayoutDashboard, User, LogOut, Globe } from 'lucide-react';
+import { Search, ShoppingBag, LogIn, LayoutDashboard, User, LogOut, Globe, Moon, Sun } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import { useShop } from '../context/ShopContext';
+import { useTheme } from '../context/ThemeContext';
 import { supabase } from '../supabaseClient';
 
 const Navbar = () => {
     const { t, language, toggleLanguage } = useLanguage();
+    const { theme, toggleTheme } = useTheme();
     const { currentUser } = useAuth();
     const { setIsCartOpen, cartCount } = useShop();
     const navigate = useNavigate();
@@ -34,14 +36,14 @@ const Navbar = () => {
     };
 
     return (
-        <header className="relative md:sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-200 h-[70px]">
+        <header className="relative md:sticky top-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-slate-200 dark:border-slate-800 h-[70px] transition-colors duration-300">
            <div className="container mx-auto px-4 h-full flex items-center justify-between">
                
                {/* Brand */}
                <Link to="/" className="flex items-center gap-3 group">
                   <img src="/clc_logo.png" alt="Logo" className="w-8 h-8 md:w-10 md:h-10 rounded-lg shadow-md group-hover:scale-105 transition-transform object-cover" />
                   <div className="flex flex-col">
-                      <span className="text-base md:text-xl font-bold tracking-tighter text-slate-900 leading-none">
+                      <span className="text-base md:text-xl font-bold tracking-tighter text-slate-900 dark:text-white leading-none">
                           CityLike<span className="text-primary-600">Collection</span>
                       </span>
                       <span className="text-[8px] font-bold text-slate-500 uppercase tracking-widest md:hidden">
@@ -57,7 +59,7 @@ const Navbar = () => {
                        <div className="relative">
                            <input
                              type="text"
-                             className="w-full pl-10 pr-4 py-2 bg-slate-100 hover:bg-slate-200 focus:bg-white border-transparent focus:border-primary-500 rounded-lg focus:ring-2 focus:ring-primary-200 transition-all font-medium text-slate-800"
+                             className="w-full pl-10 pr-4 py-2 bg-slate-100 hover:bg-slate-200 focus:bg-white border-transparent focus:border-primary-500 rounded-lg focus:ring-2 focus:ring-primary-200 transition-all font-medium text-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 dark:focus:bg-slate-900 dark:text-slate-100 dark:placeholder-slate-500"
                              placeholder={t('search_placeholder')}
                              value={searchTerm}
                              onChange={(e) => setSearchTerm(e.target.value)}
@@ -77,8 +79,16 @@ const Navbar = () => {
                <div className="flex items-center gap-2">
                    
                    <button 
+                     onClick={toggleTheme}
+                     className="p-2 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                     title="Toggle Theme"
+                   >
+                     {theme === 'dark' ? <Sun size={20} className="text-yellow-500" /> : <Moon size={20} />}
+                   </button>
+
+                   <button 
                      onClick={toggleLanguage}
-                     className="flex items-center gap-2 px-3 py-1.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                     className="flex items-center gap-2 px-3 py-1.5 text-sm font-semibold text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 rounded-lg transition-colors"
                      title="Change Language"
                    >
                      <Globe size={18} />
@@ -88,10 +98,10 @@ const Navbar = () => {
                    <div className="hidden md:flex items-center gap-2">
                        {currentUser ? (
                            <>
-                               <Link to="/shopkeeper" className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg transition-colors" title={t('nav_dashboard')}>
+                               <Link to="/shopkeeper" className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 rounded-lg transition-colors" title={t('nav_dashboard')}>
                                    <LayoutDashboard size={18} /> {t('nav_dashboard')}
                                </Link>
-                               <Link to="/profile" className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg transition-colors" title={t('nav_profile')}>
+                               <Link to="/profile" className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 rounded-lg transition-colors" title={t('nav_profile')}>
                                    <User size={18} /> {t('nav_profile')}
                                </Link>
                                <button onClick={handleLogout} className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Logout">

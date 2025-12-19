@@ -11,6 +11,7 @@ export default defineConfig(({ mode }) => ({
       injectRegister: null,
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
       workbox: {
+        navigationPreload: false,
         globPatterns: mode === 'development' 
           ? [] 
           : ['**/*.{js,css,html,ico,png,svg}']

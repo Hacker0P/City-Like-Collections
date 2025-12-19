@@ -232,8 +232,8 @@ const Shopkeeper = () => {
 
   if (!isAuthVerified) {
       return (
-        <div className="min-h-screen w-full flex items-center justify-center bg-slate-50">
-            <RefreshCcw className="animate-spin text-slate-400" size={32} />
+        <div className="min-h-screen w-full flex items-center justify-center bg-slate-50 dark:bg-slate-950">
+            <RefreshCcw className="animate-spin text-slate-400 dark:text-slate-600" size={32} />
         </div>
       );
   }
@@ -253,32 +253,32 @@ const Shopkeeper = () => {
              {/* Header Title & Date */}
              <div className="w-full">
                 <div className="flex justify-between items-center mb-1">
-                    <h1 className="text-xl md:text-3xl font-bold text-slate-900 flex items-center gap-2">
+                    <h1 className="text-xl md:text-3xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
                         {currentTime.getHours() < 12 ? t('good_morning') : currentTime.getHours() < 18 ? t('good_afternoon') : t('good_evening')}, {ownerName ? ownerName.split(' ')[0] : t('owner')}
                     </h1>
-                    <div className="text-xs font-bold text-slate-400 md:hidden bg-slate-100 px-2 py-1 rounded-md">
+                    <div className="text-xs font-bold text-slate-400 dark:text-slate-500 md:hidden bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-md">
                         {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </div>
                 </div>
-                <p className="text-sm text-slate-500 hidden md:block">{t('shop_subtitle')}</p>
-                 <div className="text-xs font-medium text-slate-400 md:hidden">
+                <p className="text-sm text-slate-500 dark:text-slate-400 hidden md:block">{t('shop_subtitle')}</p>
+                 <div className="text-xs font-medium text-slate-400 dark:text-slate-500 md:hidden">
                     {currentTime.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' })}
                  </div>
             </div>
 
             {/* Desktop Time Display & Logout */}
             <div className="hidden md:flex gap-4 items-center">
-                <div className="bg-white px-5 py-3 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-end min-w-[180px]">
-                     <div className="text-2xl font-bold text-primary-600 font-mono leading-none">
+                <div className="bg-white dark:bg-slate-900 px-5 py-3 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col items-end min-w-[180px]">
+                     <div className="text-2xl font-bold text-primary-600 dark:text-primary-400 font-mono leading-none">
                         {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                      </div>
-                     <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">
+                     <div className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mt-1">
                         {currentTime.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}
                      </div>
                 </div>
                 <button 
                     onClick={handleLogout}
-                    className="h-[68px] w-[68px] bg-slate-900 text-white rounded-2xl flex flex-col items-center justify-center gap-1 hover:bg-slate-800 transition-colors shadow-lg shadow-slate-900/20"
+                    className="h-[68px] w-[68px] bg-slate-900 dark:bg-slate-800 text-white rounded-2xl flex flex-col items-center justify-center gap-1 hover:bg-slate-800 dark:hover:bg-slate-700 transition-colors shadow-lg shadow-slate-900/20 dark:shadow-black/30"
                     title="Sign Out"
                 >
                     <LogOut size={20} />
@@ -295,22 +295,22 @@ const Shopkeeper = () => {
             <button 
                 onClick={isOnline ? toggleStoreStatus : undefined}
                 disabled={!isOnline}
-                className={`col-span-2 md:col-span-1 bg-white p-4 md:p-6 rounded-2xl border-l-4 shadow-sm flex items-center gap-4 text-left w-full relative overflow-hidden transition-all active:scale-95 group ${storeStatus ? 'border-green-500' : 'border-red-500'} ${!isOnline ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer hover:shadow-md'}`}
+                className={`col-span-2 md:col-span-1 bg-white dark:bg-slate-900 p-4 md:p-6 rounded-2xl border-l-4 shadow-sm flex items-center gap-4 text-left w-full relative overflow-hidden transition-all active:scale-95 group ${storeStatus ? 'border-green-500' : 'border-red-500'} ${!isOnline ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer hover:shadow-md'}`}
             >
                 <div className={`absolute right-4 top-1/2 -translate-y-1/2 opacity-10 scale-150 pointer-events-none`}>
-                    <Power size={64} />
+                    <Power size={64} className="dark:text-white" />
                 </div>
-                <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shrink-0 transition-colors relative z-10 ${storeStatus ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
+                <div className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center shrink-0 transition-colors relative z-10 ${storeStatus ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400' : 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'}`}>
                     <Power size={20} className="md:w-6 md:h-6" />
                 </div>
                 <div className="flex-1 relative z-10">
-                    <h4 className="text-xs md:text-sm font-semibold text-slate-500 uppercase tracking-wider">{t('store_status_label')}</h4>
+                    <h4 className="text-xs md:text-sm font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t('store_status_label')}</h4>
                     <div className="flex items-center justify-between mt-1">
-                      <span className={`text-lg md:text-xl font-black ${storeStatus ? 'text-green-700' : 'text-red-700'}`}>
+                      <span className={`text-lg md:text-xl font-black ${storeStatus ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}`}>
                         {storeStatus ? t('status_open') : t('status_closed')}
                       </span>
                       <span 
-                        className={`text-[10px] md:text-xs font-bold px-3 py-1 rounded-full border transition-all ${!isOnline ? 'bg-slate-100 text-slate-400 border-slate-200' : (storeStatus ? 'border-red-200 text-red-600 bg-red-50 group-hover:bg-red-100' : 'border-green-200 text-green-600 bg-green-50 group-hover:bg-green-100')}`}
+                        className={`text-[10px] md:text-xs font-bold px-3 py-1 rounded-full border transition-all ${!isOnline ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border-slate-200 dark:border-slate-700' : (storeStatus ? 'border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 group-hover:bg-red-100 dark:group-hover:bg-red-900/30' : 'border-green-200 dark:border-green-900/50 text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 group-hover:bg-green-100 dark:group-hover:bg-green-900/30')}`}
                       >
                         {storeStatus ? t('tap_to_close') : t('tap_to_open')}
                       </span>
@@ -318,23 +318,23 @@ const Shopkeeper = () => {
                 </div>
             </button>
 
-            <div className="bg-white p-4 md:p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-center items-center text-center gap-1 md:gap-4 md:flex-row md:text-left">
-                <div className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mb-1 md:mb-0">
+            <div className="bg-white dark:bg-slate-900 p-4 md:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-center items-center text-center gap-1 md:gap-4 md:flex-row md:text-left">
+                <div className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-1 md:mb-0">
                     <Package size={18} className="md:w-6 md:h-6" />
                 </div>
                 <div>
-                    <h4 className="text-[10px] md:text-sm font-bold text-slate-400 uppercase tracking-wider">{t('shop_totalProducts')}</h4>
-                    <span className="text-lg md:text-2xl font-black text-slate-900">{products.length}</span>
+                    <h4 className="text-[10px] md:text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">{t('shop_totalProducts')}</h4>
+                    <span className="text-lg md:text-2xl font-black text-slate-900 dark:text-white">{products.length}</span>
                 </div>
             </div>
 
-            <div className="bg-white p-4 md:p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-center items-center text-center gap-1 md:gap-4 md:flex-row md:text-left">
-                <div className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mb-1 md:mb-0">
+            <div className="bg-white dark:bg-slate-900 p-4 md:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-center items-center text-center gap-1 md:gap-4 md:flex-row md:text-left">
+                <div className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-1 md:mb-0">
                     <span className="text-lg md:text-xl font-bold">₹</span>
                 </div>
                 <div>
-                    <h4 className="text-[10px] md:text-sm font-bold text-slate-400 uppercase tracking-wider">{t('shop_inventoryValue')}</h4>
-                    <span className="text-lg md:text-2xl font-black text-slate-900">
+                    <h4 className="text-[10px] md:text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">{t('shop_inventoryValue')}</h4>
+                    <span className="text-lg md:text-2xl font-black text-slate-900 dark:text-white">
                         {totalValue >= 100000 ? `${(totalValue/100000).toFixed(1)}L` : totalValue.toLocaleString()}
                     </span>
                 </div>
@@ -342,16 +342,16 @@ const Shopkeeper = () => {
         </div>
 
         {/* Mobile Tab Navigation */}
-        <div className="flex p-1 bg-slate-100 rounded-xl mt-6 md:hidden shadow-inner">
+        <div className="flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl mt-6 md:hidden shadow-inner">
             <button 
                 onClick={() => setActiveTab('list')}
-                className={`flex-1 py-3 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-2 ${activeTab === 'list' ? 'bg-white text-slate-900 shadow-sm ring-1 ring-black/5' : 'text-slate-400 hover:text-slate-600'}`}
+                className={`flex-1 py-3 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-2 ${activeTab === 'list' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm ring-1 ring-black/5 dark:ring-white/5' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'}`}
             >
                 <Package size={16} /> Inventory
             </button>
             <button 
                 onClick={() => setActiveTab('add')}
-                className={`flex-1 py-3 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-2 ${activeTab === 'add' ? 'bg-white text-primary-600 shadow-sm ring-1 ring-black/5' : 'text-slate-400 hover:text-slate-600'}`}
+                className={`flex-1 py-3 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-2 ${activeTab === 'add' ? 'bg-white dark:bg-slate-700 text-primary-600 dark:text-primary-400 shadow-sm ring-1 ring-black/5 dark:ring-white/5' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'}`}
             >
                 {editMode ? <Edit2 size={16} /> : <Plus size={16} />} 
                 {editMode ? 'Edit Product' : 'Add Item'}
@@ -362,10 +362,10 @@ const Shopkeeper = () => {
         
         {/* Left Column: Form */}
         <div className={`lg:col-span-1 lg:sticky lg:top-24 ${activeTab === 'add' ? 'block' : 'hidden'} lg:block`}>
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden">
-            <div className="bg-slate-50 px-5 md:px-6 py-4 border-b border-slate-200 flex justify-between items-center">
-                <h3 className="font-bold text-slate-800 flex items-center gap-2">
-                    {editMode ? <Edit2 size={18} className="text-primary-600" /> : <Plus size={18} className="text-primary-600" />}
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden">
+            <div className="bg-slate-50 dark:bg-slate-800/50 px-5 md:px-6 py-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center">
+                <h3 className="font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                    {editMode ? <Edit2 size={18} className="text-primary-600 dark:text-primary-400" /> : <Plus size={18} className="text-primary-600 dark:text-primary-400" />}
                     {editMode ? t('shop_editProduct') : t('shop_addProduct')}
                 </h3>
             </div>
@@ -373,20 +373,20 @@ const Shopkeeper = () => {
             <form onSubmit={handleSubmit} className="p-5 md:p-6 space-y-5">
             <div>
                 <div className="flex justify-between items-center mb-2">
-                    <label className="text-sm font-bold text-slate-700">{t('shop_imagesLabel')}</label>
-                    <button type="button" onClick={() => cameraInputRef.current.click()} className="text-primary-600 text-xs font-bold flex items-center gap-1 hover:text-primary-700"><Camera size={14} /> {t('shop_takePhoto')}</button>
+                    <label className="text-sm font-bold text-slate-700 dark:text-slate-300">{t('shop_imagesLabel')}</label>
+                    <button type="button" onClick={() => cameraInputRef.current.click()} className="text-primary-600 dark:text-primary-400 text-xs font-bold flex items-center gap-1 hover:text-primary-700 dark:hover:text-primary-300"><Camera size={14} /> {t('shop_takePhoto')}</button>
                     <input type="file" accept="image/*" capture="environment" ref={cameraInputRef} className="hidden" onChange={handleImageUpload} />
                 </div>
                 
                 <div className="grid grid-cols-4 gap-2">
                 {formData.images.map((img, index) => (
-                    <div key={index} className="relative aspect-square rounded-lg overflow-hidden border border-slate-200 bg-slate-100 group">
+                    <div key={index} className="relative aspect-square rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 group">
                     <img src={typeof img === 'string' ? img : img.preview} alt="" className="w-full h-full object-cover" />
-                    <button type="button" onClick={() => removeImage(index)} className="absolute top-1 right-1 bg-white/90 text-red-500 p-1 rounded-full shadow-sm hover:bg-white"><X size={12} /></button>
+                    <button type="button" onClick={() => removeImage(index)} className="absolute top-1 right-1 bg-white/90 dark:bg-slate-900/90 text-red-500 p-1 rounded-full shadow-sm hover:bg-white dark:hover:bg-slate-800"><X size={12} /></button>
                     </div>
                 ))}
                 {formData.images.length < 4 && (
-                    <div className="aspect-square rounded-lg border-2 border-dashed border-slate-300 flex flex-col items-center justify-center text-slate-400 hover:border-primary-400 hover:text-primary-500 hover:bg-primary-50 transition-colors relative cursor-pointer">
+                    <div className="aspect-square rounded-lg border-2 border-dashed border-slate-300 dark:border-slate-600 flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 hover:border-primary-400 dark:hover:border-primary-500 hover:text-primary-500 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors relative cursor-pointer">
                         <ImageIcon size={20} />
                         <span className="text-[10px] font-bold mt-1">Add</span>
                         <input type="file" accept="image/*" multiple onChange={handleImageUpload} className="absolute inset-0 opacity-0 cursor-pointer" />
@@ -396,24 +396,24 @@ const Shopkeeper = () => {
             </div>
 
             <div>
-                <label className="block text-sm font-bold text-slate-700 mb-1">{t('shop_name')}</label>
-                <input className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none" placeholder={t('shop_namePlaceholder')} value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
+                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">{t('shop_name')}</label>
+                <input className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900/30 focus:border-primary-500 dark:focus:border-primary-500 outline-none dark:text-white dark:placeholder:text-slate-500" placeholder={t('shop_namePlaceholder')} value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
                 <div>
-                    <label className="block text-sm font-bold text-slate-700 mb-1">{t('shop_price')}</label>
-                    <input className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none" type="number" placeholder="0.00" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} />
+                    <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">{t('shop_price')}</label>
+                    <input className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900/30 focus:border-primary-500 dark:focus:border-primary-500 outline-none dark:text-white dark:placeholder:text-slate-500" type="number" placeholder="0.00" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} />
                 </div>
                 <div>
-                    <label className="block text-sm font-bold text-slate-700 mb-1">{t('shop_stock')}</label>
-                    <input className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none" type="number" placeholder="0" value={formData.quantity} onChange={e => setFormData({...formData, quantity: e.target.value})} />
+                    <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">{t('shop_stock')}</label>
+                    <input className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900/30 focus:border-primary-500 dark:focus:border-primary-500 outline-none dark:text-white dark:placeholder:text-slate-500" type="number" placeholder="0" value={formData.quantity} onChange={e => setFormData({...formData, quantity: e.target.value})} />
                 </div>
             </div>
             
             <div>
-                <label className="block text-sm font-bold text-slate-700 mb-1">{t('shop_category')}</label>
-                <select className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})}>
+                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">{t('shop_category')}</label>
+                <select className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900/30 focus:border-primary-500 dark:focus:border-primary-500 outline-none dark:text-white" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})}>
                 <option value="">{t('shop_selectCategory')}</option>
                 <option value="T-Shirt">T-Shirt</option>
                 <option value="Shirt">Shirt</option>
@@ -426,7 +426,7 @@ const Shopkeeper = () => {
 
             <div className="grid grid-cols-2 gap-4">
                 <div>
-                <label className="block text-sm font-bold text-slate-700 mb-1">{t('shop_sizes')}</label>
+                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">{t('shop_sizes')}</label>
                  {formData.category && ['T-Shirt', 'Shirt', 'Jeans', 'Trousers', 'Shoes'].includes(formData.category) ? (
                     <div className="flex flex-wrap gap-2">
                         {({
@@ -451,7 +451,7 @@ const Shopkeeper = () => {
                                         }
                                         setFormData({...formData, sizes: newSizes.join(', ')});
                                     }}
-                                    className={`px-3 py-1.5 text-xs font-bold rounded-lg border transition-all ${isSelected ? 'bg-primary-600 text-white border-primary-600 shadow-md' : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'}`}
+                                    className={`px-3 py-1.5 text-xs font-bold rounded-lg border transition-all ${isSelected ? 'bg-primary-600 text-white border-primary-600 shadow-md' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-500'}`}
                                 >
                                     {size}
                                 </button>
@@ -459,18 +459,18 @@ const Shopkeeper = () => {
                         })}
                     </div>
                 ) : (
-                    <input className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none" placeholder={t('shop_sizesPlaceholder')} value={formData.sizes} onChange={e => setFormData({...formData, sizes: e.target.value})} />
+                    <input className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900/30 focus:border-primary-500 dark:focus:border-primary-500 outline-none dark:text-white dark:placeholder:text-slate-500" placeholder={t('shop_sizesPlaceholder')} value={formData.sizes} onChange={e => setFormData({...formData, sizes: e.target.value})} />
                 )}
                 </div>
                 <div>
-                <label className="block text-sm font-bold text-slate-700 mb-1">{t('shop_colors')}</label>
-                <input className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none" placeholder={t('shop_colorsPlaceholder')} value={formData.colors} onChange={e => setFormData({...formData, colors: e.target.value})} />
+                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">{t('shop_colors')}</label>
+                <input className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900/30 focus:border-primary-500 dark:focus:border-primary-500 outline-none dark:text-white dark:placeholder:text-slate-500" placeholder={t('shop_colorsPlaceholder')} value={formData.colors} onChange={e => setFormData({...formData, colors: e.target.value})} />
                 </div>
             </div>
 
             <div>
-                <label className="block text-sm font-bold text-slate-700 mb-1">{t('shop_description')}</label>
-                <textarea className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none min-h-[80px]" placeholder={t('shop_descriptionPlaceholder')} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} />
+                <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-1">{t('shop_description')}</label>
+                <textarea className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900/30 focus:border-primary-500 dark:focus:border-primary-500 outline-none min-h-[80px] dark:text-white dark:placeholder:text-slate-500" placeholder={t('shop_descriptionPlaceholder')} value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} />
             </div>
             
             <div className="flex gap-3 pt-2">
@@ -479,7 +479,7 @@ const Shopkeeper = () => {
                 {uploading ? 'Saving...' : (editMode ? t('shop_update') : t('shop_add'))}
                 </button>
                 {editMode && (
-                <button className="px-6 py-3 border border-slate-300 text-slate-600 font-bold rounded-xl hover:bg-slate-50 transition-colors" type="button" onClick={() => { setEditMode(false); setEditingId(null); setActiveTab('list'); setFormData({ name: '', price: '', description: '', quantity: '', category: '', sizes: '', colors: '', images: [] }); }}>
+                <button className="px-6 py-3 border border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-300 font-bold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" type="button" onClick={() => { setEditMode(false); setEditingId(null); setActiveTab('list'); setFormData({ name: '', price: '', description: '', quantity: '', category: '', sizes: '', colors: '', images: [] }); }}>
                     {t('shop_cancel')}
                 </button>
                 )}
@@ -490,9 +490,9 @@ const Shopkeeper = () => {
 
         {/* Right Column: Inventory List */}
         <div className={`lg:col-span-2 ${activeTab === 'list' ? 'block' : 'hidden'} lg:block`}>
-          <div className="sticky top-0 z-30 bg-white/80 backdrop-blur-md p-2 -mx-2 md:static md:bg-transparent md:p-0 md:mx-0 rounded-xl mb-4 transition-all">
+          <div className="sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md p-2 -mx-2 md:static md:bg-transparent md:p-0 md:mx-0 rounded-xl mb-4 transition-all">
           <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3">
-              <h2 className="text-lg md:text-xl font-bold text-slate-900 hidden md:block">{t('shop_inventoryList')}</h2>
+              <h2 className="text-lg md:text-xl font-bold text-slate-900 dark:text-white hidden md:block">{t('shop_inventoryList')}</h2>
               
               <div className="flex gap-2 w-full md:w-auto">
                   <div className="relative flex-1 md:w-64">
@@ -502,10 +502,10 @@ const Shopkeeper = () => {
                         placeholder={t('search_placeholder') || "Search products..."} 
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full pl-9 pr-8 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none text-sm font-medium transition-all shadow-sm focus:shadow-md"
+                        className="w-full pl-9 pr-8 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900/30 focus:border-primary-500 dark:focus:border-primary-500 outline-none text-sm font-medium transition-all shadow-sm focus:shadow-md dark:text-white dark:placeholder:text-slate-500"
                       />
                       {searchTerm && (
-                        <button onClick={() => setSearchTerm('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                        <button onClick={() => setSearchTerm('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
                             <X size={14} />
                         </button>
                       )}
@@ -514,7 +514,7 @@ const Shopkeeper = () => {
                   <select 
                     value={filterCategory}
                     onChange={(e) => setFilterCategory(e.target.value)}
-                    className="pl-3 pr-8 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary-100 focus:border-primary-500 outline-none text-sm font-bold text-slate-600 transition-all shadow-sm cursor-pointer focus:shadow-md"
+                    className="pl-3 pr-8 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-primary-100 dark:focus:ring-primary-900/30 focus:border-primary-500 dark:focus:border-primary-500 outline-none text-sm font-bold text-slate-600 dark:text-slate-300 transition-all shadow-sm cursor-pointer focus:shadow-md"
                   >
                       <option value="">All</option>
                       <option value="T-Shirt">T-Shirts</option>
@@ -530,20 +530,20 @@ const Shopkeeper = () => {
 
           <div className="space-y-4">
             {loading ? (
-                <div className="text-center py-12 text-slate-400">Loading Inventory...</div>
+                <div className="text-center py-12 text-slate-400 dark:text-slate-500">Loading Inventory...</div>
             ) : filteredProducts.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16 px-4 text-center border-2 border-dashed border-slate-200 rounded-2xl bg-white">
-                <Package size={48} className="text-slate-300 mb-4" />
-                <h3 className="text-lg font-bold text-slate-900 mb-1">No products found</h3>
-                <p className="text-slate-500 text-sm">Try adjusting your search or filters.</p>
+              <div className="flex flex-col items-center justify-center py-16 px-4 text-center border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-2xl bg-white dark:bg-slate-900">
+                <Package size={48} className="text-slate-300 dark:text-slate-700 mb-4" />
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">No products found</h3>
+                <p className="text-slate-500 dark:text-slate-400 text-sm">Try adjusting your search or filters.</p>
               </div>
             ) : ( filteredProducts.map(product => (
-              <div key={product.id} className="group bg-white p-4 md:p-5 rounded-2xl border border-slate-100 hover:border-primary-100 shadow-sm hover:shadow-xl hover:shadow-primary-900/5 transition-all duration-300 flex items-start gap-3 md:gap-6 relative overflow-hidden">
+              <div key={product.id} className="group bg-white dark:bg-slate-900 p-4 md:p-5 rounded-2xl border border-slate-100 dark:border-slate-800 hover:border-primary-100 dark:hover:border-primary-900/50 shadow-sm hover:shadow-xl hover:shadow-primary-900/5 dark:hover:shadow-black/40 transition-all duration-300 flex items-start gap-3 md:gap-6 relative overflow-hidden">
                 {/* Decorative background accent on hover */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary-50/50 to-transparent rounded-bl-full -mr-10 -mt-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary-50/50 dark:from-primary-900/20 to-transparent rounded-bl-full -mr-10 -mt-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
 
                 <div 
-                    className="w-20 h-20 md:w-24 md:h-24 bg-slate-50 rounded-xl overflow-hidden flex-shrink-0 border border-slate-100 shadow-sm relative group-hover:scale-105 transition-transform duration-500 cursor-pointer"
+                    className="w-20 h-20 md:w-24 md:h-24 bg-slate-50 dark:bg-slate-800 rounded-xl overflow-hidden flex-shrink-0 border border-slate-100 dark:border-slate-700 shadow-sm relative group-hover:scale-105 transition-transform duration-500 cursor-pointer"
                     onClick={() => setSelectedImage({ index: 0, images: product.images && product.images.length > 0 ? product.images : [] })}
                 >
                   {product.images && product.images.length > 0 ? (
@@ -555,40 +555,40 @@ const Shopkeeper = () => {
                 
                 <div className="flex-1 min-w-0 py-0.5 md:py-1 relative z-10">
                    <div className="flex justify-between items-start mb-1 md:mb-2">
-                       <h4 className="font-bold text-slate-800 text-base md:text-lg leading-tight line-clamp-1 group-hover:text-primary-700 transition-colors">{product.name}</h4>
-                       <span className="font-extrabold text-primary-600 text-lg md:text-xl tracking-tight ml-2">₹{product.price}</span>
+                       <h4 className="font-bold text-slate-800 dark:text-slate-200 text-base md:text-lg leading-tight line-clamp-1 group-hover:text-primary-700 dark:group-hover:text-primary-400 transition-colors">{product.name}</h4>
+                       <span className="font-extrabold text-primary-600 dark:text-primary-400 text-lg md:text-xl tracking-tight ml-2">₹{product.price}</span>
                    </div>
                    
                    <div className="flex flex-wrap gap-2 mb-2 md:mb-3">
-                        <span className="px-2 md:px-3 py-1 rounded-lg text-[10px] md:text-xs font-bold uppercase tracking-wide bg-blue-50 text-blue-600 border border-blue-100 shadow-sm">
+                        <span className="px-2 md:px-3 py-1 rounded-lg text-[10px] md:text-xs font-bold uppercase tracking-wide bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-900/50 shadow-sm">
                            {product.category || 'Item'}
                         </span>
-                        <span className={`px-2 md:px-3 py-1 rounded-lg text-[10px] md:text-xs font-bold uppercase tracking-wide border shadow-sm ${Number(product.quantity) === 0 ? 'bg-red-50 text-red-600 border-red-100' : 'bg-emerald-50 text-emerald-600 border-emerald-100'}`}>
+                        <span className={`px-2 md:px-3 py-1 rounded-lg text-[10px] md:text-xs font-bold uppercase tracking-wide border shadow-sm ${Number(product.quantity) === 0 ? 'bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 border-red-100 dark:border-red-900/50' : 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 border-emerald-100 dark:border-emerald-900/50'}`}>
                            {Number(product.quantity) === 0 ? 'Out of Stock' : `Stock: ${product.quantity}`}
                         </span>
                    </div>
                    
                    <div className="space-y-1 md:space-y-0">
                     {product.sizes && (
-                        <div className="text-xs md:text-sm text-slate-500 font-medium flex items-center gap-2">
-                            <span className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-slate-300 hidden md:block"></span>
-                            <span className="md:hidden text-[10px] uppercase font-bold text-slate-400">Size:</span>
-                            <span className="text-slate-700 font-semibold">{product.sizes.toUpperCase()}</span>
+                        <div className="text-xs md:text-sm text-slate-500 dark:text-slate-400 font-medium flex items-center gap-2">
+                            <span className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-slate-300 dark:bg-slate-600 hidden md:block"></span>
+                            <span className="md:hidden text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500">Size:</span>
+                            <span className="text-slate-700 dark:text-slate-300 font-semibold">{product.sizes.toUpperCase()}</span>
                         </div>
                     )}
                     {product.colors && (
-                        <div className="text-xs md:text-sm text-slate-500 font-medium flex items-center gap-2">
-                            <span className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-slate-300 hidden md:block"></span>
-                            <span className="md:hidden text-[10px] uppercase font-bold text-slate-400">Color:</span>
-                            <span className="text-slate-700 font-semibold">{product.colors.toUpperCase()}</span>
+                        <div className="text-xs md:text-sm text-slate-500 dark:text-slate-400 font-medium flex items-center gap-2">
+                            <span className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-slate-300 dark:bg-slate-600 hidden md:block"></span>
+                            <span className="md:hidden text-[10px] uppercase font-bold text-slate-400 dark:text-slate-500">Color:</span>
+                            <span className="text-slate-700 dark:text-slate-300 font-semibold">{product.colors.toUpperCase()}</span>
                         </div>
                     )}
                    </div>
                 </div>
                 
                 <div className="flex flex-col gap-2 relative z-10">
-                  <button onClick={() => handleEdit(product)} className="p-2 md:p-2.5 text-primary-600 bg-primary-50 hover:bg-primary-600 hover:text-white rounded-xl transition-all shadow-sm" title="Edit"><Edit2 size={16} className="md:w-[18px] md:h-[18px]" /></button>
-                  <button onClick={() => handleDelete(product.id, product.images)} className="p-2 md:p-2.5 text-red-600 bg-red-50 hover:bg-red-600 hover:text-white rounded-xl transition-all shadow-sm" title="Delete"><Trash2 size={16} className="md:w-[18px] md:h-[18px]" /></button>
+                  <button onClick={() => handleEdit(product)} className="p-2 md:p-2.5 text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/30 hover:bg-primary-600 dark:hover:bg-primary-500 hover:text-white dark:hover:text-white rounded-xl transition-all shadow-sm" title="Edit"><Edit2 size={16} className="md:w-[18px] md:h-[18px]" /></button>
+                  <button onClick={() => handleDelete(product.id, product.images)} className="p-2 md:p-2.5 text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 hover:bg-red-600 dark:hover:bg-red-500 hover:text-white dark:hover:text-white rounded-xl transition-all shadow-sm" title="Delete"><Trash2 size={16} className="md:w-[18px] md:h-[18px]" /></button>
                 </div>
               </div>
             )))}
@@ -599,18 +599,18 @@ const Shopkeeper = () => {
       {/* Delete Confirmation Modal */}
       {deleteModal.show && (
           <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fade-in">
-              <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl transform scale-100 animate-scale-in">
-                  <div className="w-14 h-14 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-5">
+              <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 w-full max-w-sm shadow-2xl transform scale-100 animate-scale-in border border-white/10">
+                  <div className="w-14 h-14 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-full flex items-center justify-center mx-auto mb-5">
                       <Trash2 size={24} />
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 text-center mb-2">Delete Product?</h3>
-                  <p className="text-slate-500 text-center mb-8 leading-relaxed">
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white text-center mb-2">Delete Product?</h3>
+                  <p className="text-slate-500 dark:text-slate-400 text-center mb-8 leading-relaxed">
                       Are you sure you want to delete this product? This action cannot be undone.
                   </p>
                   <div className="flex gap-3">
                       <button 
                          onClick={() => setDeleteModal({ show: false, id: null, images: [] })}
-                         className="flex-1 py-3 text-slate-700 font-bold bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors"
+                         className="flex-1 py-3 text-slate-700 dark:text-slate-200 font-bold bg-slate-100 dark:bg-slate-800 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                       >
                           Cancel
                       </button>
@@ -716,15 +716,15 @@ const Shopkeeper = () => {
 
       {/* Toast Notification */}
       {toast && createPortal(
-          <div className="fixed bottom-20 md:bottom-6 right-6 z-[200] max-w-[90vw] bg-slate-900 text-white px-5 py-3 md:px-6 md:py-4 rounded-2xl shadow-2xl flex items-center gap-3 md:gap-4 animate-fade-in-up border border-slate-700">
-              <div className={`${toast.type === 'error' ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'} p-2 rounded-full flex-shrink-0`}>
+          <div className="fixed bottom-20 md:bottom-6 right-6 z-[200] max-w-[90vw] bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-5 py-3 md:px-6 md:py-4 rounded-2xl shadow-2xl flex items-center gap-3 md:gap-4 animate-fade-in-up border border-slate-700 dark:border-slate-200">
+              <div className={`${toast.type === 'error' ? 'bg-red-500/20 text-red-400 dark:text-red-500' : 'bg-green-500/20 text-green-400 dark:text-green-500'} p-2 rounded-full flex-shrink-0`}>
                   {toast.type === 'error' ? <AlertCircle size={20} /> : <CheckCircle size={20} />}
               </div>
               <div className="flex-1 min-w-0">
                   <h4 className="font-bold text-sm">{toast.type === 'error' ? 'Error' : 'Success'}</h4>
-                  <p className="text-xs md:text-sm text-slate-300 truncate">{toast.message}</p>
+                  <p className="text-xs md:text-sm text-slate-300 dark:text-slate-600 truncate">{toast.message}</p>
               </div>
-              <button onClick={() => setToast(null)} className="ml-2 text-slate-500 hover:text-white transition-colors"><X size={18} /></button>
+              <button onClick={() => setToast(null)} className="ml-2 text-slate-500 hover:text-white dark:hover:text-slate-900 transition-colors"><X size={18} /></button>
           </div>, document.body
       )}
     </div>

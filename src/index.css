@@ -6,7 +6,7 @@
 
 @layer base {
   body {
-    @apply bg-gradient-to-br from-indigo-50 via-purple-50/50 to-pink-50 text-slate-900 font-sans antialiased min-h-screen relative;
+    @apply bg-gradient-to-br from-indigo-50 via-purple-50/50 to-pink-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 text-slate-900 dark:text-slate-100 font-sans antialiased min-h-screen relative;
     background-attachment: fixed;
   }
 }

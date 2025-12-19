@@ -78,15 +78,15 @@ const CartDrawer = () => {
         ></div>
 
         {/* Drawer */}
-        <div className="relative w-full max-w-md bg-white h-full shadow-2xl flex flex-col animate-slide-in-right pb-[80px] md:pb-0">
+        <div className="relative w-full max-w-md bg-white dark:bg-slate-900 h-full shadow-2xl flex flex-col animate-slide-in-right pb-[80px] md:pb-0">
         
         {/* Header */}
-        <div className="p-5 border-b border-slate-100 flex justify-between items-center bg-white z-10">
-          <h2 className="text-xl font-bold flex items-center gap-2">
+        <div className="p-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-white dark:bg-slate-900 z-10">
+          <h2 className="text-xl font-bold flex items-center gap-2 text-slate-900 dark:text-white">
             <ShoppingBag className="text-primary-600" />
-            {t('cart_title')} <span className="text-sm font-normal text-slate-500">({cart.length} {t('cart_items')})</span>
+            {t('cart_title')} <span className="text-sm font-normal text-slate-500 dark:text-slate-400">({cart.length} {t('cart_items')})</span>
           </h2>
-          <button onClick={() => setIsCartOpen(false)} className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
+          <button onClick={() => setIsCartOpen(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-500 dark:text-slate-400">
             <X size={24} />
           </button>
         </div>
@@ -95,38 +95,38 @@ const CartDrawer = () => {
         <div className="flex-1 overflow-y-auto p-5 space-y-4">
           {cart.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center p-8 opacity-60">
-                <ShoppingBag size={64} className="mb-4 text-slate-300" />
-                <h3 className="text-lg font-bold text-slate-700">{t('cart_empty_title')}</h3>
-                <p className="text-slate-500">{t('cart_empty_desc')}</p>
-                <button onClick={() => setIsCartOpen(false)} className="mt-6 px-6 py-2 bg-slate-900 text-white rounded-full font-bold text-sm">
+                <ShoppingBag size={64} className="mb-4 text-slate-300 dark:text-slate-600" />
+                <h3 className="text-lg font-bold text-slate-700 dark:text-slate-300">{t('cart_empty_title')}</h3>
+                <p className="text-slate-500 dark:text-slate-400">{t('cart_empty_desc')}</p>
+                <button onClick={() => setIsCartOpen(false)} className="mt-6 px-6 py-2 bg-slate-900 dark:bg-slate-700 text-white rounded-full font-bold text-sm">
                     {t('cart_start_shopping')}
                 </button>
             </div>
           ) : (
             cart.map((item, idx) => (
-              <div key={`${item.id}-${item.selectedSize}-${item.selectedColor}`} className="flex gap-4 p-4 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-white hover:shadow-md transition-all">
-                  <div className="w-20 h-20 bg-white rounded-lg flex-shrink-0 border border-slate-200 overflow-hidden">
+              <div key={`${item.id}-${item.selectedSize}-${item.selectedColor}`} className="flex gap-4 p-4 rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-800 hover:shadow-md transition-all">
+                  <div className="w-20 h-20 bg-white dark:bg-slate-900 rounded-lg flex-shrink-0 border border-slate-200 dark:border-slate-700 overflow-hidden">
                       {item.images && item.images.length > 0 ? (
                           <img src={item.images[0]} alt={item.name} className="w-full h-full object-cover" />
                       ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-slate-100"><ShoppingBag className="text-slate-300" /></div>
+                          <div className="w-full h-full flex items-center justify-center bg-slate-100 dark:bg-slate-800"><ShoppingBag className="text-slate-300 dark:text-slate-600" /></div>
                       )}
                   </div>
                   <div className="flex-1 min-w-0 flex flex-col justify-between">
                       <div>
-                          <h4 className="font-bold text-slate-800 line-clamp-1">{item.name}</h4>
-                          <p className="text-xs text-slate-500 mt-1 flex flex-wrap gap-2">
-                              {item.selectedSize && <span className="px-1.5 py-0.5 bg-white border rounded text-[10px] uppercase font-bold">{item.selectedSize}</span>}
-                              {item.selectedColor && <span className="px-1.5 py-0.5 bg-white border rounded text-[10px] uppercase font-bold">{item.selectedColor}</span>}
+                          <h4 className="font-bold text-slate-800 dark:text-slate-200 line-clamp-1">{item.name}</h4>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 flex flex-wrap gap-2">
+                              {item.selectedSize && <span className="px-1.5 py-0.5 bg-white dark:bg-slate-700 border dark:border-slate-600 rounded text-[10px] uppercase font-bold">{item.selectedSize}</span>}
+                              {item.selectedColor && <span className="px-1.5 py-0.5 bg-white dark:bg-slate-700 border dark:border-slate-600 rounded text-[10px] uppercase font-bold">{item.selectedColor}</span>}
                           </p>
                       </div>
                       <div className="flex justify-between items-end mt-2">
-                          <div className="flex items-center gap-3 bg-white border border-slate-200 rounded-lg px-2 py-1">
-                              <button onClick={() => updateQuantity(item.id, item.selectedSize, item.selectedColor, -1)} className="p-1 hover:text-primary-600">
+                          <div className="flex items-center gap-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-2 py-1 text-slate-900 dark:text-slate-100">
+                              <button onClick={() => updateQuantity(item.id, item.selectedSize, item.selectedColor, -1)} className="p-1 hover:text-primary-600 dark:hover:text-primary-400">
                                   <Minus size={14} />
                               </button>
                               <span className="text-sm font-bold w-4 text-center">{item.quantity}</span>
-                              <button onClick={() => updateQuantity(item.id, item.selectedSize, item.selectedColor, 1)} className="p-1 hover:text-primary-600">
+                              <button onClick={() => updateQuantity(item.id, item.selectedSize, item.selectedColor, 1)} className="p-1 hover:text-primary-600 dark:hover:text-primary-400">
                                   <Plus size={14} />
                               </button>
                           </div>
@@ -134,7 +134,7 @@ const CartDrawer = () => {
                               <button onClick={() => removeFromCart(item.id, item.selectedSize, item.selectedColor)} className="text-red-400 p-1 mb-1 block ml-auto hover:text-red-600">
                                   <Trash2 size={16} />
                               </button>
-                              <span className="font-bold text-slate-900 block">₹{(item.price * item.quantity).toLocaleString()}</span>
+                              <span className="font-bold text-slate-900 dark:text-slate-100 block">₹{(item.price * item.quantity).toLocaleString()}</span>
                           </div>
                       </div>
                   </div>
@@ -145,15 +145,15 @@ const CartDrawer = () => {
 
         {/* Footer */}
         {cart.length > 0 && (
-          <div className="p-5 border-t border-slate-100 bg-white space-y-4 shadow-[0_-5px_20px_rgba(0,0,0,0.05)] relative z-10">
-              <div className="flex justify-between items-center text-lg font-bold text-slate-900">
+          <div className="p-5 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-4 shadow-[0_-5px_20px_rgba(0,0,0,0.05)] relative z-10">
+              <div className="flex justify-between items-center text-lg font-bold text-slate-900 dark:text-white">
                   <span>{t('cart_total')}</span>
                   <span>₹{cartTotal.toLocaleString()}</span>
               </div>
               <div className="flex gap-3">
                   <button 
                       onClick={() => setIsCartOpen(false)}
-                      className="flex-1 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold flex items-center justify-center gap-2 active:scale-[0.98] transition-all"
+                      className="flex-1 py-3.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl font-bold flex items-center justify-center gap-2 active:scale-[0.98] transition-all"
                   >
                       {t('cart_back')}
                   </button>

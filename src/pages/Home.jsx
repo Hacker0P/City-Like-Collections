@@ -60,7 +60,7 @@ const CarouselBanner = ({ t }) => {
     };
 
     return (
-        <div className="md:hidden pt-4 pb-2 px-4 relative bg-white">
+        <div className="md:hidden pt-4 pb-2 px-4 relative bg-white dark:bg-slate-900">
             <div 
                 ref={scrollRef}
                 onScroll={handleScroll}
@@ -102,10 +102,10 @@ const Home = () => {
   
   const [config, setConfig] = useState({
     whatsapp: '',
-    storeName: 'City Like Collection',
+    storeName: 'City Like collections',
     location: { lat: 23.0308542, lng: 86.3613231 },
-    googleMapsLink: 'https://www.google.com/maps/place/City+Life+collection/@23.0307752,86.3613507,20z/data=!4m6!3m5!1s0x39f673bf624dbeed:0x4dde092678b0205d!8m2!3d23.0308542!4d86.3613231!16s%2Fg%2F11y412pm3s?entry=ttu&g_ep=EgoyMDI1MTIwOC4wIKXMDSoKLDEwMDc5MjA2N0gBUAM%3D',
-    cid: '5610898517208768605',
+    googleMapsLink: 'https://www.google.com/maps/place/City+Like+collections/@23.0308542,86.3613231,17z/data=!4m6!3m5!1s0x39f673bf624dbeed:0x4dde092678b0205d!8m2!3d23.0308542!4d86.3613231!16s%2Fg%2F11y412pm3s?authuser=0&entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoKLDEwMDc5MjA2N0gBUAM%3D',
+    cid: '5610932246588432477',
     address: 'Khawasdih, Barabazar, West Bengal 723127',
     isOpen: true,
     noticeMessage: '',
@@ -141,7 +141,11 @@ const Home = () => {
                instagram: data.instagram_url || prev.socials.instagram,
                facebook: data.facebook_url || prev.socials.facebook,
                youtube: data.youtube_url || prev.socials.youtube
-           }
+           },
+           // Enforce correct location/map details regardless of DB/Local storage
+           location: { lat: 23.0308542, lng: 86.3613231 },
+           cid: '5610932246588432477',
+           googleMapsLink: 'https://www.google.com/maps/place/City+Like+collections/@23.0308542,86.3613231,17z/data=!4m6!3m5!1s0x39f673bf624dbeed:0x4dde092678b0205d!8m2!3d23.0308542!4d86.3613231!16s%2Fg%2F11y412pm3s?authuser=0&entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoKLDEwMDc5MjA2N0gBUAM%3D'
         }));
       }
     };
@@ -281,12 +285,12 @@ const Home = () => {
   }, [mobileSearch, searchedProducts.length]);
 
   return (
-    <div className="pb-24 md:pb-0 animate-fade-in min-h-screen bg-slate-50 selection:bg-purple-100 selection:text-purple-900">
+    <div className="pb-24 md:pb-0 animate-fade-in min-h-screen bg-slate-50 dark:bg-slate-950 selection:bg-purple-100 selection:text-purple-900">
       
       {/* Custom Mobile Header - App Like */}
-      <div className="md:hidden sticky top-0 z-40 bg-white pb-2 shadow-sm transition-all duration-300">
+      <div className="md:hidden sticky top-0 z-40 bg-white dark:bg-slate-900 pb-2 shadow-sm transition-all duration-300">
            <div className="px-4 pt-4 pb-2 flex items-center gap-3">
-               <div className="flex-1 bg-slate-100 rounded-lg flex items-center px-3 py-2.5 border border-slate-200">
+               <div className="flex-1 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center px-3 py-2.5 border border-slate-200 dark:border-slate-700">
                    <Search size={18} className="text-slate-400 mr-2" />
                    <input 
                         type="text" 
@@ -294,14 +298,14 @@ const Home = () => {
                         value={mobileSearch}
                         onChange={(e) => setMobileSearch(e.target.value)}
                         onKeyDown={handleMobileSearch}
-                        className="bg-transparent w-full text-slate-800 text-sm font-medium outline-none placeholder:text-slate-400"
+                        className="bg-transparent w-full text-slate-800 dark:text-slate-100 text-sm font-medium outline-none placeholder:text-slate-400"
                    />
                </div>
                
                {/* Wishlist Toggle Mobile */}
                <button 
                   onClick={() => setIsWishlistOpen(true)}
-                  className="shrink-0 w-10 h-10 bg-white border border-slate-200 text-slate-500 rounded-lg flex items-center justify-center relative active:scale-95 transition-transform"
+                  className="shrink-0 w-10 h-10 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 rounded-lg flex items-center justify-center relative active:scale-95 transition-transform"
                >
                    <Heart size={20} className={wishlist.length > 0 ? "fill-rose-500 text-rose-500" : ""} />
                    {wishlist.length > 0 && (
@@ -329,10 +333,10 @@ const Home = () => {
                         onClick={() => navigate(`/catalogue?category=${cat.name}`)}
                         className="flex flex-col items-center gap-1.5 flex-shrink-0 w-[72px] cursor-pointer"
                    >
-                        <div className="w-[60px] h-[60px] rounded-2xl bg-slate-50 border border-slate-100 p-1 flex items-center justify-center overflow-hidden shadow-sm">
+                        <div className="w-[60px] h-[60px] rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 p-1 flex items-center justify-center overflow-hidden shadow-sm">
                             <img src={cat.image} alt={cat.label} className="w-full h-full object-cover rounded-xl" />
                         </div>
-                        <span className="text-[10px] font-bold text-slate-700 text-center leading-tight line-clamp-2">{cat.label}</span>
+                        <span className="text-[10px] font-bold text-slate-700 dark:text-slate-300 text-center leading-tight line-clamp-2">{cat.label}</span>
                    </div>
                ))}
            </div>
@@ -355,7 +359,7 @@ const Home = () => {
       )}
 
       {/* Hero Section (Desktop View) */}
-      <div className="hidden md:block bg-slate-50 border-b border-slate-100 relative overflow-hidden">
+      <div className="hidden md:block bg-slate-50 dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800 relative overflow-hidden">
         {/* Subtle Background Pattern */}
         <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:20px_20px] opacity-40"></div>
         {/* Animated Background Blobs */}
@@ -376,14 +380,15 @@ const Home = () => {
                        </span>
                    </div>
                    
-                   <h1 className="text-7xl lg:text-8xl font-black text-slate-900 leading-[0.95] tracking-tight">
+                   <h1 className="text-7xl lg:text-8xl font-black text-slate-900 dark:text-white leading-[0.95] tracking-tight">
                        {t('heroTitle1')} <br />
                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-violet-600 to-fuchsia-600 animate-gradient-x">
                            {t('heroTitle2')}
                        </span>
                    </h1>
                    
-                   <p className="text-2xl text-slate-600 max-w-xl leading-relaxed font-light tracking-wide">
+                   
+                   <p className="text-2xl text-slate-600 dark:text-slate-400 max-w-xl leading-relaxed font-light tracking-wide">
                        {t('heroSubtitle') || "Explore our exclusive collection of premium mens clothing tailored to perfection. Elevate your wardrobe with City Like Collection."}
                    </p>
 
@@ -395,7 +400,7 @@ const Home = () => {
                             value={mobileSearch}
                             onChange={(e) => setMobileSearch(e.target.value)}
                             onKeyDown={handleMobileSearch}
-                            className="w-full px-6 py-4 pl-14 rounded-2xl bg-white shadow-xl shadow-slate-200/50 border border-slate-100 text-slate-900 text-lg font-medium outline-none focus:ring-2 focus:ring-primary-500/20 transition-all placeholder:text-slate-400 group-hover:scale-[1.01]"
+                            className="w-full px-6 py-4 pl-14 rounded-2xl bg-white dark:bg-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50 border border-slate-100 dark:border-slate-700 text-slate-900 dark:text-white text-lg font-medium outline-none focus:ring-2 focus:ring-primary-500/20 transition-all placeholder:text-slate-400 group-hover:scale-[1.01]"
                        />
                        <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-primary-500" size={24} />
                        {mobileSearch && (
@@ -465,17 +470,17 @@ const Home = () => {
       <CarouselBanner t={t} />
 
       {/* Shop By Category & Search Results */}
-      <div id="shop-by-category" className="bg-gradient-to-b from-slate-50 to-white py-12 md:py-24 border-y border-slate-100 relative overflow-hidden">
+      <div id="shop-by-category" className="bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900 py-12 md:py-24 border-y border-slate-100 dark:border-slate-800 relative overflow-hidden">
           {/* Decorative Background */}
           <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent"></div>
           
           <div className="container mx-auto px-4">
               <div className="text-center mb-8 md:mb-16 relative hidden md:block">
-                  <span className="text-primary-600 font-bold uppercase tracking-widest text-xs bg-white px-4 py-1.5 rounded-full border border-primary-100 mb-4 md:mb-6 inline-block shadow-sm">
+                  <span className="text-primary-600 font-bold uppercase tracking-widest text-xs bg-white dark:bg-slate-800 px-4 py-1.5 rounded-full border border-primary-100 dark:border-slate-700 mb-4 md:mb-6 inline-block shadow-sm">
                       {t('curatedCollections')}
                   </span>
-                  <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-3 md:mb-6 tracking-tight">{t('shopByCategory')}</h2>
-                  <p className="text-slate-500 max-w-2xl mx-auto text-base md:text-xl font-light">
+                  <h2 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-3 md:mb-6 tracking-tight">{t('shopByCategory')}</h2>
+                  <p className="text-slate-500 dark:text-slate-400 max-w-2xl mx-auto text-base md:text-xl font-light">
                       {t('shopByCategoryDesc')}
                   </p>
                   {mobileSearch && <p className="mt-4 text-primary-600 font-bold animate-pulse">{t('showing_results_for')} "{mobileSearch}"</p>}
@@ -485,7 +490,7 @@ const Home = () => {
               {(searchedProducts.length > 0 || loading) && (
                   <div className="mb-8 md:mb-20">
                       <div className="flex items-center justify-between mb-4 px-4 md:px-0">
-                            <h3 className="text-lg md:text-2xl font-bold text-slate-900 flex items-center gap-2">
+                            <h3 className="text-lg md:text-2xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
                                 {mobileSearch ? (
                                     <>
                                         <Search size={20} className="text-primary-600 md:w-6 md:h-6" />
@@ -505,9 +510,9 @@ const Home = () => {
                           {loading ? (
                               Array(4).fill(0).map((_, i) => (
                                   <div key={i} className="min-w-[160px] w-[160px] md:w-auto snap-center animate-pulse">
-                                      <div className="bg-slate-200 rounded-xl aspect-[3/4] mb-3"></div>
-                                      <div className="h-4 bg-slate-200 rounded w-3/4 mb-2"></div>
-                                      <div className="h-4 bg-slate-200 rounded w-1/2"></div>
+                                      <div className="bg-slate-200 dark:bg-slate-700 rounded-xl aspect-[3/4] mb-3"></div>
+                                      <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/4 mb-2"></div>
+                                      <div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-1/2"></div>
                                   </div>
                               ))
                           ) : (
@@ -536,7 +541,7 @@ const Home = () => {
                     <div 
                         key={cat.name}
                         onClick={() => navigate(`/catalogue?category=${cat.name}`)}
-                        className="group relative overflow-hidden rounded-2xl md:rounded-[2rem] cursor-pointer aspect-[3/4] shadow-md hover:shadow-2xl hover:shadow-primary-900/10 transition-all duration-500 bg-slate-100 ring-1 ring-black/5 active:scale-95"
+                        className="group relative overflow-hidden rounded-2xl md:rounded-[2rem] cursor-pointer aspect-[3/4] shadow-md hover:shadow-2xl hover:shadow-primary-900/10 transition-all duration-500 bg-slate-100 dark:bg-slate-800 ring-1 ring-black/5 dark:ring-white/5 active:scale-95"
                     >
                         <img 
                             src={cat.image} 
@@ -562,11 +567,11 @@ const Home = () => {
                     // Only show empty state if BOTH are empty
                     searchedProducts.length === 0 && (
                         <div className="col-span-full text-center py-12 flex flex-col items-center justify-center opacity-60">
-                             <div className="bg-slate-100 p-4 rounded-full mb-4">
+                             <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-full mb-4">
                                 <Search size={32} className="text-slate-400" />
                              </div>
-                             <p className="text-slate-900 font-medium text-lg">{t('no_matching_items')}</p>
-                             <p className="text-slate-500 text-sm mt-1">{t('try_checking_typos')}</p>
+                             <p className="text-slate-900 dark:text-white font-medium text-lg">{t('no_matching_items')}</p>
+                             <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">{t('try_checking_typos')}</p>
                              <button 
                                 onClick={() => setMobileSearch('')}
                                 className="mt-4 text-primary-600 font-bold hover:underline"
@@ -582,33 +587,33 @@ const Home = () => {
                   {/* Mobile Premium Card */}
                   {/* Mobile App Grid Navigation - Fixed Single Line */}
                   <div className="md:hidden flex gap-2 px-2 pb-2">
-                        <div onClick={() => navigate('/catalogue?sort=newest')} className="flex-1 min-w-0 bg-white py-3 px-1 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center gap-2 active:scale-95 transition-transform h-auto aspect-auto">
+                        <div onClick={() => navigate('/catalogue?sort=newest')} className="flex-1 min-w-0 bg-white dark:bg-slate-800 py-3 px-1 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center gap-2 active:scale-95 transition-transform h-auto aspect-auto">
                             <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-1">
                                 <Star size={20} fill="currentColor" className="opacity-20" />
                                 <Star size={20} className="absolute" />
                             </div>
-                            <span className="text-[10px] font-bold text-slate-800 text-center leading-tight px-1 line-clamp-2">{t('feat_Quality_Title')}</span>
+                            <span className="text-[10px] font-bold text-slate-800 dark:text-slate-200 text-center leading-tight px-1 line-clamp-2">{t('feat_Quality_Title')}</span>
                         </div>
 
-                        <div onClick={() => navigate('/catalogue?featured=true')} className="flex-1 min-w-0 bg-white py-3 px-1 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center gap-2 active:scale-95 transition-transform h-auto aspect-auto">
+                        <div onClick={() => navigate('/catalogue?featured=true')} className="flex-1 min-w-0 bg-white dark:bg-slate-800 py-3 px-1 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center gap-2 active:scale-95 transition-transform h-auto aspect-auto">
                             <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-1">
                                 <TrendingUp size={20} />
                             </div>
-                            <span className="text-[10px] font-bold text-slate-800 text-center leading-tight px-1 line-clamp-2">{t('feat_Trends_Title')}</span>
+                            <span className="text-[10px] font-bold text-slate-800 dark:text-slate-200 text-center leading-tight px-1 line-clamp-2">{t('feat_Trends_Title')}</span>
                         </div>
 
-                        <div onClick={() => navigate('/catalogue?sort=price_asc')} className="flex-1 min-w-0 bg-white py-3 px-1 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center gap-2 active:scale-95 transition-transform h-auto aspect-auto">
+                        <div onClick={() => navigate('/catalogue?sort=price_asc')} className="flex-1 min-w-0 bg-white dark:bg-slate-800 py-3 px-1 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center gap-2 active:scale-95 transition-transform h-auto aspect-auto">
                             <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-1">
                                 <Tag size={20} />
                             </div>
-                            <span className="text-[10px] font-bold text-slate-800 text-center leading-tight px-1 line-clamp-2">{t('feat_Prices_Title')}</span>
+                            <span className="text-[10px] font-bold text-slate-800 dark:text-slate-200 text-center leading-tight px-1 line-clamp-2">{t('feat_Prices_Title')}</span>
                         </div>
 
-                        <div onClick={() => navigate('/catalogue')} className="flex-1 min-w-0 bg-white py-3 px-1 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center gap-2 active:scale-95 transition-transform h-auto aspect-auto">
+                        <div onClick={() => navigate('/catalogue')} className="flex-1 min-w-0 bg-white dark:bg-slate-800 py-3 px-1 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col items-center justify-center gap-2 active:scale-95 transition-transform h-auto aspect-auto">
                             <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-1">
                                 <Package size={20} />
                             </div>
-                            <span className="text-[10px] font-bold text-slate-800 text-center leading-tight px-1 line-clamp-2">{t('feat_Collection_Title')}</span>
+                            <span className="text-[10px] font-bold text-slate-800 dark:text-slate-200 text-center leading-tight px-1 line-clamp-2">{t('feat_Collection_Title')}</span>
                         </div>
                   </div>
 
@@ -616,7 +621,7 @@ const Home = () => {
                   <div className="hidden md:block text-center">
                     <button 
                         onClick={() => navigate('/catalogue')}
-                        className="inline-flex items-center gap-3 bg-white text-slate-900 border-2 border-slate-200 px-10 py-5 rounded-full font-bold text-lg hover:bg-slate-50 hover:border-slate-300 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1 group"
+                        className="inline-flex items-center gap-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white border-2 border-slate-200 dark:border-slate-700 px-10 py-5 rounded-full font-bold text-lg hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1 group"
                     >
                         {t('viewFullCatalogue')} <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                     </button>
@@ -630,8 +635,8 @@ const Home = () => {
           
           {/* Section Header */}
           <div className="flex items-end justify-between px-2">
-              <h2 className="text-2xl font-black text-slate-900 tracking-tight leading-none">
-                  {t('curated')} <span className="text-slate-400">{t('collections_title')}</span>
+              <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight leading-none">
+                  {t('curated')} <span className="text-slate-400 dark:text-slate-500">{t('collections_title')}</span>
               </h2>
           </div>
 
@@ -684,7 +689,7 @@ const Home = () => {
 
           {/* 3. Horizontal Scroll "Vibes" */}
           <div>
-              <h4 className="px-2 text-sm font-bold text-slate-900 mb-3 flex items-center gap-2">
+              <h4 className="px-2 text-sm font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
                   <Sparkles size={14} className="text-amber-500" /> {t('shop_by_vibe')}
               </h4>
               <div className="flex overflow-x-auto gap-3 pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
@@ -711,14 +716,14 @@ const Home = () => {
       <div className="hidden md:block container mx-auto px-4 py-8 md:py-24">
           <div className="grid grid-cols-4 gap-8">
               {features.map((feature, idx) => (
-                  <div key={idx} className="bg-slate-50/50 p-8 rounded-3xl border border-white shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-slate-200/80 transition-all group md:hover:-translate-y-2 text-left relative overflow-hidden">
-                      <div className="absolute top-0 right-0 -mr-8 -mt-8 w-24 h-24 bg-gradient-to-br from-slate-100 to-transparent rounded-full opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
-                      <div className="w-16 h-16 bg-white shadow-lg text-slate-900 rounded-2xl flex items-center justify-center mb-6 group-hover:rotate-6 transition-transform duration-300 ring-1 ring-slate-100 relative z-10">
-                          <feature.icon size={20} className="w-8 h-8 text-primary-600" />
+                  <div key={idx} className="bg-slate-50/50 dark:bg-slate-800/50 p-8 rounded-3xl border border-white dark:border-slate-700 shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50 hover:shadow-2xl hover:shadow-slate-200/80 dark:hover:shadow-slate-900/80 transition-all group md:hover:-translate-y-2 text-left relative overflow-hidden">
+                      <div className="absolute top-0 right-0 -mr-8 -mt-8 w-24 h-24 bg-gradient-to-br from-slate-100 dark:from-slate-700 to-transparent rounded-full opacity-50 group-hover:scale-150 transition-transform duration-500"></div>
+                      <div className="w-16 h-16 bg-white dark:bg-slate-700 shadow-lg text-slate-900 dark:text-white rounded-2xl flex items-center justify-center mb-6 group-hover:rotate-6 transition-transform duration-300 ring-1 ring-slate-100 dark:ring-slate-600 relative z-10">
+                          <feature.icon size={20} className="w-8 h-8 text-primary-600 dark:text-primary-400" />
                       </div>
                       <div className="relative z-10">
-                          <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-primary-600 transition-colors leading-tight">{feature.title}</h3>
-                          <p className="text-slate-500 leading-snug font-medium text-base">{feature.desc}</p>
+                          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors leading-tight">{feature.title}</h3>
+                          <p className="text-slate-500 dark:text-slate-400 leading-snug font-medium text-base">{feature.desc}</p>
                       </div>
                   </div>
               ))}
@@ -785,9 +790,9 @@ const Home = () => {
                              scrolling="no" 
                              marginHeight="0" 
                              marginWidth="0" 
-                             src={`https://maps.google.com/maps?q=${config.location.lat},${config.location.lng}&z=15&output=embed&iwloc=B`}
+                             src={`https://maps.google.com/maps?q=${config.location.lat},${config.location.lng}+(${encodeURIComponent(config.storeName || 'City Like collections')})&z=18&output=embed&iwloc=B`}
                              referrerPolicy="no-referrer-when-downgrade"
-                             className="w-full h-full grayscale-[100%] invert-[.9]"
+                             className="w-full h-full grayscale-0"
                            ></iframe>
                      </div>
                      
@@ -886,9 +891,9 @@ const Home = () => {
                              scrolling="no" 
                              marginHeight="0" 
                              marginWidth="0" 
-                             src={`https://maps.google.com/maps?q=${config.location.lat},${config.location.lng}&z=15&output=embed&iwloc=B`}
+                             src={`https://maps.google.com/maps?cid=${config.cid || '5610932246588432477'}&z=18&output=embed&iwloc=B`}
                              referrerPolicy="no-referrer-when-downgrade"
-                             className="w-full h-full grayscale-[100%] invert-[.9] hover:grayscale-0 hover:invert-0 transition-all duration-700"
+                             className="w-full h-full grayscale-[20%] hover:grayscale-0 transition-all duration-700"
                            ></iframe>
                            <a 
                              href={config.googleMapsLink} 

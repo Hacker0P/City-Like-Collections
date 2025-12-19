@@ -17,11 +17,11 @@ const BottomNav = () => {
             <Link 
                 to={to} 
                 onClick={() => setIsCartOpen(false)}
-                className={`flex flex-col items-center justify-center gap-1 flex-1 py-3 relative group ${active ? 'text-primary-600' : 'text-slate-400 hover:text-slate-600'}`}
+                className={`flex flex-col items-center justify-center gap-1 flex-1 py-3 relative group ${active ? 'text-primary-600 dark:text-primary-400' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'}`}
             >
                 <div className="relative p-1.5 transition-all duration-300">
                      {active && (
-                       <div className="absolute inset-0 bg-primary-50 rounded-xl scale-110 -z-10 animate-fade-in"></div>
+                       <div className="absolute inset-0 bg-primary-50 dark:bg-primary-900/20 rounded-xl scale-110 -z-10 animate-fade-in"></div>
                      )}
                     <Icon size={24} strokeWidth={active ? 2.5 : 2} className="transition-transform group-active:scale-90" />
                 </div>
@@ -40,11 +40,11 @@ const BottomNav = () => {
     const CartButton = () => (
         <button 
             onClick={() => setIsCartOpen(true)}
-            className={`flex flex-col items-center justify-center gap-1 flex-1 py-3 relative group ${isCartOpen ? 'text-primary-600' : 'text-slate-400 hover:text-slate-600'}`}
+            className={`flex flex-col items-center justify-center gap-1 flex-1 py-3 relative group ${isCartOpen ? 'text-primary-600 dark:text-primary-400' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'}`}
         >
             <div className="relative p-1.5 transition-all duration-300">
                 {isCartOpen && (
-                    <div className="absolute inset-0 bg-primary-50 rounded-xl scale-110 -z-10 animate-fade-in"></div>
+                    <div className="absolute inset-0 bg-primary-50 dark:bg-primary-900/20 rounded-xl scale-110 -z-10 animate-fade-in"></div>
                 )}
                 <ShoppingBag size={24} strokeWidth={isCartOpen ? 2.5 : 2} className="transition-transform group-active:scale-90" />
                 {cartCount > 0 && (
@@ -63,7 +63,7 @@ const BottomNav = () => {
     );
 
     return (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex justify-around items-stretch z-[100] pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex justify-around items-stretch z-[100] pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
             
             {currentUser ? (
                 <>

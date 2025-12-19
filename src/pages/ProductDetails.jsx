@@ -138,12 +138,12 @@ const ProductDetails = () => {
 
     if (!product) {
         return (
-            <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4 text-center">
-                <h2 className="text-xl font-bold text-slate-800 mb-2">Product Not Found</h2>
-                <p className="text-slate-500 mb-6">The product you are looking for does not exist or has been removed.</p>
+            <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center p-4 text-center">
+                <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">Product Not Found</h2>
+                <p className="text-slate-500 dark:text-slate-400 mb-6">The product you are looking for does not exist or has been removed.</p>
                 <button 
                     onClick={() => navigate('/catalogue')}
-                    className="px-6 py-2 bg-slate-900 text-white rounded-lg font-bold"
+                    className="px-6 py-2 bg-slate-900 dark:bg-slate-800 text-white rounded-lg font-bold"
                 >
                     Back to Catalogue
                 </button>
@@ -208,15 +208,15 @@ const ProductDetails = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 pb-24 md:pb-12 animate-fade-in">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pb-24 md:pb-12 animate-fade-in">
             {/* Header */}
-            <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-100">
+            <header className="sticky top-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-100 dark:border-slate-800">
                 <div className="container mx-auto px-4 h-[60px] flex items-center justify-between">
-                    <button onClick={() => navigate(-1)} className="p-2 -ml-2 hover:bg-slate-100 rounded-full transition-colors text-slate-700">
+                    <button onClick={() => navigate(-1)} className="p-2 -ml-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-700 dark:text-slate-200">
                         <ArrowLeft size={22} />
                     </button>
-                    <span className="font-bold text-slate-900 truncate max-w-[200px] text-sm md:text-base">{product.name}</span>
-                    <button onClick={handleShare} className="p-2 -mr-2 hover:bg-slate-100 rounded-full transition-colors text-slate-700">
+                    <span className="font-bold text-slate-900 dark:text-white truncate max-w-[200px] text-sm md:text-base">{product.name}</span>
+                    <button onClick={handleShare} className="p-2 -mr-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-700 dark:text-slate-200">
                         <Share2 size={22} />
                     </button>
                 </div>
@@ -226,9 +226,9 @@ const ProductDetails = () => {
                 <div className="flex flex-col md:flex-row gap-0 md:gap-8 lg:gap-12 md:p-6 lg:p-8">
                     
                     {/* Image Gallery */}
-                    <div className="flex-1 bg-white md:rounded-3xl overflow-hidden shadow-sm md:border border-slate-100 relative group select-none">
+                    <div className="flex-1 bg-white dark:bg-slate-900 md:rounded-3xl overflow-hidden shadow-sm md:border border-slate-100 dark:border-slate-800 relative group select-none">
                         {/* Main Image */}
-                        <div className="aspect-[3/4] md:aspect-[4/5] bg-slate-100 relative group">
+                        <div className="aspect-[3/4] md:aspect-[4/5] bg-slate-100 dark:bg-slate-800 relative group">
                              {images.length > 0 ? (
                                 <div 
                                     ref={scrollRef}
@@ -254,9 +254,10 @@ const ProductDetails = () => {
                              )}
 
                              {/* Wishlist Fab */}
+                             {/* Wishlist Fab */}
                              <button 
                                 onClick={() => toggleWishlist(product)}
-                                className="absolute top-4 right-4 p-3 bg-white/90 backdrop-blur rounded-full shadow-lg z-10 active:scale-90 transition-all text-slate-700 hover:text-red-500"
+                                className="absolute top-4 right-4 p-3 bg-white/90 dark:bg-slate-800/90 backdrop-blur rounded-full shadow-lg z-10 active:scale-90 transition-all text-slate-700 dark:text-slate-200 hover:text-red-500"
                              >
                                  <Heart size={20} className={isWishlisted ? "fill-red-500 text-red-500" : ""} />
                              </button>
@@ -297,7 +298,7 @@ const ProductDetails = () => {
                                     <button 
                                         key={idx}
                                         onClick={() => setSelectedImage(idx)}
-                                        className={`w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${selectedImage === idx ? 'border-slate-900 opacity-100' : 'border-transparent opacity-60 hover:opacity-100'}`}
+                                        className={`w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${selectedImage === idx ? 'border-slate-900 dark:border-white opacity-100' : 'border-transparent opacity-60 hover:opacity-100'}`}
                                     >
                                         <img src={img} className="w-full h-full object-cover" alt="" />
                                     </button>
@@ -314,58 +315,58 @@ const ProductDetails = () => {
                                 {isOutOfStock ? (
                                     <span className="px-2.5 py-1 bg-red-100 text-red-700 rounded-md text-[10px] font-bold uppercase tracking-wider">Out of Stock</span>
                                 ) : (
-                                    <span className="px-2.5 py-1 bg-emerald-100 text-emerald-700 rounded-md text-[10px] font-bold uppercase tracking-wider">In Stock</span>
+                                    <span className="px-2.5 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-md text-[10px] font-bold uppercase tracking-wider">In Stock</span>
                                 )}
-                                <span className="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-md text-[10px] font-bold uppercase tracking-wider">{product.category}</span>
+                                <span className="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-md text-[10px] font-bold uppercase tracking-wider">{product.category}</span>
                             </div>
 
-                            <h1 className="text-2xl md:text-4xl font-black text-slate-900 leading-tight mb-2">{product.name}</h1>
+                            <h1 className="text-2xl md:text-4xl font-black text-slate-900 dark:text-white leading-tight mb-2">{product.name}</h1>
                             
                             <div className="flex items-end gap-3 mb-4">
-                                <span className="text-3xl font-extrabold text-slate-900">₹{product.price}</span>
+                                <span className="text-3xl font-extrabold text-slate-900 dark:text-white">₹{product.price}</span>
                                 {/* Optional: Fake strikethrough price if you had one */}
                                 {/* <span className="text-lg text-slate-400 line-through mb-1">₹{Number(product.price) + 500}</span> */}
                             </div>
 
-                            <div className="p-4 bg-indigo-50/50 rounded-xl border border-indigo-50">
-                                <p className="text-sm text-slate-600 leading-relaxed font-medium">
+                            <div className="p-4 bg-indigo-50/50 dark:bg-indigo-900/20 rounded-xl border border-indigo-50 dark:border-indigo-900/30">
+                                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
                                     {product.description || "No description available for this product."}
                                 </p>
                             </div>
 
                             {/* Detailed Sections (Accordion-like) */}
                             <div className="space-y-3 pt-2">
-                                <details className="group p-4 border border-slate-100 rounded-xl bg-white open:bg-slate-50 transition-colors">
-                                    <summary className="flex justify-between items-center font-bold text-slate-900 cursor-pointer list-none">
+                                <details className="group p-4 border border-slate-100 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900 open:bg-slate-50 dark:open:bg-slate-800/50 transition-colors">
+                                    <summary className="flex justify-between items-center font-bold text-slate-900 dark:text-white cursor-pointer list-none">
                                         <span>Product Specifications</span>
-                                        <ChevronDown className="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform" />
+                                        <ChevronDown className="w-5 h-5 text-slate-400 dark:text-slate-500 group-open:rotate-180 transition-transform" />
                                     </summary>
-                                    <div className="mt-4 text-sm text-slate-600 space-y-2 animate-fade-in">
-                                        <div className="flex justify-between py-1 border-b border-slate-100">
-                                            <span className="text-slate-500">Material</span>
-                                            <span className="font-medium text-slate-900">Premium Cotton Blend</span>
+                                    <div className="mt-4 text-sm text-slate-600 dark:text-slate-400 space-y-2 animate-fade-in">
+                                        <div className="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800">
+                                            <span className="text-slate-500 dark:text-slate-500">Material</span>
+                                            <span className="font-medium text-slate-900 dark:text-white">Premium Cotton Blend</span>
                                         </div>
-                                        <div className="flex justify-between py-1 border-b border-slate-100">
-                                            <span className="text-slate-500">Fit</span>
-                                            <span className="font-medium text-slate-900">Regular Fit</span>
+                                        <div className="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800">
+                                            <span className="text-slate-500 dark:text-slate-500">Fit</span>
+                                            <span className="font-medium text-slate-900 dark:text-white">Regular Fit</span>
                                         </div>
-                                        <div className="flex justify-between py-1 border-b border-slate-100">
-                                            <span className="text-slate-500">Pattern</span>
-                                            <span className="font-medium text-slate-900">Solid / Printed</span>
+                                        <div className="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800">
+                                            <span className="text-slate-500 dark:text-slate-500">Pattern</span>
+                                            <span className="font-medium text-slate-900 dark:text-white">Solid / Printed</span>
                                         </div>
                                         <div className="flex justify-between py-1">
-                                            <span className="text-slate-500">Country of Origin</span>
-                                            <span className="font-medium text-slate-900">India</span>
+                                            <span className="text-slate-500 dark:text-slate-500">Country of Origin</span>
+                                            <span className="font-medium text-slate-900 dark:text-white">India</span>
                                         </div>
                                     </div>
                                 </details>
 
-                                <details className="group p-4 border border-slate-100 rounded-xl bg-white open:bg-slate-50 transition-colors">
-                                    <summary className="flex justify-between items-center font-bold text-slate-900 cursor-pointer list-none">
+                                <details className="group p-4 border border-slate-100 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900 open:bg-slate-50 dark:open:bg-slate-800/50 transition-colors">
+                                    <summary className="flex justify-between items-center font-bold text-slate-900 dark:text-white cursor-pointer list-none">
                                         <span>Shipping & Returns</span>
-                                        <ChevronDown className="w-5 h-5 text-slate-400 group-open:rotate-180 transition-transform" />
+                                        <ChevronDown className="w-5 h-5 text-slate-400 dark:text-slate-500 group-open:rotate-180 transition-transform" />
                                     </summary>
-                                    <div className="mt-4 text-sm text-slate-600 space-y-3 animate-fade-in">
+                                    <div className="mt-4 text-sm text-slate-600 dark:text-slate-400 space-y-3 animate-fade-in">
                                         <p>Free shipping on orders above ₹999. Typical delivery time is 3-5 business days.</p>
                                         <p>Hassle-free returns within 7 days of delivery. No questions asked.</p>
                                     </div>
@@ -380,19 +381,19 @@ const ProductDetails = () => {
                             {/* Colors */}
                             {colors.length > 0 && (
                                 <div>
-                                    <label className="text-sm font-bold text-slate-900 mb-3 block">Color: <span className="font-normal text-slate-500">{selectedColor || 'Select'}</span></label>
+                                    <label className="text-sm font-bold text-slate-900 dark:text-white mb-3 block">Color: <span className="font-normal text-slate-500 dark:text-slate-400">{selectedColor || 'Select'}</span></label>
                                     <div className="flex flex-wrap gap-3">
                                         {colors.map(color => (
                                             <button 
                                                 key={color} 
                                                 onClick={() => setSelectedColor(color)}
-                                                className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${selectedColor === color ? 'ring-2 ring-offset-2 ring-slate-900 scale-110' : 'hover:scale-105'}`}
+                                                className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${selectedColor === color ? 'ring-2 ring-offset-2 ring-slate-900 dark:ring-white dark:ring-offset-slate-900 scale-110' : 'hover:scale-105'}`}
                                                 style={{ backgroundColor: getColorHex(color) || '#f1f5f9' }}
                                                 title={color}
                                             >
                                                 {selectedColor === color && (
-                                                    <div className="bg-white/20 p-1 rounded-full backdrop-blur-sm">
-                                                        <ShieldCheck className="w-5 h-5 text-slate-900 mix-blend-screen" />
+                                                    <div className="bg-white/20 dark:bg-black/20 p-1 rounded-full backdrop-blur-sm">
+                                                        <ShieldCheck className="w-5 h-5 text-slate-900 dark:text-white mix-blend-screen" />
                                                     </div>
                                                 )}
                                             </button>
@@ -405,8 +406,8 @@ const ProductDetails = () => {
                             {sizes.length > 0 && (
                                 <div>
                                     <div className="flex justify-between items-center mb-3">
-                                        <label className="text-sm font-bold text-slate-900">Size: <span className="font-normal text-slate-500">{selectedSize || 'Select'}</span></label>
-                                        <button className="text-xs font-bold text-indigo-600 hover:underline">Size Guide</button>
+                                        <label className="text-sm font-bold text-slate-900 dark:text-white">Size: <span className="font-normal text-slate-500 dark:text-slate-400">{selectedSize || 'Select'}</span></label>
+                                        <button className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline">Size Guide</button>
                                     </div>
                                     <div className="flex flex-wrap gap-3">
                                         {sizes.map(size => (
@@ -415,8 +416,8 @@ const ProductDetails = () => {
                                                 onClick={() => setSelectedSize(size)}
                                                 className={`min-w-[3.5rem] h-12 px-4 rounded-xl border-2 font-bold text-sm transition-all ${
                                                     selectedSize === size 
-                                                    ? 'border-slate-900 bg-slate-900 text-white shadow-lg' 
-                                                    : 'border-slate-200 text-slate-600 hover:border-slate-300 bg-white'
+                                                    ? 'border-slate-900 bg-slate-900 text-white dark:border-white dark:bg-white dark:text-slate-900 shadow-lg' 
+                                                    : 'border-slate-200 text-slate-600 hover:border-slate-300 bg-white dark:bg-slate-900 dark:border-slate-700 dark:text-slate-300 dark:hover:border-slate-500'
                                                 }`}
                                             >
                                                 {size}
@@ -428,24 +429,24 @@ const ProductDetails = () => {
                         </div>
 
                         {/* Trust Badges */}
-                        <div className="grid grid-cols-3 gap-2 py-6 border-y border-slate-100">
+                        <div className="grid grid-cols-3 gap-2 py-6 border-y border-slate-100 dark:border-slate-800">
                              <div className="flex flex-col items-center text-center gap-2">
-                                 <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-900">
+                                 <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-900 dark:text-white">
                                      <Truck size={18} />
                                  </div>
-                                 <span className="text-[10px] md:text-xs font-bold text-slate-600">Fast Delivery</span>
+                                 <span className="text-[10px] md:text-xs font-bold text-slate-600 dark:text-slate-400">Fast Delivery</span>
                              </div>
                              <div className="flex flex-col items-center text-center gap-2">
-                                 <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-900">
+                                 <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-900 dark:text-white">
                                      <RefreshCcw size={18} />
                                  </div>
-                                 <span className="text-[10px] md:text-xs font-bold text-slate-600">Easy Returns</span>
+                                 <span className="text-[10px] md:text-xs font-bold text-slate-600 dark:text-slate-400">Easy Returns</span>
                              </div>
                              <div className="flex flex-col items-center text-center gap-2">
-                                 <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-900">
+                                 <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-900 dark:text-white">
                                      <Star size={18} />
                                  </div>
-                                 <span className="text-[10px] md:text-xs font-bold text-slate-600">Top Quality</span>
+                                 <span className="text-[10px] md:text-xs font-bold text-slate-600 dark:text-slate-400">Top Quality</span>
                              </div>
                         </div>
 
@@ -457,8 +458,8 @@ const ProductDetails = () => {
                                 disabled={isOutOfStock}
                                 className={`flex-1 py-3 md:py-4 rounded-xl font-bold text-base md:text-lg shadow-xl active:scale-95 transition-all flex items-center justify-center gap-3 ${
                                     isOutOfStock 
-                                    ? 'bg-slate-100 text-slate-400 cursor-not-allowed shadow-none' 
-                                    : 'bg-slate-900 text-white hover:bg-slate-800 hover:shadow-2xl'
+                                    ? 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed shadow-none' 
+                                    : 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-200 hover:shadow-2xl'
                                 }`}
                             >
                                 <ShoppingBag className="w-5 h-5 md:w-6 md:h-6" />
@@ -480,8 +481,8 @@ const ProductDetails = () => {
 
             {/* Similar Products */}
             {similarProducts.length > 0 && (
-                <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl border-t border-slate-100">
-                    <h2 className="text-xl md:text-2xl font-black text-slate-900 mb-6">You Might Also Like</h2>
+                <div className="container mx-auto px-4 py-8 md:py-12 max-w-5xl border-t border-slate-100 dark:border-slate-800">
+                    <h2 className="text-xl md:text-2xl font-black text-slate-900 dark:text-white mb-6">You Might Also Like</h2>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {similarProducts.map(p => (
                             <div key={p.id} className="h-72 md:h-96">

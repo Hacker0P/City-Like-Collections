@@ -50,7 +50,7 @@ const ProductImageSlider = ({ product, onImageClick }) => {
 
   return (
     <div 
-        className="relative h-full w-full bg-slate-50 group"
+        className="relative h-full w-full bg-slate-50 dark:bg-slate-800 group"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         onTouchStart={() => setIsHovered(true)}
@@ -76,7 +76,7 @@ const ProductImageSlider = ({ product, onImageClick }) => {
             </div>
           ))
         ) : (
-          <div className="w-full h-full flex flex-col items-center justify-center text-slate-300 gap-2">
+          <div className="w-full h-full flex flex-col items-center justify-center text-slate-300 dark:text-slate-600 gap-2">
             <ImageIcon size={32} />
           </div>
         )}
