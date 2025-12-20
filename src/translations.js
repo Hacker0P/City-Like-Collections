@@ -161,6 +161,7 @@ export const translations = {
     profile_title: 'Store Settings',
     profile_subtitle: 'Manage your online presence, location details, and contact information visible to customers.',
     profile_generalConfig: 'General Configuration',
+    profile_appTheme: 'App Theme',
     profile_appLanguage: 'App Language',
     profile_chooseLanguage: 'Choose your preferred language.',
     profile_noticeBanner: 'Store Notice Banner',
@@ -239,7 +240,9 @@ export const translations = {
     vibe_classy: "Classy",
     vibe_sport: "Sport",
     status_open: "Open",
-    status_closed: "Closed"
+    status_closed: "Closed",
+    theme_light: "Light",
+    theme_dark: "Dark"
   },
   bn: {
     // Header/Footer
@@ -403,6 +406,7 @@ export const translations = {
     profile_title: 'স্টোর সেটিংস',
     profile_subtitle: 'আপনার অনলাইন উপস্থিতি, অবস্থান বিবরণ, এবং গ্রাহকদের কাছে দৃশ্যমান যোগাযোগের তথ্য পরিচালনা করুন।',
     profile_generalConfig: 'সাধারণ কনফিগারেশন',
+    profile_appTheme: 'অ্যাপ থিম',
     profile_appLanguage: 'অ্যাপের ভাষা',
     profile_chooseLanguage: 'আপনার পছন্দের ভাষা নির্বাচন করুন।',
     profile_noticeBanner: 'স্টোর নোটিশ ব্যানার',
@@ -481,6 +485,8 @@ export const translations = {
     vibe_classy: "ক্লাসি",
     vibe_sport: "স্পোর্ট",
     status_open: "খোলা",
-    status_closed: "বন্ধ"
+    status_closed: "বন্ধ",
+    theme_light: "লাইট",
+    theme_dark: "ডার্ক"
   }
 };

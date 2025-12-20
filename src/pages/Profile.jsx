@@ -260,14 +260,14 @@ const Profile = () => {
                                 onClick={() => theme !== 'light' && toggleTheme()}
                                 className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center justify-center gap-2 ${theme === 'light' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm ring-1 ring-black/5' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
                             >
-                                <Sun size={16} /> Light
+                                <Sun size={16} /> {t('theme_light')}
                             </button>
                             <button 
                                 type="button"
                                 onClick={() => theme !== 'dark' && toggleTheme()}
                                 className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center justify-center gap-2 ${theme === 'dark' ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm ring-1 ring-black/5' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'}`}
                             >
-                                <Moon size={16} /> Dark
+                                <Moon size={16} /> {t('theme_dark')}
                             </button>
                         </div>
                     </section>
