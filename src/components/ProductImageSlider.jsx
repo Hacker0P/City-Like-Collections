@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ShoppingBag, Image as ImageIcon } from 'lucide-react';
+import OptimizedImage from './OptimizedImage';
 
 const ProductImageSlider = ({ product, onImageClick }) => {
   const scrollRef = useRef(null);
@@ -67,11 +68,12 @@ const ProductImageSlider = ({ product, onImageClick }) => {
               key={idx} 
               className="flex-none w-full h-full snap-start relative flex items-center justify-center p-0"
             >
-               <img 
+               <OptimizedImage 
                   src={img} 
                   alt={`${product.name} ${idx + 1}`} 
                   onClick={() => onImageClick && onImageClick({ index: idx, images: images })}
-                  className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full cursor-pointer hover:scale-105 transition-transform duration-500"
+                  containerClassName="w-full h-full"
                 />
             </div>
           ))

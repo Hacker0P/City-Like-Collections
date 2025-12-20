@@ -5,6 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { useShop } from '../context/ShopContext';
 import { getColorHex } from '../utils/colors';
 import ProductImageSlider from './ProductImageSlider';
+import OptimizedImage from './OptimizedImage';
 
 const ProductCard = ({ product, config, onImageClick }) => {
   const navigate = useNavigate();
@@ -173,7 +174,7 @@ const ProductCard = ({ product, config, onImageClick }) => {
                 <div className="flex gap-4 mb-6">
                      <div className="w-20 h-20 rounded-xl bg-slate-100 dark:bg-slate-800 overflow-hidden border border-slate-200 dark:border-slate-700">
                          {product.images && product.images.length > 0 ? (
-                             <img src={product.images[0]} alt={product.name} className="w-full h-full object-cover" />
+                             <OptimizedImage src={product.images[0]} alt={product.name} className="w-full h-full object-cover" />
                          ) : (
                              <div className="w-full h-full flex items-center justify-center text-slate-300"><ShoppingBag size={24}/></div>
                          )}

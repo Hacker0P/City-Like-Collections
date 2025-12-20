@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ProductCard from '../components/ProductCard';
+import OptimizedImage from '../components/OptimizedImage';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Share2, Heart, ShoppingBag, Truck, ShieldCheck, RefreshCcw, Star, ChevronLeft, ChevronRight, MessageCircle, ChevronDown, X } from 'lucide-react';
 import { supabase } from '../supabaseClient';
@@ -238,7 +239,7 @@ const ProductDetails = () => {
                                 >
                                     {images.map((img, idx) => (
                                         <div key={idx} className="flex-none w-full h-full snap-center">
-                                            <img 
+                                            <OptimizedImage 
                                                 src={img} 
                                                 alt={`${product.name} ${idx + 1}`} 
                                                 className="w-full h-full object-cover cursor-zoom-in"
@@ -300,7 +301,7 @@ const ProductDetails = () => {
                                         onClick={() => setSelectedImage(idx)}
                                         className={`w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${selectedImage === idx ? 'border-slate-900 dark:border-white opacity-100' : 'border-transparent opacity-60 hover:opacity-100'}`}
                                     >
-                                        <img src={img} className="w-full h-full object-cover" alt="" />
+                                        <OptimizedImage src={img} className="w-full h-full object-cover" alt="" />
                                     </button>
                                 ))}
                             </div>
